@@ -1,8 +1,9 @@
 package com.ldream.ldream_core.coordination.interactions;
 
-import com.ldream.ldream_core.components.Component;
+import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
+import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public class PortReference implements Formula {
 	
@@ -21,9 +22,12 @@ public class PortReference implements Formula {
 	}
 
 	@Override
-	public Formula bindActualComponent(ComponentInstance componentInstance, Component actualComponent) {
-		if (componentInstance.equals(this.componentInstance)) {
-			return new PortAtom(actualComponent.getPortByName(portName));
+	public Formula bindActualComponent(
+			ReferencedComponentInstance componentReference, 
+			ActualComponentInstance actualComponent) {
+		
+		if (componentReference.equals(this.componentInstance)) {
+			return new PortAtom(actualComponent.getComponent().getPortByName(portName));
 		} else
 			return this;
 	}

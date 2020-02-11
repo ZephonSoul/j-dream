@@ -6,6 +6,7 @@ import com.ldream.ldream_core.ExecutionEngine;
 import com.ldream.ldream_core.components.AbstractComponent;
 import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.components.Pool;
+import com.ldream.ldream_core.coordination.interactions.And;
 import com.ldream.ldream_core.coordination.interactions.PortReference;
 import com.ldream.ldream_core.coordination.operations.Assign;
 import com.ldream.ldream_core.exec.GreedyStrategy;
@@ -28,7 +29,7 @@ public class SimpleCompound extends AbstractComponent {
 				);
 		var d = new Declaration(
 				Quantifier.EXISTS,
-				this,
+				new ActualComponentInstance(this),
 				new TypeRestriction(DummyComponent.class));
 		Rule target = new FOILRule(d,new AndR(
 				new Term(
@@ -47,20 +48,59 @@ public class SimpleCompound extends AbstractComponent {
 
 		//System.out.println(c.getRule().toString());
 
-		var r = c.getRule();
+//		var r = c.getRule();
+//
+//		System.out.println(r.expandDeclarations().toString() + "\n");
+//
+//		for (Interaction i : c.getAllAllowedInteractions())
+//			System.out.println(i.toString());
+//
+//		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,10);
+//		ex.setSnapshotSemantics(true);
+//		ex.run();
+//		//		
+//		//		Set<Component> components = c.getComponentsFromPool(new ComponentTypes(DummyComponent.class));
+//		//		System.out.println(components.size());
+//		//		components.stream().map(Component::toString).forEach(System.out::println);
+//
+//		var d0 = new Declaration(
+//				Quantifier.FORALL,
+//				new ActualComponentInstance(c));
+//		var d1 = new Declaration(
+//				Quantifier.EXISTS,
+//				new ActualComponentInstance(c));
+//
+//		Rule test = 
+//				new FOILRule(d0,
+//						new FOILRule(d1,
+//								new Term(
+//										new And(
+//												new PortReference(d1.getVariable(),"p1"),
+//												new PortReference(d0.getVariable(),"p1")
+//												)
+//										)
+//								)
+//						);
+//
+//		System.out.println(test.toString());
+//		System.out.println(test.expandDeclarations().toString()+"\n");
 
-		System.out.println(r.getPILRule().toString() + "\n");
+		var dd1 = new Declaration(
+				Quantifier.EXISTS,
+				new ActualComponentInstance(c));
 
-		for (Interaction i : c.getAllAllowedInteractions())
-			System.out.println(i.toString());
-
-		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,10);
-		ex.setSnapshotSemantics(true);
-		ex.run();
-		//		
-		//		Set<Component> components = c.getComponentsFromPool(new ComponentTypes(DummyComponent.class));
-		//		System.out.println(components.size());
-		//		components.stream().map(Component::toString).forEach(System.out::println);
+		var dd2 = new Declaration(
+				Quantifier.EXISTS,
+				dd1.getVariable());
+		
+		Rule test2 = 
+				new FOILRule(dd1,
+						new FOILRule(dd2,
+								new Term(new PortReference(dd2.getVariable(),"p1")))
+						);
+		System.out.println(test2.toString());
+		var t2e = test2.expandDeclarations();
+		System.out.println(t2e.toString()+"\n");
 	}
 
 }

@@ -1,10 +1,12 @@
 package com.ldream.ldream_core;
 
-import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.coordination.ActualComponentInstance;
+import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public interface Bindable<T extends Bindable<T>> {
 
-	public T bindActualComponent(ComponentInstance componentInstance, Component actualComponent);
+	public T bindActualComponent(
+			ReferencedComponentInstance componentReference, 
+			ActualComponentInstance actualComponent);
 	
 }

@@ -3,8 +3,8 @@ package com.ldream.ldream_core.expressions;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.coordination.ActualComponentInstance;
+import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 @SuppressWarnings("serial")
 public class Sum extends AbstractExpression {
@@ -34,8 +34,8 @@ public class Sum extends AbstractExpression {
 
 	@Override
 	public Expression bindActualComponent(
-			ComponentInstance componentVariable, 
-			Component actualComponent) {
+			ReferencedComponentInstance componentVariable, 
+			ActualComponentInstance actualComponent) {
 		
 		return new Sum(params.stream()
 				.map(e -> e.bindActualComponent(componentVariable, actualComponent))

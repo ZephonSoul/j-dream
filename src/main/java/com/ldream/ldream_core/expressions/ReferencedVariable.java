@@ -1,7 +1,8 @@
 package com.ldream.ldream_core.expressions;
 
-import com.ldream.ldream_core.components.Component;
+import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public class ReferencedVariable implements VariableExpression {
 	
@@ -39,11 +40,11 @@ public class ReferencedVariable implements VariableExpression {
 
 	@Override
 	public Expression bindActualComponent(
-			ComponentInstance componentInstance, 
-			Component actualComponent) {
+			ReferencedComponentInstance componentReference, 
+			ActualComponentInstance actualComponent) {
 		
-		if (this.componentInstance.equals(componentInstance))
-			return new ActualVariable(actualComponent.getLocalVariable(localVariableName));
+		if (this.componentInstance.equals(componentReference))
+			return new ActualVariable(actualComponent.getComponent().getLocalVariable(localVariableName));
 		else
 			return this;
 	}

@@ -1,6 +1,5 @@
 package com.ldream.ldream_core.coordination;
 
-import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.coordination.interactions.Formula;
 import com.ldream.ldream_core.coordination.interactions.Tautology;
 import com.ldream.ldream_core.coordination.operations.Operation;
@@ -50,15 +49,15 @@ public class Term implements Rule  {
 
 	@Override
 	public Rule bindActualComponent(
-			ComponentInstance componentInstance, 
-			Component actualComponent) {
+			ReferencedComponentInstance componentReference, 
+			ActualComponentInstance actualComponent) {
 		
-		return new Term(constraint.bindActualComponent(componentInstance,actualComponent),
-				operation.bindActualComponent(componentInstance,actualComponent));
+		return new Term(constraint.bindActualComponent(componentReference,actualComponent),
+				operation.bindActualComponent(componentReference,actualComponent));
 	}
 	
 	@Override
-	public Rule getPILRule() {
+	public Rule expandDeclarations() {
 		return this;
 	}
 	

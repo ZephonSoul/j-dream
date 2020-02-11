@@ -4,14 +4,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.components.Component;
+import com.ldream.ldream_core.Bindable;
 
-public class Declaration {
+public class Declaration implements Bindable<Declaration> {
 
 	private Quantifier quantifier;
-	private Component scope;
+	private ComponentInstance scope;
 	private TypeRestriction type;
 	private ReferencedComponentInstance variable;
-
 
 	/**
 	 * @param quantifier
@@ -20,25 +20,33 @@ public class Declaration {
 	 */
 	public Declaration(
 			Quantifier quantifier, 
-			Component scope, 
+			ComponentInstance scope, 
 			TypeRestriction type, 
 			ReferencedComponentInstance variable) {
+		
 		this.quantifier = quantifier;
 		this.scope = scope;
 		this.type = type;
 		this.variable = variable;
 	}
 
-	public Declaration(Quantifier quantifier, Component scope) {
+	public Declaration(
+			Quantifier quantifier, 
+			ComponentInstance scope) {
+		
 		this(
-				quantifier, 
-				scope, 
+				quantifier,
+				scope,
 				new TypeRestriction(),
 				new ReferencedComponentInstance()
 				);
 	}
-	
-	public Declaration(Quantifier quantifier, Component scope, TypeRestriction type) {
+
+	public Declaration(
+			Quantifier quantifier, 
+			ComponentInstance scope, 
+			TypeRestriction type) {
+		
 		this(
 				quantifier, 
 				scope, 
@@ -46,8 +54,12 @@ public class Declaration {
 				new ReferencedComponentInstance()
 				);
 	}
-	
-	public Declaration(Quantifier quantifier, Component scope, ReferencedComponentInstance variable) {
+
+	public Declaration(
+			Quantifier quantifier,
+			ComponentInstance scope, 
+			ReferencedComponentInstance variable) {
+		
 		this(
 				quantifier, 
 				scope, 
@@ -73,14 +85,14 @@ public class Declaration {
 	/**
 	 * @return the scope
 	 */
-	public Component getScope() {
+	public ComponentInstance getScope() {
 		return scope;
 	}
 
 	/**
 	 * @param scope the scope to set
 	 */
-	public void setScope(Component scope) {
+	public void setScope(ComponentInstance scope) {
 		this.scope = scope;
 	}
 
@@ -101,7 +113,7 @@ public class Declaration {
 	/**
 	 * @return the variable
 	 */
-	public ComponentInstance getVariable() {
+	public ReferencedComponentInstance getVariable() {
 		return variable;
 	}
 
@@ -111,9 +123,12 @@ public class Declaration {
 	public void setVariable(ReferencedComponentInstance variable) {
 		this.variable = variable;
 	}
-	
-	public Set<Component> getActualComponents() {
-		return scope.getComponentsFromPool().stream().filter(c -> type.match(c)).collect(Collectors.toSet());
+
+	public Set<ActualComponentInstance> getActualComponents() {
+		return scope.getComponent().getComponentsFromPool().stream()
+				.filter(c -> type.match(c))
+				.map(c -> new ActualComponentInstance(c))
+				.collect(Collectors.toSet());
 	}
 
 	public boolean equals(Declaration cVar) {
@@ -130,14 +145,31 @@ public class Declaration {
 		else
 			return false;
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("%s(%s.%s):[%s]",
 				quantifier.toString(),
-				scope.getInstanceName(),
+				scope.getName(),
 				variable.getName(),
 				type.toString());
 	}
-	
+
+	@Override
+	public Declaration bindActualComponent(
+			ReferencedComponentInstance componentReference, 
+			ActualComponentInstance actualComponent) {
+
+		if (scope.equals(componentReference))
+			return new Declaration(
+					quantifier,
+					actualComponent,
+					type,
+					variable
+					);
+		else
+			return this;
+
+	}
+
 }

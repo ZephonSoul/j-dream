@@ -1,8 +1,8 @@
 package com.ldream.ldream_core.coordination.interactions;
 
-import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
+import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public class Tautology implements Formula {
 
@@ -16,7 +16,7 @@ public class Tautology implements Formula {
 	}
 
 	@Override
-	public Formula bindActualComponent(ComponentInstance componentVariable, Component actualComponent) {
+	public Formula bindActualComponent(ReferencedComponentInstance componentVariable, ActualComponentInstance actualComponent) {
 		return this;
 	}
 

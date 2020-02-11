@@ -4,33 +4,33 @@ import com.ldream.ldream_core.components.Component;
 
 public class ActualComponentInstance implements ComponentInstance {
 	
-	private Component actualComponent;
+	private Component component;
 
-	public ActualComponentInstance(Component actualComponent) {
-		this.actualComponent = actualComponent;
+	public ActualComponentInstance(Component component) {
+		this.component = component;
 	}
 
 	/**
 	 * @return the componentInstance
 	 */
-	public Component getActualComponent() {
-		return actualComponent;
+	public Component getComponent() {
+		return component;
 	}
 
 	/**
-	 * @param componentInstance the componentInstance to set
+	 * @param component the componentInstance to set
 	 */
-	public void setActualComponent(Component componentInstance) {
-		this.actualComponent = componentInstance;
+	public void setActualComponent(Component component) {
+		this.component = component;
 	}
 
 	public boolean equals(ActualComponentInstance componentInstance) {
-		return this.actualComponent.equals(componentInstance.getActualComponent());
+		return this.component.equals(componentInstance.getComponent());
 	}
 	
 	@Override
 	public String getName() {
-		return actualComponent.getInstanceName();
+		return component.getInstanceName();
 	}
 	
 	@Override
@@ -42,7 +42,7 @@ public class ActualComponentInstance implements ComponentInstance {
 	}
 
 	@Override
-	public ComponentInstance bindActualComponent(ComponentInstance componentInstance, Component actualComponent) {
+	public ComponentInstance bindActualComponent(ReferencedComponentInstance componentReference, ActualComponentInstance actualComponent) {
 		return this;
 	}
 

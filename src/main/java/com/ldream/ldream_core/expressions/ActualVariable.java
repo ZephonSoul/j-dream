@@ -1,8 +1,8 @@
 package com.ldream.ldream_core.expressions;
 
-import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.components.LocalVariable;
-import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.coordination.ActualComponentInstance;
+import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public class ActualVariable implements VariableExpression {
 	
@@ -42,8 +42,8 @@ public class ActualVariable implements VariableExpression {
 
 	@Override
 	public Expression bindActualComponent(
-			ComponentInstance componentInstance, 
-			Component actualComponent) {
+			ReferencedComponentInstance componentReference, 
+			ActualComponentInstance actualComponent) {
 		
 		return this;
 	}

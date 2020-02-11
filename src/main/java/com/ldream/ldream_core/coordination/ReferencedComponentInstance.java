@@ -27,15 +27,24 @@ public class ReferencedComponentInstance implements ComponentInstance {
 	}
 
 	@Override
-	public ComponentInstance bindActualComponent(ComponentInstance componentInstance, Component actualComponent) {
-		if (this.equals(componentInstance)) {
-			return new ActualComponentInstance(actualComponent);
+	public ComponentInstance bindActualComponent(
+			ReferencedComponentInstance componentReference, 
+			ActualComponentInstance actualComponent) {
+		
+		if (this.equals(componentReference)) {
+			return actualComponent;
 		} else
 			return this;
 	}
 	
 	public String toString() {
 		return this.name;
+	}
+
+	@Override
+	public Component getComponent() {
+		// TODO raise exception
+		return null;
 	}
 	
 }

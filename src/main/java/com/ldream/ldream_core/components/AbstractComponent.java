@@ -34,7 +34,7 @@ public abstract class AbstractComponent implements Component {
 		cStore = new Store();
 		cPool = new Pool();
 		cRule = new Term(new Tautology()); // default rule: allow everything
-		cRule_cached = cRule.getPILRule();
+		cRule_cached = cRule.expandDeclarations();
 		cIterator = new ComponentInteractionIterator();
 		portActions = new HashMap<>();
 	}
@@ -44,7 +44,7 @@ public abstract class AbstractComponent implements Component {
 		this.cInterface = cInterface;
 		this.cInterface.setOwner(this);
 		this.cRule = cRule;
-		this.cRule_cached = cRule.getPILRule();
+		this.cRule_cached = cRule.expandDeclarations();
 		this.interactionsIterator = new InteractionsIterator(cInterface);
 		this.cIterator = new ComponentInteractionIterator(cInterface);
 	}
@@ -106,7 +106,7 @@ public abstract class AbstractComponent implements Component {
 	public void setPool(Pool pool) {
 		this.cPool = pool;
 		this.cIterator.setPoolIterator(this.cPool.getInteractionIterator());
-		this.cRule_cached = cRule.getPILRule();
+		this.cRule_cached = cRule.expandDeclarations();
 	}
 
 	public void setInterface(Interface cInterface) {
@@ -137,7 +137,7 @@ public abstract class AbstractComponent implements Component {
 
 	public void setRule(Rule cRule) {
 		this.cRule = cRule;
-		this.cRule_cached = cRule.getPILRule();
+		this.cRule_cached = cRule.expandDeclarations();
 	}
 	
 	public void setPortActions(Map<Port,Action> portActions) {
@@ -167,7 +167,7 @@ public abstract class AbstractComponent implements Component {
 	public Interaction getAllowedInteraction() {
 		Interaction interaction;
 		if (cRule_cached == null)
-			cRule_cached = cRule.getPILRule();
+			cRule_cached = cRule.expandDeclarations();
 		do {
 			interaction = cIterator.next();
 		} while (!cRule_cached.sat(interaction));
@@ -250,7 +250,7 @@ public abstract class AbstractComponent implements Component {
 		if (!isAtomic()) {
 			cPool.refresh();
 			cIterator.setPoolIterator(cPool.getInteractionIterator());
-			cRule_cached = cRule.getPILRule();
+			cRule_cached = cRule.expandDeclarations();
 		}
 	}
 

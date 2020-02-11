@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ldream.ldream_core.coordination.interactions.Not;
+import com.ldream.ldream_core.coordination.interactions.Tautology;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
 public abstract class AbstractPILRule implements Rule {
@@ -44,8 +46,11 @@ public abstract class AbstractPILRule implements Rule {
 	}
 	
 	@Override
-	public Rule getPILRule() {
-		return this;
+	public Rule expandDeclarations() {
+		if (rules.isEmpty())
+			return new Term(new Not(new Tautology()));
+		else
+			return this;
 	}
 	
 	public String toString() {

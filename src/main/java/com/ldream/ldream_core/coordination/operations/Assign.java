@@ -1,8 +1,8 @@
 package com.ldream.ldream_core.coordination.operations;
 
-import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.expressions.Expression;
+import com.ldream.ldream_core.coordination.ActualComponentInstance;
+import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 import com.ldream.ldream_core.expressions.ActualVariable;
 import com.ldream.ldream_core.expressions.VariableExpression;
 
@@ -80,8 +80,8 @@ public class Assign implements Operation {
 
 	@Override
 	public Operation bindActualComponent(
-			ComponentInstance componentVariable, 
-			Component actualComponent) {
+			ReferencedComponentInstance componentVariable, 
+			ActualComponentInstance actualComponent) {
 		
 		return new Assign(
 				(VariableExpression)localVariable.bindActualComponent(componentVariable, actualComponent),

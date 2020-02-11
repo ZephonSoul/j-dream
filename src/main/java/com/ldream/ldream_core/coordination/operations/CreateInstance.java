@@ -1,7 +1,9 @@
 package com.ldream.ldream_core.coordination.operations;
 
 import com.ldream.ldream_core.components.Component;
+import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public class CreateInstance implements Operation {
 
@@ -43,7 +45,7 @@ public class CreateInstance implements Operation {
 	}
 
 	@Override
-	public Operation bindActualComponent(ComponentInstance componentVariable, Component actualComponent) {
+	public Operation bindActualComponent(ReferencedComponentInstance componentVariable, ActualComponentInstance actualComponent) {
 		// TODO Auto-generated method stub
 		return null;
 	}

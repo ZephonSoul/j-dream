@@ -3,14 +3,15 @@ package com.ldream.ldream_core.coordination;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.components.Component;
+import com.ldream.ldream_core.coordination.interactions.Not;
+import com.ldream.ldream_core.coordination.interactions.Tautology;
 
 public class AndR extends AbstractPILRule implements Rule {
 
 	public AndR(Rule... rules) {
 		super(rules);
 	}
-	
+
 	public AndR(List<Rule> rules) {
 		super(rules);
 	}
@@ -31,12 +32,15 @@ public class AndR extends AbstractPILRule implements Rule {
 
 	@Override
 	public Rule bindActualComponent(
-			ComponentInstance componentVariable, 
-			Component actualComponent) {
-		
-		return new AndR(rules.stream()
-				.map(r -> r.bindActualComponent(componentVariable, actualComponent))
-				.collect(Collectors.toList()));
+			ReferencedComponentInstance componentVariable, 
+			ActualComponentInstance actualComponent) {
+
+		if (rules.isEmpty())
+			return new Term(new Not(new Tautology()));
+		else
+			return new AndR(rules.stream()
+					.map(r -> r.bindActualComponent(componentVariable, actualComponent))
+					.collect(Collectors.toList()));
 	}
 
 	protected String getConnectiveSymbol() {

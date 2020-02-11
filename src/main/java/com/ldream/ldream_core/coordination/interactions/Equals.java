@@ -3,9 +3,9 @@ package com.ldream.ldream_core.coordination.interactions;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
+import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 import com.ldream.ldream_core.expressions.Expression;
 
 public class Equals extends AbstractPredicate implements Predicate {
@@ -36,7 +36,7 @@ public class Equals extends AbstractPredicate implements Predicate {
 	}
 
 	@Override
-	public Predicate bindActualComponent(ComponentInstance componentVariable, Component actualComponent) {
+	public Predicate bindActualComponent(ReferencedComponentInstance componentVariable, ActualComponentInstance actualComponent) {
 		return new Equals(terms.stream()
 				.map(t -> t.bindActualComponent(componentVariable,actualComponent))
 				.collect(Collectors.toList()));

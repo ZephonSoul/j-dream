@@ -1,6 +1,5 @@
 package com.ldream.ldream_core.coordination;
 
-import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
 public class FOILRule implements Rule {
@@ -15,7 +14,7 @@ public class FOILRule implements Rule {
 	}
 
 	@Override
-	public Rule getPILRule() {
+	public Rule expandDeclarations() {
 		switch(declaration.getQuantifier()) {
 		case FORALL:
 			ruleInstance = new AndR(declaration.getActualComponents().stream()
@@ -30,22 +29,29 @@ public class FOILRule implements Rule {
 	}
 
 	@Override
-	public Rule bindActualComponent(ComponentInstance componentInstance,Component actualComponent) {
-		ruleInstance = getPILRule().bindActualComponent(componentInstance, actualComponent);
+	public Rule bindActualComponent(
+			ReferencedComponentInstance componentReference,
+			ActualComponentInstance actualComponent) {
+		
+		ruleInstance = new FOILRule(
+				declaration.bindActualComponent(componentReference, actualComponent),
+				rule
+				);
+		ruleInstance = ruleInstance.expandDeclarations().bindActualComponent(componentReference, actualComponent);
 		return ruleInstance;
 	}
 
 	@Override
 	public boolean sat(Interaction i) {
 		if (ruleInstance == null)
-			ruleInstance = getPILRule();
+			ruleInstance = expandDeclarations();
 		return ruleInstance.sat(i);
 	}
 
 	@Override
 	public OperationsSet getOperationsForInteraction(Interaction i) {
 		if (ruleInstance == null)
-			ruleInstance = getPILRule();
+			ruleInstance = expandDeclarations();
 		return ruleInstance.getOperationsForInteraction(i);
 	}
 	

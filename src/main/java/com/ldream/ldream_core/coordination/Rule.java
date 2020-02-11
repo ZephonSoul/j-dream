@@ -9,6 +9,6 @@ public interface Rule extends Bindable<Rule> {
 	
 	public OperationsSet getOperationsForInteraction(Interaction i);
 	
-	public Rule getPILRule();
+	public Rule expandDeclarations();
 	
 }
