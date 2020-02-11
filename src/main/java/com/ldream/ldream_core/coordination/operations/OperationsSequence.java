@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentVariable;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 
 public class OperationsSequence extends AbstractOperation implements Operation {
 
@@ -21,10 +21,10 @@ public class OperationsSequence extends AbstractOperation implements Operation {
 	}
 
 	@Override
-	public Operation instantiateComponentVariable(ComponentVariable componentVariable, Component actualComponent) {
+	public Operation bindActualComponent(ComponentInstance componentInstance, Component actualComponent) {
 		return new OperationsSequence(
 				operations.stream()
-				.map(o -> o.instantiateComponentVariable(componentVariable, actualComponent))
+				.map(o -> o.bindActualComponent(componentInstance, actualComponent))
 				.collect(Collectors.toList()));
 	}
 

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentVariable;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 
 public class Not extends AbstractFormula implements Formula {
@@ -23,12 +23,12 @@ public class Not extends AbstractFormula implements Formula {
 	}
 
 	@Override
-	public Formula instantiateComponentVariable(
-			ComponentVariable componentVariable, 
+	public Formula bindActualComponent(
+			ComponentInstance componentVariable, 
 			Component actualComponent) {
 		
 		return new Not(subformulas.stream().limit(1)
-				.map(f -> f.instantiateComponentVariable(componentVariable, actualComponent))
+				.map(f -> f.bindActualComponent(componentVariable, actualComponent))
 				.collect(Collectors.toList()));
 	}
 	

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentVariable;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 
 @SuppressWarnings("serial")
 public class Sum extends AbstractExpression {
@@ -33,12 +33,12 @@ public class Sum extends AbstractExpression {
 	}
 
 	@Override
-	public Expression instantiateComponentVariable(
-			ComponentVariable componentVariable, 
+	public Expression bindActualComponent(
+			ComponentInstance componentVariable, 
 			Component actualComponent) {
 		
 		return new Sum(params.stream()
-				.map(e -> e.instantiateComponentVariable(componentVariable, actualComponent))
+				.map(e -> e.bindActualComponent(componentVariable, actualComponent))
 				.collect(Collectors.toList()));
 	}
 

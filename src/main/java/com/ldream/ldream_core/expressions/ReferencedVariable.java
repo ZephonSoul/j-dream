@@ -1,16 +1,16 @@
 package com.ldream.ldream_core.expressions;
 
 import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentVariable;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 
 public class ReferencedVariable implements VariableExpression {
 	
-	private ComponentVariable componentVariable;
-	private String variableName;
+	private ComponentInstance componentInstance;
+	private String localVariableName;
 	
-	public ReferencedVariable(ComponentVariable componentVariable, String variableName) {
-		this.componentVariable = componentVariable;
-		this.variableName = variableName;
+	public ReferencedVariable(ComponentInstance componentInstance, String localVariableName) {
+		this.componentInstance = componentInstance;
+		this.localVariableName = localVariableName;
 	}
 
 	@Override
@@ -22,9 +22,9 @@ public class ReferencedVariable implements VariableExpression {
 	@Override
 	public boolean equals(Expression ex) {
 		if (ex instanceof ReferencedVariable) {
-			return (componentVariable.equals(((ReferencedVariable) ex).getComponentVariable()))
+			return (componentInstance.equals(((ReferencedVariable) ex).getComponentInstance()))
 					&&
-					(variableName.equals(((ReferencedVariable) ex).getComponentVariable()));
+					(localVariableName.equals(((ReferencedVariable) ex).getVariableName()));
 		} else
 			return false;
 	}
@@ -38,12 +38,12 @@ public class ReferencedVariable implements VariableExpression {
 	}
 
 	@Override
-	public Expression instantiateComponentVariable(
-			ComponentVariable componentVariable, 
+	public Expression bindActualComponent(
+			ComponentInstance componentInstance, 
 			Component actualComponent) {
 		
-		if (this.componentVariable.equals(componentVariable))
-			return new ActualVariable(actualComponent.getLocalVariable(variableName));
+		if (this.componentInstance.equals(componentInstance))
+			return new ActualVariable(actualComponent.getLocalVariable(localVariableName));
 		else
 			return this;
 	}
@@ -51,25 +51,25 @@ public class ReferencedVariable implements VariableExpression {
 	/**
 	 * @return the componentVariable
 	 */
-	public ComponentVariable getComponentVariable() {
-		return componentVariable;
+	public ComponentInstance getComponentInstance() {
+		return componentInstance;
 	}
 
 	/**
 	 * @return the variableName
 	 */
 	public String getVariableName() {
-		return variableName;
+		return localVariableName;
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("%s.%s",componentVariable.getName(),variableName);
+		return String.format("%s.%s",componentInstance.getName(),localVariableName);
 	}
 	
 	@Override
 	public int hashCode() {
-		return componentVariable.hashCode() + variableName.hashCode();
+		return componentInstance.hashCode() + localVariableName.hashCode();
 	}
 
 }

@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.components.Component;
 
-public class ComponentVariable {
+public class Declaration {
 
 	private Quantifier quantifier;
 	private Component scope;
 	private TypeRestriction type;
-	private String name;
+	private ReferencedComponentInstance variable;
 
 
 	/**
@@ -18,28 +18,41 @@ public class ComponentVariable {
 	 * @param scope
 	 * @param type
 	 */
-	public ComponentVariable(Quantifier quantifier, Component scope, TypeRestriction type, String name) {
+	public Declaration(
+			Quantifier quantifier, 
+			Component scope, 
+			TypeRestriction type, 
+			ReferencedComponentInstance variable) {
 		this.quantifier = quantifier;
 		this.scope = scope;
 		this.type = type;
-		this.name = name;
+		this.variable = variable;
 	}
 
-	public ComponentVariable(Quantifier quantifier, Component scope, TypeRestriction typeRestriction) {
-		this(
-				quantifier, 
-				scope, 
-				typeRestriction,
-				ComponentVariableNamesFactory.getInstance().getFreshName()
-				);
-	}
-
-	public ComponentVariable(Quantifier quantifier, Component scope) {
+	public Declaration(Quantifier quantifier, Component scope) {
 		this(
 				quantifier, 
 				scope, 
 				new TypeRestriction(),
-				ComponentVariableNamesFactory.getInstance().getFreshName()
+				new ReferencedComponentInstance()
+				);
+	}
+	
+	public Declaration(Quantifier quantifier, Component scope, TypeRestriction type) {
+		this(
+				quantifier, 
+				scope, 
+				type,
+				new ReferencedComponentInstance()
+				);
+	}
+	
+	public Declaration(Quantifier quantifier, Component scope, ReferencedComponentInstance variable) {
+		this(
+				quantifier, 
+				scope, 
+				new TypeRestriction(),
+				variable
 				);
 	}
 
@@ -86,35 +99,36 @@ public class ComponentVariable {
 	}
 
 	/**
-	 * @return the name
+	 * @return the variable
 	 */
-	public String getName() {
-		return name;
+	public ComponentInstance getVariable() {
+		return variable;
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param variable the variable to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setVariable(ReferencedComponentInstance variable) {
+		this.variable = variable;
 	}
 	
 	public Set<Component> getActualComponents() {
 		return scope.getComponentsFromPool().stream().filter(c -> type.match(c)).collect(Collectors.toSet());
 	}
 
-	public boolean equals(ComponentVariable cVar) {
+	public boolean equals(Declaration cVar) {
 		return quantifier.equals(cVar.getQuantifier())
 				&& scope.equals(cVar.getScope())
-				&& type.equals(cVar.getType());
+				&& type.equals(cVar.getType())
+				&& variable.equals(cVar.getVariable());
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof ComponentVariable)
-			return equals((ComponentVariable)o);
+		if (o instanceof Declaration)
+			return equals((Declaration)o);
 		else
-			return true;
+			return false;
 	}
 	
 	@Override
@@ -122,7 +136,7 @@ public class ComponentVariable {
 		return String.format("%s(%s.%s):[%s]",
 				quantifier.toString(),
 				scope.getInstanceName(),
-				name,
+				variable.getName(),
 				type.toString());
 	}
 	

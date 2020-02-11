@@ -17,7 +17,7 @@ public class SimpleCompound extends AbstractComponent {
 	public SimpleCompound() {
 		super();
 		DummyComponent d1 = new DummyComponent(),
-					d2 = new DummyComponent();
+				d2 = new DummyComponent();
 		d1.setPool(new Pool(new DummyComponent(),new DummyComponent(),new DummyComponent()));
 		setPool(new Pool(d1,d2));
 		setRule(new AndR(
@@ -26,38 +26,41 @@ public class SimpleCompound extends AbstractComponent {
 				new Term(
 						new Assign(new ActualVariable(d2.getLocalVariable("x")), new Sum(new ActualVariable(d1.getLocalVariable("x")),new Constant(10)))))
 				);
-		var c = new ComponentVariable(Quantifier.EXISTS,this,new TypeRestriction(DummyComponent.class));
-		Rule target = new FOILRule(c,new AndR(
+		var d = new Declaration(
+				Quantifier.EXISTS,
+				this,
+				new TypeRestriction(DummyComponent.class));
+		Rule target = new FOILRule(d,new AndR(
 				new Term(
-						new PortReference(c,"p1"),
-						new Assign(new ReferencedVariable(c,"x"), new Sum(new ReferencedVariable(c,"x"),new Constant(1)))
+						new PortReference(d.getVariable(),"p1"),
+						new Assign(new ReferencedVariable(d.getVariable(),"x"), new Sum(new ReferencedVariable(d.getVariable(),"x"),new Constant(1)))
 						)
 				)
 				);
 		setRule(target);
 	}
-	
+
 	public static void main(String[] args) {
 		AbstractComponent c = new SimpleCompound();
-		
+
 		System.out.println(c.toString(true, "") + "\n");
-		
+
 		//System.out.println(c.getRule().toString());
-		
+
 		var r = c.getRule();
-		
+
 		System.out.println(r.getPILRule().toString() + "\n");
-		
+
 		for (Interaction i : c.getAllAllowedInteractions())
 			System.out.println(i.toString());
-		
+
 		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,10);
 		ex.setSnapshotSemantics(true);
 		ex.run();
-//		
-//		Set<Component> components = c.getComponentsFromPool(new ComponentTypes(DummyComponent.class));
-//		System.out.println(components.size());
-//		components.stream().map(Component::toString).forEach(System.out::println);
+		//		
+		//		Set<Component> components = c.getComponentsFromPool(new ComponentTypes(DummyComponent.class));
+		//		System.out.println(components.size());
+		//		components.stream().map(Component::toString).forEach(System.out::println);
 	}
-	
+
 }

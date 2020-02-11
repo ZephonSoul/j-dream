@@ -1,7 +1,7 @@
 package com.ldream.ldream_core.coordination.operations;
 
 import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentVariable;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 
 public class Skip implements Operation {
 	
@@ -34,7 +34,7 @@ public class Skip implements Operation {
 	}
 
 	@Override
-	public Operation instantiateComponentVariable(ComponentVariable componentVariable, Component actualComponent) {
+	public Operation bindActualComponent(ComponentInstance componentInstance, Component actualComponent) {
 		return this;
 	}
 

@@ -49,12 +49,12 @@ public class Term implements Rule  {
 	}
 
 	@Override
-	public Rule instantiateComponentVariable(
-			ComponentVariable componentVariable, 
+	public Rule bindActualComponent(
+			ComponentInstance componentInstance, 
 			Component actualComponent) {
 		
-		return new Term(constraint.instantiateComponentVariable(componentVariable,actualComponent),
-				operation.instantiateComponentVariable(componentVariable,actualComponent));
+		return new Term(constraint.bindActualComponent(componentInstance,actualComponent),
+				operation.bindActualComponent(componentInstance,actualComponent));
 	}
 	
 	@Override

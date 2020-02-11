@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentVariable;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 
 /**
  * @author alessandro
@@ -40,12 +40,12 @@ public class Product extends AbstractExpression {
 	}
 
 	@Override
-	public Expression instantiateComponentVariable(
-			ComponentVariable componentVariable, 
+	public Expression bindActualComponent(
+			ComponentInstance componentVariable, 
 			Component actualComponent) {
 
 		return new Product(params.stream()
-				.map(e -> e.instantiateComponentVariable(componentVariable, actualComponent))
+				.map(e -> e.bindActualComponent(componentVariable, actualComponent))
 				.collect(Collectors.toList()));
 	}
 }

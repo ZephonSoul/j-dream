@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentVariable;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.expressions.Expression;
 
@@ -36,9 +36,9 @@ public class Equals extends AbstractPredicate implements Predicate {
 	}
 
 	@Override
-	public Formula instantiateComponentVariable(ComponentVariable componentVariable, Component actualComponent) {
+	public Predicate bindActualComponent(ComponentInstance componentVariable, Component actualComponent) {
 		return new Equals(terms.stream()
-				.map(t -> t.instantiateComponentVariable(componentVariable,actualComponent))
+				.map(t -> t.bindActualComponent(componentVariable,actualComponent))
 				.collect(Collectors.toList()));
 	}
 

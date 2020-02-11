@@ -30,12 +30,12 @@ public class AndR extends AbstractPILRule implements Rule {
 	}
 
 	@Override
-	public Rule instantiateComponentVariable(
-			ComponentVariable componentVariable, 
+	public Rule bindActualComponent(
+			ComponentInstance componentVariable, 
 			Component actualComponent) {
 		
 		return new AndR(rules.stream()
-				.map(r -> r.instantiateComponentVariable(componentVariable, actualComponent))
+				.map(r -> r.bindActualComponent(componentVariable, actualComponent))
 				.collect(Collectors.toList()));
 	}
 

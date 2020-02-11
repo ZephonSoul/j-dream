@@ -1,18 +1,13 @@
 package com.ldream.ldream_core.coordination.operations;
 
-import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.coordination.ComponentVariable;
+import com.ldream.ldream_core.Bindable;
 
-public interface Operation {
+public interface Operation extends Bindable<Operation> {
 
 	public void evaluateParams();
 	
 	public void execute();
 	
 	public boolean equals(Operation op);
-
-	public Operation instantiateComponentVariable(
-			ComponentVariable componentVariable, 
-			Component actualComponent);
 	
 }
