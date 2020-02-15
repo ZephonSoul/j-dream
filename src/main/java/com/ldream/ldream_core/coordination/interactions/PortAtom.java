@@ -2,8 +2,8 @@ package com.ldream.ldream_core.coordination.interactions;
 
 import com.ldream.ldream_core.components.Port;
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
-import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public class PortAtom implements Formula {
 
@@ -22,7 +22,7 @@ public class PortAtom implements Formula {
 	}
 
 	@Override
-	public Formula bindActualComponent(ReferencedComponentInstance componentVariable, ActualComponentInstance actualComponent) {
+	public Formula bindActualComponent(ComponentInstance componentVariable, ActualComponentInstance actualComponent) {
 		return this;
 	}
 	

@@ -3,14 +3,12 @@ package com.ldream.ldream_core;
 import java.io.IOException;
 
 import com.ldream.ldream_core.components.Component;
+import com.ldream.ldream_core.components.NoAdmissibleInteractionsException;
 import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 import com.ldream.ldream_core.exec.ExecutionStrategy;
-import com.ldream.ldream_core.output.ComponentStateWritable;
-import com.ldream.ldream_core.output.InteractionWritable;
-import com.ldream.ldream_core.output.OperationsWritable;
+import com.ldream.ldream_core.output.MessageWritable;
 import com.ldream.ldream_core.output.Output;
-import com.ldream.ldream_core.output.Writable;
 
 public class ExecutionEngine implements Runnable {
 
@@ -67,32 +65,37 @@ public class ExecutionEngine implements Runnable {
 		boolean unboundedExecution = false;
 		if (maxCycles <= 0)
 			unboundedExecution = true;
-		Writable w = new ComponentStateWritable(rootComponent);
-		output.write(w);
+		output.write(MessageWritable.write(rootComponent));
 		while (cycles < maxCycles || unboundedExecution) {
-			Interaction interaction = executionStrategy.selectInteraction(rootComponent);
-			OperationsSet opsSet = rootComponent.getOperationsForInteraction(interaction);
+			try {
+				Interaction interaction = executionStrategy.selectInteraction(rootComponent);
+				OperationsSet opsSet = rootComponent.getOperationsForInteraction(interaction);
+				
+				output.write(MessageWritable.write("Expanded rule:\n",rootComponent.getCurrentRule()));
+				output.write(MessageWritable.write("Performed interaction = ",interaction));
+				output.write(MessageWritable.write("Performed operations = ",opsSet));
+	
+				opsSet.executeOperations(snapshotSemantics);
+				interaction.trigger();
 
-			output.write(new InteractionWritable(interaction));
-			output.write(new OperationsWritable(opsSet));
-
-			opsSet.executeOperations(snapshotSemantics);
-			interaction.trigger();
-
-			output.write(w);
-			cycles++;
-			if (interactive) {
-				initPause = System.currentTimeMillis();
-				System.out.println("Press ENTER to continue");
-				try {
-					System.in.read();
-					startTime += (System.currentTimeMillis() - initPause);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				output.write(MessageWritable.write(rootComponent));
+				cycles++;
+				if (interactive) {
+					initPause = System.currentTimeMillis();
+					System.out.println("Press ENTER to continue");
+					try {
+						System.in.read();
+						startTime += (System.currentTimeMillis() - initPause);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+				rootComponent.refresh();
+			} catch (NoAdmissibleInteractionsException e) {
+				output.write(MessageWritable.write(e.getMessage()));
+				break;
 			}
-			rootComponent.refresh();
 		}
 
 		long stopTime = System.currentTimeMillis();

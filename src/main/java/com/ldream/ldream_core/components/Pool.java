@@ -52,6 +52,16 @@ public class Pool {
 		return components.isEmpty();
 	}
 
+	public void add(Component component) {
+		components.add(component);
+		refresh();
+	}
+
+	public void remove(Component component) {
+		components.remove(component);
+		refresh();
+	}
+
 	public String toString() {
 		return components.stream().map(Component::getInstanceName).collect(Collectors.joining(","));
 	}

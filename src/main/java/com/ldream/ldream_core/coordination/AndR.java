@@ -29,10 +29,21 @@ public class AndR extends AbstractPILRule implements Rule {
 		cachedSat = sat;
 		return sat;
 	}
+	
+	@Override
+	public Rule expandDeclarations() {
+		if (rules.isEmpty())
+			return new Term(new Not(new Tautology()));
+		else
+			return new AndR(
+					rules.stream().
+					map(Rule::expandDeclarations).
+					collect(Collectors.toList())	);
+	}
 
 	@Override
 	public Rule bindActualComponent(
-			ReferencedComponentInstance componentVariable, 
+			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
 
 		if (rules.isEmpty())

@@ -21,7 +21,7 @@ public abstract class AbstractPredicate implements Predicate {
 	
 	public String toString() {
 		return terms.stream().map(Expression::toString).collect(Collectors.joining(getPredicateSymbol()));
-	}
+	}	
 	
 	@Override
 	public abstract boolean sat(Interaction i);

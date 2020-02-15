@@ -3,7 +3,6 @@ package com.ldream.ldream_core.coordination;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.Bindable;
 
 public class Declaration implements Bindable<Declaration> {
@@ -157,7 +156,7 @@ public class Declaration implements Bindable<Declaration> {
 
 	@Override
 	public Declaration bindActualComponent(
-			ReferencedComponentInstance componentReference, 
+			ComponentInstance componentReference, 
 			ActualComponentInstance actualComponent) {
 
 		if (scope.equals(componentReference))

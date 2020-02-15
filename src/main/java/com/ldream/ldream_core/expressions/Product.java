@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
-import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 
 /**
  * @author alessandro
  *
  */
 @SuppressWarnings("serial")
-public class Product extends AbstractExpression {
+public class Product extends AbstractMultiOperandsExpression {
 	
 	public Product(Expression... params) {
 		super(params);
@@ -41,10 +41,10 @@ public class Product extends AbstractExpression {
 
 	@Override
 	public Expression bindActualComponent(
-			ReferencedComponentInstance componentVariable, 
+			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
 
-		return new Product(params.stream()
+		return new Product(operands.stream()
 				.map(e -> e.bindActualComponent(componentVariable, actualComponent))
 				.collect(Collectors.toList()));
 	}

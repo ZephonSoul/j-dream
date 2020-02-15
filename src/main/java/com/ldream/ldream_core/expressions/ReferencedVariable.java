@@ -2,7 +2,6 @@ package com.ldream.ldream_core.expressions;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
-import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public class ReferencedVariable implements VariableExpression {
 	
@@ -40,7 +39,7 @@ public class ReferencedVariable implements VariableExpression {
 
 	@Override
 	public Expression bindActualComponent(
-			ReferencedComponentInstance componentReference, 
+			ComponentInstance componentReference, 
 			ActualComponentInstance actualComponent) {
 		
 		if (this.componentInstance.equals(componentReference))

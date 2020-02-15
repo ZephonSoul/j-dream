@@ -42,7 +42,10 @@ public class ActualComponentInstance implements ComponentInstance {
 	}
 
 	@Override
-	public ComponentInstance bindActualComponent(ReferencedComponentInstance componentReference, ActualComponentInstance actualComponent) {
+	public ComponentInstance bindActualComponent(
+			ComponentInstance componentReference, 
+			ActualComponentInstance actualComponent) {
+		
 		return this;
 	}
 

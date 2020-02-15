@@ -2,11 +2,11 @@ package com.ldream.ldream_core.coordination.operations;
 
 import com.ldream.ldream_core.expressions.Expression;
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
-import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.expressions.ActualVariable;
 import com.ldream.ldream_core.expressions.VariableExpression;
 
-public class Assign implements Operation {
+public class Assign extends AbstractOperation implements Operation {
 	
 	public static int BASE_CODE = 100;
 
@@ -57,14 +57,6 @@ public class Assign implements Operation {
 		return BASE_CODE + localVariable.hashCode() + valueExpression.hashCode();
 	}
 	
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Assign)
-			return equals((Assign) o);
-		else
-			return false;
-	}
-	
 	public boolean equals(Operation op) {
 		boolean test = (op instanceof Assign) && 
 				(valueExpression.equals(((Assign)op).getValueExpression())) &&
@@ -80,7 +72,7 @@ public class Assign implements Operation {
 
 	@Override
 	public Operation bindActualComponent(
-			ReferencedComponentInstance componentVariable, 
+			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
 		
 		return new Assign(

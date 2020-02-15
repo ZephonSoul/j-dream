@@ -1,7 +1,7 @@
 package com.ldream.ldream_core.expressions;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
-import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 
 public class Constant implements Expression {
 
@@ -44,7 +44,7 @@ public class Constant implements Expression {
 	}
 
 	@Override
-	public Expression bindActualComponent(ReferencedComponentInstance componentVariable, ActualComponentInstance actualComponent) {
+	public Expression bindActualComponent(ComponentInstance componentVariable, ActualComponentInstance actualComponent) {
 		return this;
 	}
 

@@ -3,6 +3,7 @@ package com.ldream.ldream_core.components;
 import java.util.Set;
 
 import com.ldream.ldream_core.coordination.Interaction;
+import com.ldream.ldream_core.coordination.Rule;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
 public interface Component {
@@ -25,6 +26,10 @@ public interface Component {
 	
 	public Set<Component> getComponentsFromPool();
 	
+	public void addToPool(Component component);
+
+	public void removeFromPool(Component component);
+	
 	public Port getPortByName(String portName);
 	
 	public String getInstanceName();
@@ -32,5 +37,7 @@ public interface Component {
 	public String toString(boolean exhaustive,String offset);
 
 	public int getId();
+	
+	public Rule getCurrentRule();
 
 }

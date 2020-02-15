@@ -30,7 +30,7 @@ public class FOILRule implements Rule {
 
 	@Override
 	public Rule bindActualComponent(
-			ReferencedComponentInstance componentReference,
+			ComponentInstance componentReference,
 			ActualComponentInstance actualComponent) {
 		
 		ruleInstance = new FOILRule(

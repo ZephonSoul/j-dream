@@ -27,7 +27,7 @@ public class PILFrameworkTest {
 
 	Component c,c1,c2;
 	Port p1,p2,p3;
-	Interaction i1;
+	Interaction i1,i2;
 	Formula fp1,fp2,fp3;
 	Predicate sp1,sp2,sp3;
 	LocalVariable lvar1,lvar2;
@@ -44,7 +44,9 @@ public class PILFrameworkTest {
 		p2 = new Port("p2",c);
 		p3 = new Port("p3",c);
 		Port[] i = {p1,p3};
+		Port[] ii = {p1};
 		i1 = new Interaction(i);
+		i2 = new Interaction(ii);
 		fp1 = new PortAtom(p1);
 		fp2 = new PortAtom(p2);
 		fp3 = new PortAtom(p3);
@@ -161,6 +163,19 @@ public class PILFrameworkTest {
 		OperationsSet opSet = new OperationsSet(new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3)),new Skip());
 		System.out.println(opSet.toString() + "\t" + opSet.hashCode());
 		assertTrue(ru1.getOperationsForInteraction(i1).equals(opSet));
+	}
+	
+	@Test
+	@DisplayName("Test rule: {p1} |= (p1 -> assign(...) || p3 -> skip)")
+	void RuleTest2() {
+		Operation op = new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3));
+		ru1 = new OrR(new Term(fp1, op),new Term(fp3));
+		assertTrue(ru1.sat(i2));
+		OperationsSet res = ru1.getOperationsForInteraction(i2);
+		System.out.println(res.toString() + "\t" + res.hashCode());
+		OperationsSet opSet = new OperationsSet(new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3)));
+		System.out.println(opSet.toString() + "\t" + opSet.hashCode());
+		assertTrue(res.equals(opSet));
 	}
 
 }

@@ -3,7 +3,6 @@ package com.ldream.ldream_core.coordination.interactions;
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
-import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public class PortReference implements Formula {
 	
@@ -23,7 +22,7 @@ public class PortReference implements Formula {
 
 	@Override
 	public Formula bindActualComponent(
-			ReferencedComponentInstance componentReference, 
+			ComponentInstance componentReference, 
 			ActualComponentInstance actualComponent) {
 		
 		if (componentReference.equals(this.componentInstance)) {

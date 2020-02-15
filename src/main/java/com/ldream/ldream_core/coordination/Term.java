@@ -49,7 +49,7 @@ public class Term implements Rule  {
 
 	@Override
 	public Rule bindActualComponent(
-			ReferencedComponentInstance componentReference, 
+			ComponentInstance componentReference, 
 			ActualComponentInstance actualComponent) {
 		
 		return new Term(constraint.bindActualComponent(componentReference,actualComponent),

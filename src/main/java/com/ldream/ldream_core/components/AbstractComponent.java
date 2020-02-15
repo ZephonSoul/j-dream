@@ -10,6 +10,7 @@ import com.ldream.ldream_core.coordination.Rule;
 import com.ldream.ldream_core.coordination.Term;
 import com.ldream.ldream_core.coordination.interactions.Tautology;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
+import com.ldream.ldream_core.shared.Messages;
 
 public abstract class AbstractComponent implements Component {
 
@@ -22,7 +23,7 @@ public abstract class AbstractComponent implements Component {
 	protected InteractionsIterator interactionsIterator;
 	protected ComponentInteractionIterator cIterator;
 	protected Map<Port,Action> portActions;
-	
+
 	/**
 	 * Constructors
 	 */
@@ -65,7 +66,7 @@ public abstract class AbstractComponent implements Component {
 		this.cPool = pool;
 		this.cIterator.setPoolIterator(this.cPool.getInteractionIterator());
 	}
-	
+
 	public AbstractComponent(Interface cInterface,Rule cRule,Map<Port,Action> portActions) {
 		this(cInterface,cRule);
 		this.portActions = portActions;
@@ -109,6 +110,14 @@ public abstract class AbstractComponent implements Component {
 		this.cRule_cached = cRule.expandDeclarations();
 	}
 
+	public void addToPool(Component component) {
+		this.cPool.add(component);
+	}
+	
+	public void removeFromPool(Component component) {
+		this.cPool.remove(component);
+	}
+
 	public void setInterface(Interface cInterface) {
 		this.cInterface = cInterface;
 		this.cInterface.setOwner(this);
@@ -139,11 +148,11 @@ public abstract class AbstractComponent implements Component {
 		this.cRule = cRule;
 		this.cRule_cached = cRule.expandDeclarations();
 	}
-	
+
 	public void setPortActions(Map<Port,Action> portActions) {
 		this.portActions = portActions;
 	}
-	
+
 	public void addPortAction(Port port,Action action) {
 		portActions.put(port,action);
 	}
@@ -166,40 +175,54 @@ public abstract class AbstractComponent implements Component {
 	@Override
 	public Interaction getAllowedInteraction() {
 		Interaction interaction;
+		Set<Interaction> forbiddenInteractions = new HashSet<>();
 		if (cRule_cached == null)
 			cRule_cached = cRule.expandDeclarations();
+		boolean sat = false;
 		do {
 			interaction = cIterator.next();
-		} while (!cRule_cached.sat(interaction));
+			sat = cRule_cached.sat(interaction);
+			if (!sat)
+				if (forbiddenInteractions.contains(interaction))
+					throw new NoAdmissibleInteractionsException(
+							Messages.noAdmissibleInteractionMessage(getInstanceName()));
+				else
+					forbiddenInteractions.add(interaction);
+		} while (!sat);
 		return interaction;
 	}
 
 	@Override
 	public Interaction[] getAllAllowedInteractions() {
-//		Set<Interaction> localInteractions = interactionsIterator.getAll().stream()
-//				.filter(i -> cRule.sat(i))
-//				.collect(Collectors.toSet());
-//
-//		if (!isAtomic()) {
-//			Set<Interaction> poolInteractions = cPool.getAllowedInteractions();
-//			localInteractions = localInteractions.stream()
-//					.flatMap(i -> poolInteractions.stream()
-//							.map(pi -> Interaction.mergeAll(i,pi)))
-//					.collect(Collectors.toSet());
-//		}
+		//		Set<Interaction> localInteractions = interactionsIterator.getAll().stream()
+		//				.filter(i -> cRule.sat(i))
+		//				.collect(Collectors.toSet());
+		//
+		//		if (!isAtomic()) {
+		//			Set<Interaction> poolInteractions = cPool.getAllowedInteractions();
+		//			localInteractions = localInteractions.stream()
+		//					.flatMap(i -> poolInteractions.stream()
+		//							.map(pi -> Interaction.mergeAll(i,pi)))
+		//					.collect(Collectors.toSet());
+		//		}
 		Set<Interaction> localInteractions = new HashSet<>();
+		Interaction i;
 		boolean check = false;
 		while (!check) {
-			Interaction i = getAllowedInteraction();
-			if (localInteractions.contains(i))
-				check = true;
-			else {
-				localInteractions.add(i);
+			try {
+				i = getAllowedInteraction();
+				if (localInteractions.contains(i))
+					check = true;
+				else {
+					localInteractions.add(i);
+				}
+			} catch (NoAdmissibleInteractionsException e) {
+				break;
 			}
 		}
 		return localInteractions.toArray(Interaction[]::new);
 	}
-	
+
 	@Override
 	public OperationsSet getOperationsForInteraction(Interaction interaction) {
 		OperationsSet operations = cRule_cached.getOperationsForInteraction(interaction);
@@ -210,7 +233,7 @@ public abstract class AbstractComponent implements Component {
 	public String getInstanceName() {
 		return String.format("%s[%s]",this.getClass().getSimpleName(),cId);
 	}
-	
+
 	@Override
 	public Port getPortByName(String portName) {
 		return cInterface.getPortByName(portName);
@@ -227,7 +250,7 @@ public abstract class AbstractComponent implements Component {
 						cRule.toString());
 		return componentDescription;
 	}
-	
+
 	@Override
 	public String toString(boolean exhaustive,String offset) {
 		if (offset==null)
@@ -244,24 +267,28 @@ public abstract class AbstractComponent implements Component {
 					cPool.toString(true,offset+"\t"),	//6
 					cRule.toString());					//7
 	}
-	
+
 	public void refresh() {
 		cIterator = new ComponentInteractionIterator(cInterface);
-		if (!isAtomic()) {
+		//if (!isAtomic()) {
 			cPool.refresh();
 			cIterator.setPoolIterator(cPool.getInteractionIterator());
 			cRule_cached = cRule.expandDeclarations();
-		}
+		//}
 	}
 
 	public void activatePort(Port port) {
 		if (portActions.containsKey(port))
 			portActions.get(port).accept(this);
 	}
-	
+
 	@Override
 	public Set<Component> getComponentsFromPool() {
 		return cPool.getComponents();
+	}
+	
+	public Rule getCurrentRule() {
+		return cRule_cached;
 	}
 
 }

@@ -28,7 +28,7 @@ public class ReferencedComponentInstance implements ComponentInstance {
 
 	@Override
 	public ComponentInstance bindActualComponent(
-			ReferencedComponentInstance componentReference, 
+			ComponentInstance componentReference, 
 			ActualComponentInstance actualComponent) {
 		
 		if (this.equals(componentReference)) {

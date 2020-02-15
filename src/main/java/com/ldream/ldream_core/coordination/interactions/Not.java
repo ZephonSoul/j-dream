@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
+import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
-import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public class Not extends AbstractFormula implements Formula {
 
@@ -24,7 +24,7 @@ public class Not extends AbstractFormula implements Formula {
 
 	@Override
 	public Formula bindActualComponent(
-			ReferencedComponentInstance componentVariable, 
+			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
 		
 		return new Not(subformulas.stream().limit(1)

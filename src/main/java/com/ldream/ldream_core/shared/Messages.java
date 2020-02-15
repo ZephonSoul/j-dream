@@ -17,4 +17,8 @@ public class Messages {
 	public static String invalidPortName(String portName,String ownerName) {
 		return String.format("Invalid port name %s: no such port for component %s", portName, ownerName);
 	}
+	
+	public static String noAdmissibleInteractionMessage(String scope) {
+		return String.format("No admissible interactions found for component %s", scope);
+	}
 }
