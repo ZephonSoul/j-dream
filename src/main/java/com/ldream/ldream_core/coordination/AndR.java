@@ -32,7 +32,7 @@ public class AndR extends AbstractPILRule implements Rule {
 	@Override
 	public Rule expandDeclarations() {
 		if (rules.isEmpty())
-			return new Term(new Tautology());
+			return new Term(Tautology.getInstance());
 		else
 			return new AndR(
 					rules.stream().
@@ -46,7 +46,7 @@ public class AndR extends AbstractPILRule implements Rule {
 			ActualComponentInstance actualComponent) {
 
 		if (rules.isEmpty())
-			return new Term(new Tautology());
+			return new Term(Tautology.getInstance());
 		else
 			return new AndR(rules.stream()
 					.map(r -> r.bindActualComponent(componentVariable, actualComponent))
@@ -54,7 +54,7 @@ public class AndR extends AbstractPILRule implements Rule {
 	}
 
 	protected String getConnectiveSymbol() {
-		return "/\\";
+		return "&";
 	}
 
 }

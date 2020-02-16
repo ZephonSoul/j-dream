@@ -23,7 +23,7 @@ public class Term implements Rule  {
 	}
 	
 	public Term(Operation ops) {
-		this(new Tautology(),ops);
+		this(Tautology.getInstance(),ops);
 	}
 
 	@Override

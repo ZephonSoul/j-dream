@@ -21,7 +21,7 @@ public class SimpleComponent extends AbstractComponent implements Component {
 		setInterface(new Interface(p1,p2));
 		setRule(new OrR(
 				new Term(
-						new Tautology()
+						Tautology.getInstance()
 						),
 				new Term(new PortAtom(p1),
 						new Assign(new ActualVariable(x),new Sum(new Constant(10),new Constant(5),new ActualVariable(x)))

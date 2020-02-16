@@ -54,7 +54,7 @@ public abstract class AbstractComponent implements Component {
 	public AbstractComponent() {
 		this(
 				new Interface(),
-				new Term(new Tautology()), // default rule: allow everything
+				new Term(Tautology.getInstance()), // default rule: allow everything
 				new Store(),
 				new Pool(),
 				null,

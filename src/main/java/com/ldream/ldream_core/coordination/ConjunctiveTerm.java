@@ -26,7 +26,7 @@ public class ConjunctiveTerm implements Rule  {
 	
 
 	public ConjunctiveTerm(Formula constraint,Operation ops) {
-		this(constraint,new Tautology(),ops);
+		this(constraint,Tautology.getInstance(),ops);
 	}
 	
 	public ConjunctiveTerm(Formula constraint) {
@@ -34,7 +34,7 @@ public class ConjunctiveTerm implements Rule  {
 	}
 	
 	public ConjunctiveTerm(Operation ops) {
-		this(new Tautology(),ops);
+		this(Tautology.getInstance(),ops);
 	}
 
 	@Override

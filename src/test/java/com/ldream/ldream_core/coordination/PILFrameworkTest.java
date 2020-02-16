@@ -121,7 +121,7 @@ public class PILFrameworkTest {
 	@Test
 	@DisplayName("{} |= True")
 	void satTautology() {
-		Formula form = new Tautology();
+		Formula form = Tautology.getInstance();
 		assertTrue( form.sat(new Interaction()));
 	}
 	

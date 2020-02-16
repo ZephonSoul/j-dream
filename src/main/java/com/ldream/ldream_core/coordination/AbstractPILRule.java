@@ -44,7 +44,8 @@ public abstract class AbstractPILRule implements Rule {
 	}
 	
 	public String toString() {
-		return rules.stream().map(Rule::toString).collect(Collectors.joining(getConnectiveSymbol()));
+		return rules.stream().map(Rule::toString)
+				.collect(Collectors.joining(" " + getConnectiveSymbol() +" "));
 	}
 	
 	protected abstract boolean checkSat(Interaction i);

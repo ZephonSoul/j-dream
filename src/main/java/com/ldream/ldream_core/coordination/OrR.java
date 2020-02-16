@@ -3,8 +3,7 @@ package com.ldream.ldream_core.coordination;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.coordination.interactions.Not;
-import com.ldream.ldream_core.coordination.interactions.Tautology;
+import com.ldream.ldream_core.coordination.interactions.Contradiction;
 
 public class OrR extends AbstractPILRule implements Rule {
 
@@ -33,7 +32,7 @@ public class OrR extends AbstractPILRule implements Rule {
 	@Override
 	public Rule expandDeclarations() {
 		if (rules.isEmpty())
-			return new Term(new Not(new Tautology()));
+			return new Term(Contradiction.getInstance());
 		else
 			return new OrR(
 					rules.stream().
@@ -47,7 +46,7 @@ public class OrR extends AbstractPILRule implements Rule {
 			ActualComponentInstance actualComponent) {
 
 		if (rules.isEmpty())
-			return new Term(new Not(new Tautology()));
+			return new Term(Contradiction.getInstance());
 		else
 			return new OrR(rules.stream()
 					.map(r -> r.bindActualComponent(componentVariable, actualComponent))
@@ -56,7 +55,7 @@ public class OrR extends AbstractPILRule implements Rule {
 
 	@Override
 	protected String getConnectiveSymbol() {
-		return "\\/";
+		return "||";
 	}
 
 }

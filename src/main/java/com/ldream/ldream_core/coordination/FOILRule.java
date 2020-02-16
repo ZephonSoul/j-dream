@@ -2,6 +2,7 @@ package com.ldream.ldream_core.coordination;
 
 import java.util.Set;
 
+import com.ldream.ldream_core.coordination.interactions.Contradiction;
 import com.ldream.ldream_core.coordination.interactions.Not;
 import com.ldream.ldream_core.coordination.interactions.Tautology;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
@@ -25,7 +26,7 @@ public class FOILRule implements Rule {
 		switch(declaration.getQuantifier()) {
 		case FORALL:
 			if (matchingInstances.isEmpty())
-				ruleInstance = new Term(new Tautology());
+				ruleInstance = new Term(Tautology.getInstance());
 			else
 				ruleInstance = new AndR(declaration.getActualComponents().stream()
 						.map(c -> rule.bindActualComponent(declaration.getVariable(), c))
@@ -33,7 +34,7 @@ public class FOILRule implements Rule {
 			break;
 		case EXISTS:
 			if (matchingInstances.isEmpty())
-				ruleInstance = new Term(new Not(new Tautology()));
+				ruleInstance = new Term(Contradiction.getInstance());
 			else
 				ruleInstance = new OrR(declaration.getActualComponents().stream()
 						.map(c -> rule.bindActualComponent(declaration.getVariable(), c))
