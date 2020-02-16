@@ -6,5 +6,7 @@ public interface Expression extends Bindable<Expression> {
 
 	public Number eval();
 	
+	public void evaluateOperands();
+	
 	public boolean equals(Expression ex);
 }
