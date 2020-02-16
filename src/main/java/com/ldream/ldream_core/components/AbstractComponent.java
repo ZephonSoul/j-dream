@@ -10,7 +10,6 @@ import com.ldream.ldream_core.coordination.Rule;
 import com.ldream.ldream_core.coordination.Term;
 import com.ldream.ldream_core.coordination.interactions.Tautology;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
-import com.ldream.ldream_core.shared.Messages;
 
 public abstract class AbstractComponent implements Component {
 
@@ -18,6 +17,7 @@ public abstract class AbstractComponent implements Component {
 	protected Interface cInterface;
 	protected Store cStore;
 	protected Pool cPool;
+	protected Component parent;
 	protected Rule cRule;
 	protected Rule cRule_cached;
 	protected InteractionsIterator interactionsIterator;
@@ -27,64 +27,39 @@ public abstract class AbstractComponent implements Component {
 	/**
 	 * Constructors
 	 */
-
-	public AbstractComponent() {
+	
+	public AbstractComponent(
+			Interface cInterface,
+			Rule cRule,
+			Store cStore,
+			Pool cPool,
+			Component parent,
+			Map<Port,Action> portActions) {
+		
 		cId = ComponentsIDFactory.getInstance().getFreshId();
-		cInterface = new Interface();
-		cInterface.setOwner(this);
-		cStore = new Store();
-		cPool = new Pool();
-		cRule = new Term(new Tautology()); // default rule: allow everything
-		cRule_cached = cRule.expandDeclarations();
-		cIterator = new ComponentInteractionIterator();
-		portActions = new HashMap<>();
-	}
-
-	public AbstractComponent(Interface cInterface,Rule cRule) {
-		this();
 		this.cInterface = cInterface;
 		this.cInterface.setOwner(this);
+		this.cStore = cStore;
+		this.cPool = cPool;
+		this.cPool.setComponentsParent(this);
+		this.parent = parent;
 		this.cRule = cRule;
 		this.cRule_cached = cRule.expandDeclarations();
-		this.interactionsIterator = new InteractionsIterator(cInterface);
-		this.cIterator = new ComponentInteractionIterator(cInterface);
-	}
-
-	public AbstractComponent(Interface cInterface,Rule cRule,Store store) {
-		this(cInterface,cRule);
-		this.cStore = store;
-	}
-
-	public AbstractComponent(Interface cInterface,Rule cRule,Pool pool) {
-		this(cInterface,cRule);
-		this.cPool = pool;
+		this.cIterator = new ComponentInteractionIterator(this.cInterface);
+		this.interactionsIterator = new InteractionsIterator(this.cInterface);
 		this.cIterator.setPoolIterator(this.cPool.getInteractionIterator());
-	}
-
-	public AbstractComponent(Interface cInterface,Rule cRule,Store store,Pool pool) {
-		this(cInterface,cRule,store);
-		this.cPool = pool;
-		this.cIterator.setPoolIterator(this.cPool.getInteractionIterator());
-	}
-
-	public AbstractComponent(Interface cInterface,Rule cRule,Map<Port,Action> portActions) {
-		this(cInterface,cRule);
 		this.portActions = portActions;
 	}
 
-	public AbstractComponent(Interface cInterface,Rule cRule,Store store,Map<Port,Action> portActions) {
-		this(cInterface,cRule,store);
-		this.portActions = portActions;
-	}
-
-	public AbstractComponent(Interface cInterface,Rule cRule,Pool pool,Map<Port,Action> portActions) {
-		this(cInterface,cRule,pool);
-		this.portActions = portActions;
-	}
-
-	public AbstractComponent(Interface cInterface,Rule cRule,Store store,Pool pool,Map<Port,Action> portActions) {
-		this(cInterface,cRule,store,pool);
-		this.portActions = portActions;
+	public AbstractComponent() {
+		this(
+				new Interface(),
+				new Term(new Tautology()), // default rule: allow everything
+				new Store(),
+				new Pool(),
+				null,
+				new HashMap<>()
+				);
 	}
 
 	/**
@@ -106,15 +81,18 @@ public abstract class AbstractComponent implements Component {
 	 */
 	public void setPool(Pool pool) {
 		this.cPool = pool;
+		this.cPool.setComponentsParent(this);
 		this.cIterator.setPoolIterator(this.cPool.getInteractionIterator());
 		this.cRule_cached = cRule.expandDeclarations();
 	}
 
 	public void addToPool(Component component) {
+		component.setParent(this);
 		this.cPool.add(component);
 	}
 	
 	public void removeFromPool(Component component) {
+		component.setParent(null);
 		this.cPool.remove(component);
 	}
 
@@ -138,6 +116,23 @@ public abstract class AbstractComponent implements Component {
 
 	public void setStore(Store cStore) {
 		this.cStore = cStore;
+	}
+
+	/**
+	 * @return the parent
+	 * @throws OrphanComponentException 
+	 */
+	public Component getParent() throws OrphanComponentException {
+		if (parent == null)
+			throw new OrphanComponentException(this);
+		return parent;
+	}
+
+	/**
+	 * @param parent the parent to set
+	 */
+	public void setParent(Component parent) {
+		this.parent = parent;
 	}
 
 	public Rule getRule() {
@@ -171,6 +166,11 @@ public abstract class AbstractComponent implements Component {
 	public boolean isAtomic() {
 		return this.cPool.isEmpty();
 	}
+	
+	@Override
+	public int getPoolSize() {
+		return this.cPool.size();
+	}
 
 	@Override
 	public Interaction getAllowedInteraction() {
@@ -184,8 +184,7 @@ public abstract class AbstractComponent implements Component {
 			sat = cRule_cached.sat(interaction);
 			if (!sat)
 				if (forbiddenInteractions.contains(interaction))
-					throw new NoAdmissibleInteractionsException(
-							Messages.noAdmissibleInteractionMessage(getInstanceName()));
+					throw new NoAdmissibleInteractionsException(this);
 				else
 					forbiddenInteractions.add(interaction);
 		} while (!sat);
@@ -246,7 +245,7 @@ public abstract class AbstractComponent implements Component {
 						cId,
 						cInterface.toString(),
 						cStore.toString(),
-						cPool.toString(),
+						cPool.toString(true,"\t"),
 						cRule.toString());
 		return componentDescription;
 	}
@@ -270,11 +269,9 @@ public abstract class AbstractComponent implements Component {
 
 	public void refresh() {
 		cIterator = new ComponentInteractionIterator(cInterface);
-		//if (!isAtomic()) {
-			cPool.refresh();
-			cIterator.setPoolIterator(cPool.getInteractionIterator());
-			cRule_cached = cRule.expandDeclarations();
-		//}
+		cPool.refresh();
+		cIterator.setPoolIterator(cPool.getInteractionIterator());
+		cRule_cached = cRule.expandDeclarations();
 	}
 
 	public void activatePort(Port port) {

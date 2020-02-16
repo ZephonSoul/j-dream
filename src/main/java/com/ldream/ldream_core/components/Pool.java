@@ -44,6 +44,10 @@ public class Pool {
 		interactionIterator = new PoolInteractionIterator(components);
 	}
 	
+	public void setComponentsParent(Component parent) {
+		components.stream().forEach(c -> c.setParent(parent));
+	}
+	
 	public PoolInteractionIterator getInteractionIterator() {
 		return interactionIterator;
 	}
@@ -125,6 +129,10 @@ public class Pool {
 	public void refresh() {
 		interactionIterator = new PoolInteractionIterator(components.toArray(Component[]::new));
 		components.stream().forEach(Component::refresh);
+	}
+
+	public int size() {
+		return components.size();
 	}
 
 }

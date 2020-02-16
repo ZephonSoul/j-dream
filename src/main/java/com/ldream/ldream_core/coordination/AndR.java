@@ -3,7 +3,6 @@ package com.ldream.ldream_core.coordination;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.coordination.interactions.Not;
 import com.ldream.ldream_core.coordination.interactions.Tautology;
 
 public class AndR extends AbstractPILRule implements Rule {
@@ -33,7 +32,7 @@ public class AndR extends AbstractPILRule implements Rule {
 	@Override
 	public Rule expandDeclarations() {
 		if (rules.isEmpty())
-			return new Term(new Not(new Tautology()));
+			return new Term(new Tautology());
 		else
 			return new AndR(
 					rules.stream().
@@ -47,7 +46,7 @@ public class AndR extends AbstractPILRule implements Rule {
 			ActualComponentInstance actualComponent) {
 
 		if (rules.isEmpty())
-			return new Term(new Not(new Tautology()));
+			return new Term(new Tautology());
 		else
 			return new AndR(rules.stream()
 					.map(r -> r.bindActualComponent(componentVariable, actualComponent))

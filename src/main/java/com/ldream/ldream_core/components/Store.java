@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.shared.Messages;
-
 public class Store {
 	
 	private Map<String,LocalVariable> localVariables;
@@ -43,8 +41,7 @@ public class Store {
 			localVariables.get(varName).setValue(varValue);
 		}
 		else {
-			String message = Messages.invalidLocalVariableName(varName);
-			throw new InvalidLocalVariableException(message);
+			throw new InvalidLocalVariableException(varName);
 		}
 	}
 
@@ -53,8 +50,7 @@ public class Store {
 			return localVariables.get(varName);
 		}
 		else {
-			String message = Messages.invalidLocalVariableName(varName);
-			throw new InvalidLocalVariableException(message);
+			throw new InvalidLocalVariableException(varName);
 		}
 	}
 	

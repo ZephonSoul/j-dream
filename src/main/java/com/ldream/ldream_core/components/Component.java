@@ -7,6 +7,10 @@ import com.ldream.ldream_core.coordination.Rule;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
 public interface Component {
+	
+	public Component getParent() throws OrphanComponentException;
+	
+	public void setParent(Component parent);
 
 	public void setStoreVar(String varName,Number val) throws InvalidLocalVariableException;
 	
@@ -25,6 +29,8 @@ public interface Component {
 	public OperationsSet getOperationsForInteraction(Interaction interaction);
 	
 	public Set<Component> getComponentsFromPool();
+	
+	public int getPoolSize();
 	
 	public void addToPool(Component component);
 

@@ -10,6 +10,7 @@ import com.ldream.ldream_core.components.Component;
 public class TypeRestriction {
 
 	private Set<Class> types;
+	private static TypeRestriction anyTypeInstance;
 
 	public TypeRestriction(Class... type) {
 		this.types = Arrays.asList(type).stream().collect(Collectors.toSet());
@@ -18,12 +19,13 @@ public class TypeRestriction {
 	public Set<Class> getTypes() {
 		return types;
 	}
+	
+	public boolean matchAny() {
+		return types.size() == 0;
+	}
 
 	public boolean match(Component c) {
-		if (types.size() == 0)
-			return true;
-		else
-			return types.contains(c.getClass());
+		return matchAny() || types.contains(c.getClass());
 	}
 
 	public String toString() {
@@ -41,6 +43,12 @@ public class TypeRestriction {
 			return types.containsAll(type.getTypes());
 		else
 			return false;
+	}
+	
+	public static TypeRestriction anyType() {
+		if (anyTypeInstance == null)
+			anyTypeInstance = new TypeRestriction();
+		return anyTypeInstance;
 	}
 
 }

@@ -3,7 +3,6 @@ package com.ldream.ldream_core.exec;
 import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.components.NoAdmissibleInteractionsException;
 import com.ldream.ldream_core.coordination.Interaction;
-import com.ldream.ldream_core.shared.Messages;
 
 public class ExhaustiveStrategy implements ExecutionStrategy {
 	
@@ -21,8 +20,7 @@ public class ExhaustiveStrategy implements ExecutionStrategy {
 	public Interaction selectInteraction(Component rootComponent) {
 		Interaction[] interactions = rootComponent.getAllAllowedInteractions();
 		if (interactions.length == 0)
-			throw new NoAdmissibleInteractionsException(
-					Messages.noAdmissibleInteractionMessage(rootComponent.getInstanceName()));
+			throw new NoAdmissibleInteractionsException(rootComponent);
 		return interactions[(int) Math.floor(Math.random()*interactions.length)];
 	}
 

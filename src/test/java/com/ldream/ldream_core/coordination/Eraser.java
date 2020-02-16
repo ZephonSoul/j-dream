@@ -19,7 +19,7 @@ public class Eraser extends AbstractComponent {
 		setRule(new FOILRule(d,
 				new Term(
 						new Tautology(),
-						new DeleteInstance(d.getScope(),d.getVariable())
+						new DeleteInstance(d.getVariable())
 						))
 				);
 	}

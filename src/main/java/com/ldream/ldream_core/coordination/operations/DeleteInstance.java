@@ -1,34 +1,20 @@
 package com.ldream.ldream_core.coordination.operations;
 
+import com.ldream.ldream_core.components.OrphanComponentException;
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 
 public class DeleteInstance extends AbstractOperation implements Operation {
 
 	public static int BASE_CODE = 2000;
-	
-	private ComponentInstance parentInstance;
+
 	private ComponentInstance targetInstance;
 
-	public DeleteInstance(
-			ComponentInstance parentInstance,
-			ComponentInstance targetInstance) {
-		
-		this.parentInstance = parentInstance;
+	public DeleteInstance(ComponentInstance targetInstance) {
 		this.targetInstance = targetInstance;
 	}
-	
-	/**
-	 * @return the parentInstance
-	 */
-	public ComponentInstance getParentInstance() {
-		return parentInstance;
-	}
 
-	/**
-	 * @return the parentInstance
-	 */
-	public ComponentInstance getTargetInstance() {
+	private ComponentInstance getTargetInstance() {
 		return targetInstance;
 	}
 
@@ -37,13 +23,19 @@ public class DeleteInstance extends AbstractOperation implements Operation {
 
 	@Override
 	public void execute() {
-		parentInstance.getComponent().removeFromPool(targetInstance.getComponent());
+		try {
+			targetInstance.getComponent().getParent().removeFromPool(
+					targetInstance.getComponent());
+		} catch (OrphanComponentException e) {
+			//Best-effort delete (if component already orphan, do nothing)
+			//TODO: link logger to log event
+		}
 	}
 
 	@Override
 	public boolean equals(Operation op) {
 		return (op instanceof DeleteInstance)
-				&& parentInstance.equals(((DeleteInstance) op).getParentInstance());
+				&& targetInstance.equals(((DeleteInstance) op).getTargetInstance());
 	}
 
 	@Override
@@ -51,21 +43,14 @@ public class DeleteInstance extends AbstractOperation implements Operation {
 			ComponentInstance componentReference, 
 			ActualComponentInstance actualComponent) {
 
-		if (parentInstance.equals(componentReference))
-			return new DeleteInstance(
-					actualComponent,
-					targetInstance);
-		else if (targetInstance.equals(componentReference))
-			return new DeleteInstance(
-					parentInstance,
-					actualComponent);
+		if (targetInstance.equals(componentReference))
+			return new DeleteInstance(actualComponent);
 		else
 			return this;
 	}
 
 	public String toString() {
-		return String.format("delete(%s.%s)",
-				parentInstance.getName(),
+		return String.format("delete(%s)",
 				targetInstance.getName());
 	}
 

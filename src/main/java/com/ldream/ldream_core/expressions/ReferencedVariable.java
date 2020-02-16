@@ -29,13 +29,13 @@ public class ReferencedVariable implements VariableExpression {
 			return false;
 	}
 	
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof ReferencedVariable)
-			return equals((ReferencedVariable)o);
-		else
-			return false;
-	}
+//	@Override
+//	public boolean equals(Object o) {
+//		if (o instanceof ReferencedVariable)
+//			return equals((ReferencedVariable)o);
+//		else
+//			return false;
+//	}
 
 	@Override
 	public Expression bindActualComponent(

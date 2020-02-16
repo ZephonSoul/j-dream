@@ -4,15 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.shared.Messages;
-
 public class Interface {
 
 	private Component owner;
 	private Set<Port> ports;
-
-	public Interface() {
-		ports = new HashSet<>();
+	
+	public Interface(Component owner,Set<Port> ports) {
+		this.owner = owner;
+		this.ports = ports;
 	}
 	
 	public Interface(Set<Port> ports) {
@@ -24,6 +23,14 @@ public class Interface {
 		for (Port p : ports) {
 			this.ports.add(p);
 		}
+	}
+	
+	public Interface(Component owner) {
+		this(owner,new HashSet<>());
+	}
+
+	public Interface() {
+		this(new HashSet<>());
 	}
 	
 	private void bindOwner() {
@@ -70,7 +77,7 @@ public class Interface {
 			if (p.getName().equals(portName))
 				return p;
 		};
-		throw new InvalidPortException(Messages.invalidPortName(portName, owner.getInstanceName()));
+		throw new InvalidPortException(portName,owner);
 	}
 
 }

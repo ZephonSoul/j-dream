@@ -66,6 +66,7 @@ public class ExecutionEngine implements Runnable {
 		if (maxCycles <= 0)
 			unboundedExecution = true;
 		output.write(MessageWritable.write(rootComponent));
+		output.write(MessageWritable.write("Expanded rule:\n",rootComponent.getCurrentRule()));
 		while (cycles < maxCycles || unboundedExecution) {
 			try {
 				Interaction interaction = executionStrategy.selectInteraction(rootComponent);

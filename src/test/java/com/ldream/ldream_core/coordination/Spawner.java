@@ -19,21 +19,28 @@ public class Spawner extends AbstractComponent {
 		var d = new Declaration(
 				Quantifier.EXISTS,
 				new ActualComponentInstance(this));
-		setRule(new OrR (
-				new Term(
+//		setRule(new OrR (
+//				new Term(
+//						new LessThan(new ActualVariable(y),new Constant(5)),
+//						new OperationsSequence(
+//								new CreateInstance(DummyComponent.class,new ActualComponentInstance(this)),
+//								new Assign(new ActualVariable(x),new Difference(new ActualVariable(x),new Constant(1))),
+//								new Assign(new ActualVariable(y),new Sum(new ActualVariable(y),new Constant(1)))				)
+//						),
+//				new FOILRule(d,
+//						new Term(
+//								new Equals(new ActualVariable(y),new Constant(5)),
+//								new DeleteInstance(d.getVariable())
+//								))
+//				)
+//				);
+		setRule(new ConjunctiveTerm(
 						new LessThan(new ActualVariable(y),new Constant(5)),
 						new OperationsSequence(
 								new CreateInstance(DummyComponent.class,new ActualComponentInstance(this)),
 								new Assign(new ActualVariable(x),new Difference(new ActualVariable(x),new Constant(1))),
 								new Assign(new ActualVariable(y),new Sum(new ActualVariable(y),new Constant(1)))				)
-						),
-				new FOILRule(d,
-						new Term(
-								new Equals(new ActualVariable(y),new Constant(5)),
-								new DeleteInstance(d.getScope(),d.getVariable())
-								))
-				)
-				);
+						));
 	}
 
 	public static void main(String[] args) {
