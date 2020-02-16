@@ -44,7 +44,7 @@ public class SimpleCompound extends AbstractComponent {
 	public static void main(String[] args) {
 		AbstractComponent c = new SimpleCompound();
 
-		System.out.println(c.toString(true, "") + "\n");
+		//System.out.println(c.toString(true, "") + "\n");
 
 		//System.out.println(c.getRule().toString());
 
@@ -55,7 +55,7 @@ public class SimpleCompound extends AbstractComponent {
 		//		for (Interaction i : c.getAllAllowedInteractions())
 		//			System.out.println(i.toString());
 		//
-		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,10);
+		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,2);
 		ex.setSnapshotSemantics(true);
 		ex.run();
 		//		//		
@@ -85,57 +85,57 @@ public class SimpleCompound extends AbstractComponent {
 		//		System.out.println(test.toString());
 		//		System.out.println(test.expandDeclarations().toString()+"\n");
 
-		var dd1 = new Declaration(
-				Quantifier.EXISTS,
-				new ActualComponentInstance(c),
-				new TypeRestriction(DummyComponent.class));
-
-		var dd2 = new Declaration(
-				Quantifier.EXISTS,
-				dd1.getVariable());
-
-		Rule test2 = 
-				new FOILRule(dd1,
-						new FOILRule(dd2,
-								new Term(new PortReference(dd2.getVariable(),"p1")))
-						);
-		System.out.println(test2.toString());
-		var t2e = test2.expandDeclarations();
-		System.out.println(t2e.toString()+"\n");
-
-		ReferencedComponentInstance newComp = new ReferencedComponentInstance();
-		Rule test3 =
-				new FOILRule(dd1,
-						new Term(
-								new PortReference(dd1.getVariable(),"p1"),
-								new OperationsSequence(
-										new CreateInstance(
-												DummyComponent.class,
-												dd1.getScope(),
-												newComp,
-												new Assign(new ReferencedVariable(newComp,"x"),new Constant(5))),
-										Skip.getInstance())
-								)
-						);
-
-		System.out.println(test3.toString());
-		var t3e = test3.expandDeclarations();
-		System.out.println(t3e.toString()+"\n");
-
-		Rule test4 =
-				new FOILRule(dd1,
-						new Term(
-								new PortReference(dd1.getVariable(),"p1"),
-								new OperationsSequence(
-										new CreateInstance(
-												DummyComponent.class,
-												dd1.getScope()),
-										Skip.getInstance())
-								)
-						);
-		System.out.println(test4.toString());
-		var t4e = test4.expandDeclarations();
-		System.out.println(t4e.toString()+"\n");
+//		var dd1 = new Declaration(
+//				Quantifier.EXISTS,
+//				new ActualComponentInstance(c),
+//				new TypeRestriction(DummyComponent.class));
+//
+//		var dd2 = new Declaration(
+//				Quantifier.EXISTS,
+//				dd1.getVariable());
+//
+//		Rule test2 = 
+//				new FOILRule(dd1,
+//						new FOILRule(dd2,
+//								new Term(new PortReference(dd2.getVariable(),"p1")))
+//						);
+//		System.out.println(test2.toString());
+//		var t2e = test2.expandDeclarations();
+//		System.out.println(t2e.toString()+"\n");
+//
+//		ReferencedComponentInstance newComp = new ReferencedComponentInstance();
+//		Rule test3 =
+//				new FOILRule(dd1,
+//						new Term(
+//								new PortReference(dd1.getVariable(),"p1"),
+//								new OperationsSequence(
+//										new CreateInstance(
+//												DummyComponent.class,
+//												dd1.getScope(),
+//												newComp,
+//												new Assign(new ReferencedVariable(newComp,"x"),new Constant(5))),
+//										Skip.getInstance())
+//								)
+//						);
+//
+//		System.out.println(test3.toString());
+//		var t3e = test3.expandDeclarations();
+//		System.out.println(t3e.toString()+"\n");
+//
+//		Rule test4 =
+//				new FOILRule(dd1,
+//						new Term(
+//								new PortReference(dd1.getVariable(),"p1"),
+//								new OperationsSequence(
+//										new CreateInstance(
+//												DummyComponent.class,
+//												dd1.getScope()),
+//										Skip.getInstance())
+//								)
+//						);
+//		System.out.println(test4.toString());
+//		var t4e = test4.expandDeclarations();
+//		System.out.println(t4e.toString()+"\n");
 	}
 
 }

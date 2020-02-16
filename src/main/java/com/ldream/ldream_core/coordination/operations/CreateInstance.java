@@ -53,8 +53,8 @@ public class CreateInstance extends AbstractOperation implements Operation {
 	}
 
 	@Override
-	public void evaluateParams() {
-		chainedOperation.evaluateParams();
+	public void evaluateOperands() {
+		chainedOperation.evaluateOperands();
 	}
 
 	@Override
@@ -62,8 +62,11 @@ public class CreateInstance extends AbstractOperation implements Operation {
 		try {
 			Component newComponent = componentType.getConstructor().newInstance();
 			parentInstance.getComponent().addToPool(newComponent);
-			if (newInstance instanceof ReferencedComponentInstance)
-				chainedOperation.bindActualComponent(newInstance, new ActualComponentInstance(newComponent));
+			if (newInstance instanceof ReferencedComponentInstance) {
+				chainedOperation = chainedOperation.bindActualComponent(
+						newInstance, new ActualComponentInstance(newComponent));
+				chainedOperation.evaluateOperands();
+			}
 			chainedOperation.execute();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
@@ -106,6 +109,11 @@ public class CreateInstance extends AbstractOperation implements Operation {
 					);
 		else
 			return this;
+	}
+	
+	@Override
+	public void clearCache() {
+		chainedOperation.clearCache();
 	}
 
 	public String toString() {

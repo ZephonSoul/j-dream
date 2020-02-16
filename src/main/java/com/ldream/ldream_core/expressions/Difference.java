@@ -11,27 +11,22 @@ import com.ldream.ldream_core.coordination.ComponentInstance;
  *
  */
 @SuppressWarnings("serial")
-public class Difference extends AbstractExpression {
-
-	private Expression operand1,operand2;
-
-	public Difference(Expression operand1,Expression operand2) {
-		this.operand1 = operand1;
-		this.operand2 = operand2;
+public class Difference extends AbstractBinaryExpression {
+	
+	public Difference(
+			Expression operand1,
+			Expression operand2,
+			Number operandValue1,
+			Number operandValue2) {
+		
+		super(operand1,operand2,operandValue1,operandValue2);
 	}
 
-	/**
-	 * @return the operand1
-	 */
-	public Expression getOperand1() {
-		return operand1;
-	}
-
-	/**
-	 * @return the operand2
-	 */
-	public Expression getOperand2() {
-		return operand2;
+	public Difference(
+			Expression operand1,
+			Expression operand2) {
+		
+		super(operand1,operand2);
 	}
 
 	@Override
@@ -39,35 +34,28 @@ public class Difference extends AbstractExpression {
 			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
 
-		return new Difference(operand1.bindActualComponent(componentVariable, actualComponent),
-				operand2.bindActualComponent(componentVariable, actualComponent));
-	}
-
-	@Override
-	public Number eval() {
-		// check if both operands are integer
-		Number val1 = operand1.eval(),
-				val2 = operand2.eval();
-		boolean int_operands = 
-				(val1.intValue() == (int)val1.doubleValue()) &&
-				(val2.intValue() == (int)val2.doubleValue());
-		Number result = val1.doubleValue() - val2.doubleValue();
-		// return integer result if both operands are integer AND the result is integer
-		if (int_operands && (result.intValue() == (int)result.doubleValue()))
-			return result.intValue();
-		else
-			return result;
+		return new Difference(
+				operand1.bindActualComponent(componentVariable, actualComponent),
+				operand2.bindActualComponent(componentVariable, actualComponent),
+				operandValue1,
+				operandValue2);
 	}
 
 	@Override
 	public boolean equals(Expression ex) {
-		return (ex instanceof Difference) &&
-				operand1.equals(((Difference) ex).getOperand1()) &&
-				operand2.equals(((Difference) ex).getOperand2());
+		return (ex instanceof Difference) 
+				&& operand1.equals(((Difference) ex).getOperand1()) 
+				&& operand2.equals(((Difference) ex).getOperand2());
 	}
-	
-	public String toString() {
-		return operand1.toString() + "-" + operand2.toString();
+
+	@Override
+	public String getOperatorSymbol() {
+		return "-";
+	}
+
+	@Override
+	public Number op(Number n1, Number n2) {
+		return n1.doubleValue() - n2.doubleValue();
 	}
 
 }

@@ -7,7 +7,7 @@ import com.ldream.ldream_core.coordination.operations.OperationsSet;
 import com.ldream.ldream_core.coordination.operations.Skip;
 
 public class Term implements Rule  {
-	
+
 	Formula constraint;
 	Operation operation;
 	private Interaction cachedInteraction;
@@ -17,11 +17,11 @@ public class Term implements Rule  {
 		this.constraint = constraint;
 		this.operation = ops;
 	}
-	
+
 	public Term(Formula constraint) {
 		this(constraint,Skip.getInstance());
 	}
-	
+
 	public Term(Operation ops) {
 		this(Tautology.getInstance(),ops);
 	}
@@ -59,26 +59,32 @@ public class Term implements Rule  {
 	public Rule bindActualComponent(
 			ComponentInstance componentReference, 
 			ActualComponentInstance actualComponent) {
-		
+
 		return new Term(constraint.bindActualComponent(componentReference,actualComponent),
 				operation.bindActualComponent(componentReference,actualComponent));
 	}
-	
+
 	@Override
 	public Rule expandDeclarations() {
 		return this;
 	}
-	
-	public String toString() {
-		return String.format("(%s -> %s)", constraint.toString(), operation.toString());
-	}
 
 	@Override
 	public boolean equals(Rule rule) {
-		if (rule instanceof Term)
-			return constraint.equals(((Term) rule).getConstraint())
-					&& operation.equals(((Term) rule).getOperation());
-		return false;
+		return (rule instanceof Term)
+				&& constraint.equals(((Term) rule).getConstraint())
+				&& operation.equals(((Term) rule).getOperation());
+	}
+
+	@Override
+	public void clearCache() {
+		cachedInteraction = null;
+		constraint.clearCache();
+		operation.clearCache();
+	}
+
+	public String toString() {
+		return String.format("(%s -> %s)", constraint.toString(), operation.toString());
 	}
 
 }

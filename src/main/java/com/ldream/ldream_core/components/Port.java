@@ -1,7 +1,7 @@
 package com.ldream.ldream_core.components;
 
 public class Port {
-	
+
 	final static int BASE_CODE = 9;
 
 	private Component component;
@@ -27,19 +27,17 @@ public class Port {
 	public void setComponent(Component component) {
 		this.component = component;
 	}
-	
+
 	public boolean equals(Port port) {
-		return (this.name.equals(port.getName()) && this.component.equals(port.getComponent()));
+		return (this.name.equals(port.getName()) 
+				&& this.component.equals(port.getComponent()));
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Port)
-			return equals((Port) o);
-		else
-			return false;
+		return (o instanceof Port) && equals((Port) o);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int idCode = 1;
@@ -47,10 +45,10 @@ public class Port {
 			idCode = component.getId()*BASE_CODE;
 		}
 		int nameCode = name.hashCode();
-		
+
 		return nameCode*idCode;		
 	}
-	
+
 	public String toString() {
 		String id = "";
 		if (component != null) {
@@ -58,7 +56,7 @@ public class Port {
 		}
 		return String.format("%s[%s]", name, id);
 	}
-	
+
 	public void trigger() {
 		component.activatePort(this);
 	}

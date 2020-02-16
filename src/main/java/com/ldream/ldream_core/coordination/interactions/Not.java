@@ -4,12 +4,10 @@ import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 
-public class Not implements Formula {
-	
-	private Formula subformula;
+public class Not extends AbstractUnaryFormula implements Formula {
 
 	public Not(Formula subformula) {
-		this.subformula = subformula;
+		super(subformula);
 	}
 
 	/**
@@ -28,21 +26,19 @@ public class Not implements Formula {
 	public Formula bindActualComponent(
 			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
-		
+
 		return new Not(subformula.bindActualComponent(componentVariable, actualComponent));
 	}
-	
+
 	@Override
 	public String toString() {
 		return "¬" + subformula.toString();
 	}
-	
+
 	@Override
 	public boolean equals(Formula formula) {
-		if (formula instanceof Not)
-			return subformula.equals(((Not) formula).getSubformula());
-		else
-			return false;
+		return (formula instanceof Not)
+				&& equalSubformula((Not) formula);
 	}
 
 }

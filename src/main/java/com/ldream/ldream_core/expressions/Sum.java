@@ -1,20 +1,24 @@
 package com.ldream.ldream_core.expressions;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 
 @SuppressWarnings("serial")
-public class Sum extends AbstractMultiOperandsExpression {
+public class Sum extends AbstractEnnaryExpression {
 
-	public Sum(Expression... params) {
-		super(params);
+	public Sum(Expression[] operands, Number[] operandsValue) {
+		super(operands,operandsValue);
 	}
-	
-	public Sum(List<Expression> params) {
-		super(params);
+
+	public Sum(Expression... operands) {
+		super(operands);
+	}
+
+	public Sum(List<Expression> operands) {
+		super(operands);
 	}
 
 	@Override
@@ -36,10 +40,11 @@ public class Sum extends AbstractMultiOperandsExpression {
 	public Expression bindActualComponent(
 			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
-		
-		return new Sum(operands.stream()
+
+		return new Sum(Arrays.stream(operands)
 				.map(e -> e.bindActualComponent(componentVariable, actualComponent))
-				.collect(Collectors.toList()));
+				.toArray(Expression[]::new),
+				operandsValue);
 	}
 
 }

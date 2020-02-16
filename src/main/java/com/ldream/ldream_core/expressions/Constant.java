@@ -26,16 +26,21 @@ public class Constant implements Expression {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Constant)
-			return equals((Constant) o);
-		else
-			return false;
+		return (o instanceof Constant) && equals((Constant) o);
 	}
 	
 	@Override
 	public boolean equals(Expression ex) {
-		return (ex.getClass().equals(Constant.class) && 
-				value.equals(((Constant)ex).getValue()));
+		return (ex.getClass().equals(Constant.class) 
+				&& value.equals(((Constant)ex).getValue()));
+	}
+
+	@Override
+	public Expression bindActualComponent(
+			ComponentInstance componentVariable, 
+			ActualComponentInstance actualComponent) {
+		
+		return this;
 	}
 
 	@Override
@@ -44,8 +49,9 @@ public class Constant implements Expression {
 	}
 
 	@Override
-	public Expression bindActualComponent(ComponentInstance componentVariable, ActualComponentInstance actualComponent) {
-		return this;
-	}
+	public void evaluateOperands() {}
+	
+	@Override
+	public void clearCache() {}
 
 }

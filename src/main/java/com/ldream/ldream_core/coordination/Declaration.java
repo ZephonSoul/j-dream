@@ -139,10 +139,8 @@ public class Declaration implements Bindable<Declaration> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Declaration)
-			return equals((Declaration)o);
-		else
-			return false;
+		return (o instanceof Declaration)
+				&& equals((Declaration)o);
 	}
 
 	@Override

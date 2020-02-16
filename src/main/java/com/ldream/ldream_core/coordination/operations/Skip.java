@@ -3,7 +3,7 @@ package com.ldream.ldream_core.coordination.operations;
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 
-public class Skip implements Operation {
+public class Skip extends AbstractOperation implements Operation {
 	
 	final static int BASE_CODE = 0;
 	private static Skip instance;
@@ -15,7 +15,7 @@ public class Skip implements Operation {
 	}
 
 	@Override
-	public void evaluateParams() {}
+	public void evaluateOperands() {}
 
 	@Override
 	public void execute() {}
@@ -26,9 +26,12 @@ public class Skip implements Operation {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
-		return (o instanceof Skip);
+	public Operation bindActualComponent(ComponentInstance componentReference, ActualComponentInstance actualComponent) {
+		return this;
 	}
+	
+	@Override
+	public void clearCache() {}
 	
 	public boolean equals(Operation op) {
 		return (op instanceof Skip);
@@ -36,11 +39,6 @@ public class Skip implements Operation {
 	
 	public String toString() {
 		return "skip()";
-	}
-
-	@Override
-	public Operation bindActualComponent(ComponentInstance componentReference, ActualComponentInstance actualComponent) {
-		return this;
 	}
 
 }

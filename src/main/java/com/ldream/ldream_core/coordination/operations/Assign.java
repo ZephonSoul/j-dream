@@ -7,13 +7,12 @@ import com.ldream.ldream_core.expressions.ActualVariable;
 import com.ldream.ldream_core.expressions.VariableExpression;
 
 public class Assign extends AbstractOperation implements Operation {
-	
+
 	final static int BASE_CODE = 100;
 
 	private VariableExpression localVariable;
 	private Expression valueExpression;
-	private Number value;
-	
+
 	public Assign(VariableExpression localVariable, Expression valueExpression) {
 		this.localVariable = localVariable;
 		this.valueExpression = valueExpression;
@@ -27,57 +26,55 @@ public class Assign extends AbstractOperation implements Operation {
 	}
 
 	/**
-	 * @return the value
-	 */
-	public Number getValue() {
-		return value;
-	}
-
-	/**
 	 * @return the localVariable
 	 */
 	public VariableExpression getLocalVariable() {
 		return localVariable;
 	}
-	
+
 	@Override
-	public void evaluateParams() {
-		value = valueExpression.eval();
+	public void evaluateOperands() {
+		valueExpression.evaluateOperands();
 	}
 
 	@Override
 	public void execute() {
 		if (localVariable instanceof ActualVariable)
-			((ActualVariable)localVariable).getLocalVariable().setValue(value);
+			((ActualVariable)localVariable).getLocalVariable().setValue(valueExpression.eval());
 		//TODO: raise exception otherwise
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return BASE_CODE + localVariable.hashCode() + valueExpression.hashCode();
-	}
-	
-	public boolean equals(Operation op) {
-		boolean test = (op instanceof Assign) && 
-				(valueExpression.equals(((Assign)op).getValueExpression())) &&
-				(localVariable.equals(((Assign)op).getLocalVariable()));
-		return test;
-	}
-	
-	public String toString() {
-		return String.format("assign(%s,%s)",
-				localVariable.toString(),
-				valueExpression.toString());
 	}
 
 	@Override
 	public Operation bindActualComponent(
 			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
-		
+
 		return new Assign(
-				(VariableExpression)localVariable.bindActualComponent(componentVariable, actualComponent),
-				valueExpression.bindActualComponent(componentVariable, actualComponent));
+				(VariableExpression) localVariable.bindActualComponent(
+						componentVariable, actualComponent),
+				valueExpression.bindActualComponent(
+						componentVariable, actualComponent));
+	}
+
+	public void clearCache() {
+		valueExpression.clearCache();
+	}
+
+	public boolean equals(Operation op) {
+		return (op instanceof Assign) 
+				&& (valueExpression.equals(((Assign)op).getValueExpression())) 
+				&& (localVariable.equals(((Assign)op).getLocalVariable()));
+	}
+
+	public String toString() {
+		return String.format("assign(%s,%s)",
+				localVariable.toString(),
+				valueExpression.toString());
 	}
 
 }

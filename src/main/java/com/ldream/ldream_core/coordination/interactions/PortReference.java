@@ -4,7 +4,7 @@ import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 
-public class PortReference implements Formula {
+public class PortReference extends AbstractFormula implements Formula {
 	
 	private ComponentInstance componentInstance;
 
@@ -54,11 +54,9 @@ public class PortReference implements Formula {
 	
 	@Override
 	public boolean equals(Formula formula) {
-		if (formula instanceof PortReference)
-			return componentInstance.equals(((PortReference) formula).getComponentInstance())
-					&& portName.equals(((PortReference) formula).getPortName());
-		else
-			return false;
+		return (formula instanceof PortReference)
+			&& componentInstance.equals(((PortReference) formula).getComponentInstance())
+			&& portName.equals(((PortReference) formula).getPortName());
 	}
 
 }

@@ -137,10 +137,7 @@ public class Pool {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Pool) {
-			return equals((Pool) o);
-		} else
-			return false;
+		return (o instanceof Pool) && equals((Pool) o);
 	}
 	
 	public boolean equals(Pool pool) {

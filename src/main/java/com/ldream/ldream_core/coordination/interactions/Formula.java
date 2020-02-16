@@ -8,5 +8,7 @@ public interface Formula extends Bindable<Formula> {
 	public boolean sat(Interaction i);
 	
 	public boolean equals(Formula formula);
+
+	public void clearCache();
 	
 }

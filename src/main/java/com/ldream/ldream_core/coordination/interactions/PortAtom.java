@@ -5,7 +5,7 @@ import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 
-public class PortAtom implements Formula {
+public class PortAtom extends AbstractFormula implements Formula {
 
 	private Port port;
 
@@ -35,10 +35,8 @@ public class PortAtom implements Formula {
 
 	@Override
 	public boolean equals(Formula formula) {
-		if (formula instanceof PortAtom)
-			return port.equals(((PortAtom) formula).getPort());
-		else
-			return false;
+		return (formula instanceof PortAtom)
+				&& port.equals(((PortAtom) formula).getPort());
 	}
 
 

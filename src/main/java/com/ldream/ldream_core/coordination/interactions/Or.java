@@ -7,12 +7,12 @@ import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 
-public class Or extends AbstractFormula implements Formula {
+public class Or extends AbstractEnnaryFormula implements Formula {
 
 	public Or(Formula... subformulas) {
 		super(subformulas);
 	}
-	
+
 	public Or(List<Formula> subformulas) {
 		super(subformulas);
 	}
@@ -32,22 +32,20 @@ public class Or extends AbstractFormula implements Formula {
 	public Formula bindActualComponent(
 			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
-		
+
 		return new Or(subformulas.stream()
 				.map(f -> f.bindActualComponent(componentVariable, actualComponent))
 				.collect(Collectors.toList()));
 	}
-	
+
 	public String getConnectiveSymbol() {
 		return "\\/";
 	}
-	
+
 	@Override
 	public boolean equals(Formula formula) {
-		if (formula instanceof Or)
-			return equalSubformulas((Or) formula);
-		else
-			return false;
+		return (formula instanceof Or)
+				&& equalSubformulas((Or) formula);
 	}
 
 }

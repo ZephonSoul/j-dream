@@ -64,10 +64,7 @@ public class Store {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Store)
-			return equals((Store) o);
-		else
-			return false;
+		return (o instanceof Store) && equals((Store) o);
 	}
 
 }

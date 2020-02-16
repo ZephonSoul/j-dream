@@ -60,10 +60,7 @@ public class OrR extends AbstractPILRule implements Rule {
 
 	@Override
 	public boolean equals(Rule rule) {
-		if (rule instanceof OrR)
-			return equalSubRules((OrR) rule);
-		else
-			return false;
+		return (rule instanceof OrR) 	&& equalSubRules((OrR) rule);
 	}
 
 }

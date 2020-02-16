@@ -129,7 +129,7 @@ public class PILFrameworkTest {
 	@DisplayName("lvar1 := lvar2 + 3")
 	void assignmentTest() {
 		Operation op = new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3));
-		op.evaluateParams();
+		op.evaluateOperands();
 		assertEquals(lvar1.getValue(),0);
 		assertEquals(lvar2.getValue(),5);
 		op.execute();
@@ -142,8 +142,8 @@ public class PILFrameworkTest {
 	void assignmentSequenceTest() {
 		Operation op1 = new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3));
 		Operation op2 = new Assign(new ActualVariable(lvar2), new Product(new ActualVariable(lvar1),n3));
-		op1.evaluateParams();
-		op2.evaluateParams();
+		op1.evaluateOperands();
+		op2.evaluateOperands();
 		assertEquals(lvar1.getValue(),0);
 		assertEquals(lvar2.getValue(),5);
 		op1.execute();

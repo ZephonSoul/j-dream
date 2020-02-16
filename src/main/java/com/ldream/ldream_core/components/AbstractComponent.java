@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.ldream.ldream_core.coordination.AndR;
 import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.coordination.Rule;
 import com.ldream.ldream_core.coordination.Term;
@@ -151,7 +153,7 @@ public abstract class AbstractComponent implements Component {
 
 	public void setRule(Rule cRule) {
 		this.cRule = cRule;
-		this.cRule_cached = cRule.expandDeclarations();
+		this.cRule_cached = null;
 	}
 
 	@Override
@@ -191,8 +193,10 @@ public abstract class AbstractComponent implements Component {
 	public Interaction getAllowedInteraction() {
 		Interaction interaction;
 		Set<Interaction> forbiddenInteractions = new HashSet<>();
-		if (cRule_cached == null)
+		if (cRule_cached == null) {
+			cRule.clearCache();
 			cRule_cached = cRule.expandDeclarations();
+		}
 		boolean sat = false;
 		do {
 			interaction = cIterator.next();
@@ -276,7 +280,7 @@ public abstract class AbstractComponent implements Component {
 		cIterator = new ComponentInteractionIterator(cInterface);
 		cPool.refresh();
 		cIterator.setPoolIterator(cPool.getInteractionIterator());
-		cRule_cached = cRule.expandDeclarations();
+		cRule_cached = null;
 	}
 
 	@Override
@@ -292,7 +296,13 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public Rule getCurrentRule() {
-		return cRule_cached;
+		if (cPool.isEmpty())
+			return cRule_cached;
+		else
+			return new AndR(cRule_cached,
+					new AndR(cPool.getComponents().stream()
+							.map(Component::getCurrentRule)
+							.collect(Collectors.toList())));
 	}
 
 	@Override
@@ -302,10 +312,8 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Component) 
-			return equals((Component) o);
-		else
-			return false;
+		return (o instanceof Component) 
+				&& equals((Component) o);
 	}
 
 	public boolean equals(Component component) {

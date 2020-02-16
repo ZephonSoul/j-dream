@@ -3,7 +3,7 @@ package com.ldream.ldream_core.components;
 public class LocalVariable {
 
 	final static int BASE_CODE = 777;
-	
+
 	protected String name;
 	protected Number value;
 	protected Component component;
@@ -12,7 +12,7 @@ public class LocalVariable {
 		this.name = name;
 		this.value = value;
 	}
-	
+
 	public LocalVariable(String name, Number value, Component component) {
 		this(name,value);
 		this.component = component;
@@ -21,7 +21,7 @@ public class LocalVariable {
 	public LocalVariable(String name) {
 		this(name,0);
 	}
-	
+
 	public LocalVariable(Number value) {
 		this("x"+(int)(Math.random()*30000),value);
 	}
@@ -57,13 +57,11 @@ public class LocalVariable {
 		//TODO: make more robust comparing name and component owner
 		return getInstanceName().equals(var.getInstanceName());
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof LocalVariable)
-			return equals((LocalVariable) o);
-		else
-			return false;
+		return (o instanceof LocalVariable)
+				&& equals((LocalVariable) o);
 	}
 
 	/**

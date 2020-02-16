@@ -19,7 +19,7 @@ public class DeleteInstance extends AbstractOperation implements Operation {
 	}
 
 	@Override
-	public void evaluateParams() {}
+	public void evaluateOperands() {}
 
 	@Override
 	public void execute() {
@@ -53,6 +53,9 @@ public class DeleteInstance extends AbstractOperation implements Operation {
 		else
 			return this;
 	}
+	
+	@Override
+	public void clearCache() {}
 
 	public String toString() {
 		return String.format("delete(%s)",

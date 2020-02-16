@@ -2,13 +2,11 @@ package com.ldream.ldream_core.expressions;
 
 @SuppressWarnings("serial")
 public abstract class AbstractExpression extends Number implements Expression {
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Expression)
-			return equals((Expression) o);
-		else
-			return false;
+		return (o instanceof Expression)
+				&& equals((Expression) o);
 	}
 
 	@Override
@@ -30,5 +28,20 @@ public abstract class AbstractExpression extends Number implements Expression {
 	public double doubleValue() {
 		return eval().doubleValue();
 	}
-	
+
+	@Override
+	public Number eval() {
+		evaluateOperands();
+		if (allOperandsValued()) {
+			return computeResult();
+		}
+		else
+			//TODO: throw exception
+			return null;
+	}
+
+	protected abstract Number computeResult();
+
+	protected abstract boolean allOperandsValued();
+
 }

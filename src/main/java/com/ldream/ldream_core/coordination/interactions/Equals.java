@@ -47,10 +47,8 @@ public class Equals extends AbstractPredicate implements Predicate {
 
 	@Override
 	public boolean equals(Formula formula) {
-		if (formula instanceof Equals)
-			return equalTerms((Equals) formula);
-		else
-			return false;
+		return (formula instanceof Equals)
+				&& equalTerms((Equals) formula);
 	}
 
 }

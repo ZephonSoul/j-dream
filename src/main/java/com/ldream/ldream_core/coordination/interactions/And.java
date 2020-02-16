@@ -7,7 +7,7 @@ import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 
-public class And extends AbstractFormula implements Formula {
+public class And extends AbstractEnnaryFormula implements Formula {
 
 	public And(Formula... subformulas) {
 		super(subformulas);
@@ -45,10 +45,8 @@ public class And extends AbstractFormula implements Formula {
 
 	@Override
 	public boolean equals(Formula formula) {
-		if (formula instanceof And)
-			return equalSubformulas((And) formula);
-		else
-			return false;
+		return (formula instanceof And)
+				&& equalSubformulas((And) formula);
 	}
 
 }

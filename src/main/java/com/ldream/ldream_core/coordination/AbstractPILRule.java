@@ -49,10 +49,12 @@ public abstract class AbstractPILRule implements Rule {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Rule)
-			return equals((Rule) o);
-		else
-			return false;
+		return (o instanceof Rule) && equals((Rule) o);
+	}
+	
+	@Override
+	public void clearCache() {
+		rules.stream().forEach(Rule::clearCache);
 	}
 	
 	protected boolean equalSubRules(AbstractPILRule rule) {
@@ -60,8 +62,8 @@ public abstract class AbstractPILRule implements Rule {
 	}
 
 	public String toString() {
-		return rules.stream().map(Rule::toString)
-				.collect(Collectors.joining(" " + getConnectiveSymbol() +" "));
+		return "(" + rules.stream().map(Rule::toString)
+				.collect(Collectors.joining(" " + getConnectiveSymbol() +" ")) + ")";
 	}
 	
 	protected abstract boolean checkSat(Interaction i);

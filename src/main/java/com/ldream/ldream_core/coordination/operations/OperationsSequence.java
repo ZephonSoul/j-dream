@@ -23,17 +23,9 @@ public class OperationsSequence extends AbstractOperation implements Operation {
 		return operations;
 	}
 	
-	protected List<String> getOperationsString() {
-		return operations.stream().map(Operation::toString).collect(Collectors.toList());
-	}
-	
-	public String toString() {
-		return "(" + String.join(";", getOperationsString()) + ")";
-	}
-	
 	@Override
-	public void evaluateParams() {
-		operations.stream().forEach(Operation::evaluateParams);
+	public void evaluateOperands() {
+		operations.stream().forEach(Operation::evaluateOperands);
 	}
 
 	@Override
@@ -51,6 +43,16 @@ public class OperationsSequence extends AbstractOperation implements Operation {
 			code += o.hashCode();
 		return code;
 	}
+
+	@Override
+	public void execute() {
+		operations.stream().forEach(Operation::execute);
+	}
+	
+	@Override
+	public void clearCache() {
+		operations.stream().forEach(Operation::clearCache);
+	}
 	
 	public boolean equals(Operation op) {
 		if (op instanceof OperationsSequence) {
@@ -65,10 +67,13 @@ public class OperationsSequence extends AbstractOperation implements Operation {
 		}
 		return false;
 	}
-
-	@Override
-	public void execute() {
-		operations.stream().forEach(Operation::execute);
+	
+	protected List<String> getOperationsString() {
+		return operations.stream().map(Operation::toString).collect(Collectors.toList());
+	}
+	
+	public String toString() {
+		return "(" + String.join(";", getOperationsString()) + ")";
 	}
 
 }

@@ -33,10 +33,12 @@ public abstract class AbstractPredicate implements Predicate {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Predicate)
-			return equals((Predicate) o);
-		else
-			return false;
+		return (o instanceof Predicate)	&& equals((Predicate) o);
+	}
+	
+	@Override
+	public void clearCache() {
+		terms.stream().forEach(Expression::clearCache);
 	}
 	
 	@Override

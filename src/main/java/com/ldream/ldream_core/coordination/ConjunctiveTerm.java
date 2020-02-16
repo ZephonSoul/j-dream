@@ -95,22 +95,27 @@ public class ConjunctiveTerm implements Rule  {
 		return this;
 	}
 
+	@Override
+	public boolean equals(Rule rule) {
+		return (rule instanceof ConjunctiveTerm)
+				&& constraint.equals(((ConjunctiveTerm) rule).getConstraint())
+				&& requirement.equals(((ConjunctiveTerm) rule).getRequirement())
+				&& operation.equals(((ConjunctiveTerm) rule).getOperation());
+	}
+
+	@Override
+	public void clearCache() {
+		cachedInteraction = null;
+		constraint.clearCache();
+		requirement.clearCache();
+		operation.clearCache();
+	}
+
 	public String toString() {
 		return String.format("(%s ► %s -> %s)", 
 				constraint.toString(), 
 				requirement.toString(),
 				operation.toString());
-	}
-
-
-	@Override
-	public boolean equals(Rule rule) {
-		if (rule instanceof ConjunctiveTerm)
-			return constraint.equals(((ConjunctiveTerm) rule).getConstraint())
-					&& requirement.equals(((ConjunctiveTerm) rule).getRequirement())
-					&& operation.equals(((ConjunctiveTerm) rule).getOperation());
-		else
-			return false;
 	}
 
 }

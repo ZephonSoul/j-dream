@@ -1,6 +1,7 @@
 package com.ldream.ldream_core.coordination;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.interactions.Contradiction;
 import com.ldream.ldream_core.coordination.interactions.Tautology;
@@ -37,7 +38,7 @@ public class FOILRule implements Rule {
 			else
 				ruleInstance = new AndR(declaration.getActualComponents().stream()
 						.map(c -> rule.bindActualComponent(declaration.getVariable(), c))
-						.toArray(Rule[]::new));
+						.collect(Collectors.toList()));
 			break;
 		case EXISTS:
 			if (matchingInstances.isEmpty())
@@ -45,7 +46,7 @@ public class FOILRule implements Rule {
 			else
 				ruleInstance = new OrR(declaration.getActualComponents().stream()
 						.map(c -> rule.bindActualComponent(declaration.getVariable(), c))
-						.toArray(Rule[]::new));
+						.collect(Collectors.toList()));
 			break;
 		}
 		return ruleInstance;
@@ -77,6 +78,12 @@ public class FOILRule implements Rule {
 			ruleInstance = expandDeclarations();
 		return ruleInstance.getOperationsForInteraction(i);
 	}
+	
+	@Override
+	public void clearCache() {
+		ruleInstance = null;
+		rule.clearCache();
+	}
 
 	@Override
 	public String toString() {
@@ -87,11 +94,9 @@ public class FOILRule implements Rule {
 
 	@Override
 	public boolean equals(Rule rule) {
-		if (rule instanceof FOILRule)
-			return declaration.equals(((FOILRule) rule).getDeclaration())
-					&& rule.equals(((FOILRule) rule).getRule());
-		else
-			return false;
+		return (rule instanceof FOILRule)
+			&& declaration.equals(((FOILRule) rule).getDeclaration())
+			&& rule.equals(((FOILRule) rule).getRule());
 	}
 
 }

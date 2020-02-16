@@ -27,10 +27,8 @@ public class ReferencedComponentInstance implements ComponentInstance {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof ReferencedComponentInstance)
-			return equals((ReferencedComponentInstance) o);
-		else
-			return false;
+		return (o instanceof ReferencedComponentInstance)
+				&& equals((ReferencedComponentInstance) o);
 	}
 
 	@Override

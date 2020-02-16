@@ -4,9 +4,11 @@ import com.ldream.ldream_core.components.LocalVariable;
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 
-public class ActualVariable implements VariableExpression {
+@SuppressWarnings("serial")
+public class ActualVariable extends AbstractExpression implements VariableExpression {
 	
 	private LocalVariable localVariable;
+	private Number variableValue;
 	
 	public ActualVariable(LocalVariable localVariable) {
 		this.localVariable = localVariable;
@@ -28,14 +30,6 @@ public class ActualVariable implements VariableExpression {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof ActualVariable)
-			return equals((ActualVariable)o);
-		else
-			return false;
-	}
-	
-	@Override
 	public int hashCode() {
 		return localVariable.hashCode();
 	}
@@ -51,6 +45,27 @@ public class ActualVariable implements VariableExpression {
 	@Override
 	public String toString() {
 		return localVariable.getInstanceName();
+	}
+
+	@Override
+	public void evaluateOperands() {
+		if (variableValue == null)
+			variableValue = localVariable.getValue();
+	}
+
+	@Override
+	public Number computeResult() {
+		return variableValue;
+	}
+
+	@Override
+	public boolean allOperandsValued() {
+		return (variableValue != null);
+	}
+
+	@Override
+	public void clearCache() {
+		variableValue = null;
 	}
 
 }

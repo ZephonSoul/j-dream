@@ -39,10 +39,8 @@ public class TypeRestriction {
 	}
 	
 	public boolean equals(TypeRestriction type) {
-		if (types.size() == type.getTypes().size())
-			return types.containsAll(type.getTypes());
-		else
-			return false;
+		return (types.size() == type.getTypes().size())
+				&& types.containsAll(type.getTypes());
 	}
 	
 	public static TypeRestriction anyType() {
@@ -53,10 +51,8 @@ public class TypeRestriction {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof TypeRestriction)
-			return equals((TypeRestriction) o);
-		else
-			return false;
+		return (o instanceof TypeRestriction)
+				&& equals((TypeRestriction) o);
 	}
 
 }

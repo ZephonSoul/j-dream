@@ -3,8 +3,8 @@
  */
 package com.ldream.ldream_core.expressions;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
@@ -14,14 +14,18 @@ import com.ldream.ldream_core.coordination.ComponentInstance;
  *
  */
 @SuppressWarnings("serial")
-public class Product extends AbstractMultiOperandsExpression {
+public class Product extends AbstractEnnaryExpression {
 	
-	public Product(Expression... params) {
-		super(params);
+	public Product(Expression[] operands,Number[] operandsValue) {
+		super(operands,operandsValue);
 	}
 	
-	public Product(List<Expression> params) {
-		super(params);
+	public Product(Expression... operands) {
+		super(operands);
+	}
+	
+	public Product(List<Expression> operands) {
+		super(operands);
 	}
 
 	@Override
@@ -44,8 +48,9 @@ public class Product extends AbstractMultiOperandsExpression {
 			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
 
-		return new Product(operands.stream()
+		return new Product(Arrays.stream(operands)
 				.map(e -> e.bindActualComponent(componentVariable, actualComponent))
-				.collect(Collectors.toList()));
+				.toArray(Expression[]::new),
+				operandsValue);
 	}
 }

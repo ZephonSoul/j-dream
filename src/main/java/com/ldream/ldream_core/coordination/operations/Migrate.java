@@ -34,7 +34,7 @@ public class Migrate extends AbstractOperation implements Operation {
 	}
 
 	@Override
-	public void evaluateParams() {}
+	public void evaluateOperands() {}
 
 	@Override
 	public void execute() {
@@ -77,6 +77,9 @@ public class Migrate extends AbstractOperation implements Operation {
 		else
 			return this;
 	}
+	
+	@Override
+	public void clearCache() {}
 
 	public String toString() {
 		return String.format("migrate(%s,%s)",
