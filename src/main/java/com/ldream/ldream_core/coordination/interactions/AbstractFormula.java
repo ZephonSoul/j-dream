@@ -17,11 +17,27 @@ public abstract class AbstractFormula implements Formula {
 	public AbstractFormula(List<Formula> subformulas) {
 		this.subformulas = subformulas;
 	}
+	
+	public List<Formula> getSubformulas() {
+		return subformulas;
+	}
 
 	public String toString() {
 		return "(" + 
 				subformulas.stream().map(Formula::toString).collect(Collectors.joining(getConnectiveSymbol()))
 				+ ")";
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Formula)
+			return equals((Formula) o);
+		else
+			return false;
+	}
+	
+	public boolean equalSubformulas(AbstractFormula formula) {
+		return subformulas.equals(formula.getSubformulas());
 	}
 
 	@Override

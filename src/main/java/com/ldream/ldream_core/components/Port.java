@@ -2,7 +2,7 @@ package com.ldream.ldream_core.components;
 
 public class Port {
 	
-	public static int BASE_CODE = 9;
+	final static int BASE_CODE = 9;
 
 	private Component component;
 	private String name;
@@ -30,6 +30,14 @@ public class Port {
 	
 	public boolean equals(Port port) {
 		return (this.name.equals(port.getName()) && this.component.equals(port.getComponent()));
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Port)
+			return equals((Port) o);
+		else
+			return false;
 	}
 	
 	@Override

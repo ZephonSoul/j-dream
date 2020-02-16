@@ -19,6 +19,10 @@ public abstract class AbstractPILRule implements Rule {
 	public AbstractPILRule(List<Rule> rules) {
 		this.rules = rules;
 	}
+
+	private List<Rule> getRules() {
+		return rules;
+	}
 	
 	@Override
 	public boolean sat(Interaction i) {
@@ -43,6 +47,18 @@ public abstract class AbstractPILRule implements Rule {
 		return executableOps;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Rule)
+			return equals((Rule) o);
+		else
+			return false;
+	}
+	
+	protected boolean equalSubRules(AbstractPILRule rule) {
+		return rules.equals(rule.getRules());
+	}
+
 	public String toString() {
 		return rules.stream().map(Rule::toString)
 				.collect(Collectors.joining(" " + getConnectiveSymbol() +" "));

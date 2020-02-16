@@ -3,7 +3,6 @@ package com.ldream.ldream_core.coordination;
 import java.util.Set;
 
 import com.ldream.ldream_core.coordination.interactions.Contradiction;
-import com.ldream.ldream_core.coordination.interactions.Not;
 import com.ldream.ldream_core.coordination.interactions.Tautology;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
@@ -16,6 +15,14 @@ public class FOILRule implements Rule {
 	public FOILRule(Declaration declaration,Rule rule) {
 		this.declaration = declaration;
 		this.rule = rule;
+	}
+
+	public Rule getRule() {
+		return rule;
+	}
+
+	private Declaration getDeclaration() {
+		return declaration;
 	}
 
 	@Override
@@ -76,6 +83,15 @@ public class FOILRule implements Rule {
 		return String.format("%s{%s}",
 				declaration.toString(),
 				rule.toString());
+	}
+
+	@Override
+	public boolean equals(Rule rule) {
+		if (rule instanceof FOILRule)
+			return declaration.equals(((FOILRule) rule).getDeclaration())
+					&& rule.equals(((FOILRule) rule).getRule());
+		else
+			return false;
 	}
 
 }

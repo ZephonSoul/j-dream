@@ -160,7 +160,7 @@ public class PILFrameworkTest {
 		assertTrue(ru1.sat(i1));
 		OperationsSet res = ru1.getOperationsForInteraction(i1);
 		System.out.println(res.toString() + "\t" + res.hashCode());
-		OperationsSet opSet = new OperationsSet(new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3)),new Skip());
+		OperationsSet opSet = new OperationsSet(new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3)),Skip.getInstance());
 		System.out.println(opSet.toString() + "\t" + opSet.hashCode());
 		assertTrue(ru1.getOperationsForInteraction(i1).equals(opSet));
 	}

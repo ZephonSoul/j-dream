@@ -6,7 +6,7 @@ import com.ldream.ldream_core.coordination.ComponentInstance;
 
 public class DeleteInstance extends AbstractOperation implements Operation {
 
-	public static int BASE_CODE = 2000;
+	final static int BASE_CODE = 10000;
 
 	private ComponentInstance targetInstance;
 
@@ -30,6 +30,11 @@ public class DeleteInstance extends AbstractOperation implements Operation {
 			//Best-effort delete (if component already orphan, do nothing)
 			//TODO: link logger to log event
 		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE + targetInstance.hashCode();
 	}
 
 	@Override

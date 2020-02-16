@@ -8,15 +8,22 @@ import com.ldream.ldream_core.coordination.Interaction;
 public class PortAtom implements Formula {
 
 	private Port port;
-	
+
 	public PortAtom(Port p) {
 		this.port = p;
+	}
+
+	/**
+	 * @return the port
+	 */
+	public Port getPort() {
+		return port;
 	}
 
 	public boolean sat(Interaction i) {
 		return i.contains(this.port);
 	}
-	
+
 	public String toString() {
 		return this.port.toString();
 	}
@@ -25,5 +32,14 @@ public class PortAtom implements Formula {
 	public Formula bindActualComponent(ComponentInstance componentVariable, ActualComponentInstance actualComponent) {
 		return this;
 	}
-	
+
+	@Override
+	public boolean equals(Formula formula) {
+		if (formula instanceof PortAtom)
+			return port.equals(((PortAtom) formula).getPort());
+		else
+			return false;
+	}
+
+
 }

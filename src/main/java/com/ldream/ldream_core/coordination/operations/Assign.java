@@ -8,7 +8,7 @@ import com.ldream.ldream_core.expressions.VariableExpression;
 
 public class Assign extends AbstractOperation implements Operation {
 	
-	public static int BASE_CODE = 100;
+	final static int BASE_CODE = 100;
 
 	private VariableExpression localVariable;
 	private Expression valueExpression;

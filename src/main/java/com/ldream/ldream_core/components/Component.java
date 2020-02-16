@@ -1,5 +1,6 @@
 package com.ldream.ldream_core.components;
 
+import java.util.Map;
 import java.util.Set;
 
 import com.ldream.ldream_core.coordination.Interaction;
@@ -45,5 +46,15 @@ public interface Component {
 	public int getId();
 	
 	public Rule getCurrentRule();
+
+	public Interface getInterface();
+
+	public Store getStore();
+
+	public Pool getPool();
+
+	public Rule getRule();
+
+	public Map<Port,Action> getPortActions();
 
 }

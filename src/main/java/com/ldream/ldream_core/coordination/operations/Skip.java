@@ -5,9 +5,14 @@ import com.ldream.ldream_core.coordination.ComponentInstance;
 
 public class Skip implements Operation {
 	
-	public static int BASE_CODE = 0;
+	final static int BASE_CODE = 0;
+	private static Skip instance;
 
-	public Skip() {}
+	public static Skip getInstance() {
+		if (instance == null)
+			instance = new Skip();
+		return instance;
+	}
 
 	@Override
 	public void evaluateParams() {}

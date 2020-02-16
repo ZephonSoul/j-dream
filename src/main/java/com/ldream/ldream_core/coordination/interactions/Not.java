@@ -1,25 +1,27 @@
 package com.ldream.ldream_core.coordination.interactions;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 
-public class Not extends AbstractFormula implements Formula {
+public class Not implements Formula {
+	
+	private Formula subformula;
 
 	public Not(Formula subformula) {
-		super(subformula);
+		this.subformula = subformula;
 	}
-	
-	public Not(List<Formula> subformula) {
-		super(subformula);
+
+	/**
+	 * @return the subformula
+	 */
+	public Formula getSubformula() {
+		return subformula;
 	}
 
 	@Override
 	public boolean sat(Interaction i) {
-		return !(subformulas.get(0).sat(i));
+		return !(subformula.sat(i));
 	}
 
 	@Override
@@ -27,19 +29,20 @@ public class Not extends AbstractFormula implements Formula {
 			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
 		
-		return new Not(subformulas.stream().limit(1)
-				.map(f -> f.bindActualComponent(componentVariable, actualComponent))
-				.collect(Collectors.toList()));
+		return new Not(subformula.bindActualComponent(componentVariable, actualComponent));
 	}
 	
 	@Override
 	public String toString() {
-		return getConnectiveSymbol() + subformulas.get(0).toString();
+		return "¬" + subformula.toString();
 	}
-
+	
 	@Override
-	protected String getConnectiveSymbol() {
-		return "¬";
+	public boolean equals(Formula formula) {
+		if (formula instanceof Not)
+			return subformula.equals(((Not) formula).getSubformula());
+		else
+			return false;
 	}
 
 }

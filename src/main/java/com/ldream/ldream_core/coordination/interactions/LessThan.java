@@ -54,4 +54,12 @@ public class LessThan extends AbstractPredicate implements Predicate {
 		return "<";
 	}
 
+	@Override
+	public boolean equals(Formula formula) {
+		if (formula instanceof LessThan)
+			return equalTerms((LessThan) formula);
+		else
+			return false;
+	}
+
 }

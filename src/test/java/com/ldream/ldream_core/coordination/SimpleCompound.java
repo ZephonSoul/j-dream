@@ -21,12 +21,12 @@ public class SimpleCompound extends AbstractComponent {
 				d2 = new DummyComponent();
 		d1.setPool(new Pool(new DummyComponent(),new DummyComponent(),new DummyComponent()));
 		setPool(new Pool(d1,d2));
-//		setRule(new AndR(
-//				new Term(
-//						new Assign(new ActualVariable(d1.getLocalVariable("x")), new Sum(new ActualVariable(d2.getLocalVariable("x")),new Constant(10)))),
-//				new Term(
-//						new Assign(new ActualVariable(d2.getLocalVariable("x")), new Sum(new ActualVariable(d1.getLocalVariable("x")),new Constant(10)))))
-//				);
+		//		setRule(new AndR(
+		//				new Term(
+		//						new Assign(new ActualVariable(d1.getLocalVariable("x")), new Sum(new ActualVariable(d2.getLocalVariable("x")),new Constant(10)))),
+		//				new Term(
+		//						new Assign(new ActualVariable(d2.getLocalVariable("x")), new Sum(new ActualVariable(d1.getLocalVariable("x")),new Constant(10)))))
+		//				);
 		var d = new Declaration(
 				Quantifier.EXISTS,
 				new ActualComponentInstance(this),
@@ -55,9 +55,9 @@ public class SimpleCompound extends AbstractComponent {
 		//		for (Interaction i : c.getAllAllowedInteractions())
 		//			System.out.println(i.toString());
 		//
-		//		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,10);
-		//		ex.setSnapshotSemantics(true);
-		//		ex.run();
+		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,10);
+		ex.setSnapshotSemantics(true);
+		ex.run();
 		//		//		
 		//		//		Set<Component> components = c.getComponentsFromPool(new ComponentTypes(DummyComponent.class));
 		//		//		System.out.println(components.size());
@@ -114,14 +114,14 @@ public class SimpleCompound extends AbstractComponent {
 												dd1.getScope(),
 												newComp,
 												new Assign(new ReferencedVariable(newComp,"x"),new Constant(5))),
-										new Skip())
+										Skip.getInstance())
 								)
 						);
-		
+
 		System.out.println(test3.toString());
 		var t3e = test3.expandDeclarations();
 		System.out.println(t3e.toString()+"\n");
-		
+
 		Rule test4 =
 				new FOILRule(dd1,
 						new Term(
@@ -130,7 +130,7 @@ public class SimpleCompound extends AbstractComponent {
 										new CreateInstance(
 												DummyComponent.class,
 												dd1.getScope()),
-										new Skip())
+										Skip.getInstance())
 								)
 						);
 		System.out.println(test4.toString());

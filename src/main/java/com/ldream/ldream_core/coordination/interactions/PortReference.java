@@ -7,11 +7,25 @@ import com.ldream.ldream_core.coordination.Interaction;
 public class PortReference implements Formula {
 	
 	private ComponentInstance componentInstance;
+
 	private String portName;
 	
 	public PortReference(ComponentInstance componentInstance,String portName) {
 		this.componentInstance = componentInstance;
 		this.portName = portName;
+	}
+	/**
+	 * @return the componentInstance
+	 */
+	public ComponentInstance getComponentInstance() {
+		return componentInstance;
+	}
+
+	/**
+	 * @return the portName
+	 */
+	public String getPortName() {
+		return portName;
 	}
 
 	@Override
@@ -36,6 +50,15 @@ public class PortReference implements Formula {
 		return String.format("%s.%s", 
 				componentInstance.toString(),
 				portName);
+	}
+	
+	@Override
+	public boolean equals(Formula formula) {
+		if (formula instanceof PortReference)
+			return componentInstance.equals(((PortReference) formula).getComponentInstance())
+					&& portName.equals(((PortReference) formula).getPortName());
+		else
+			return false;
 	}
 
 }

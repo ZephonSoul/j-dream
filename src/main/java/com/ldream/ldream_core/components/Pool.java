@@ -134,5 +134,17 @@ public class Pool {
 	public int size() {
 		return components.size();
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Pool) {
+			return equals((Pool) o);
+		} else
+			return false;
+	}
+	
+	public boolean equals(Pool pool) {
+		return components.equals(pool.getComponents());
+	}
 
 }

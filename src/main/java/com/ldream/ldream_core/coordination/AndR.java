@@ -57,4 +57,12 @@ public class AndR extends AbstractPILRule implements Rule {
 		return "&";
 	}
 
+	@Override
+	public boolean equals(Rule rule) {
+		if (rule instanceof AndR)
+			return equalSubRules((AndR) rule);
+		else
+			return false;
+	}
+
 }

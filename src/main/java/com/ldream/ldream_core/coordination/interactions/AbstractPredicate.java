@@ -19,9 +19,25 @@ public abstract class AbstractPredicate implements Predicate {
 		this.terms = terms;
 	}
 	
+	public List<Expression> getTerms() {
+		return terms;
+	}
+	
 	public String toString() {
 		return terms.stream().map(Expression::toString).collect(Collectors.joining(getPredicateSymbol()));
 	}	
+	
+	public boolean equalTerms(AbstractPredicate predicate) {
+		return terms.equals(predicate.getTerms());
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Predicate)
+			return equals((Predicate) o);
+		else
+			return false;
+	}
 	
 	@Override
 	public abstract boolean sat(Interaction i);

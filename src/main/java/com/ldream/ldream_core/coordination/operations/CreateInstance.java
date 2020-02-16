@@ -8,7 +8,7 @@ import com.ldream.ldream_core.coordination.ReferencedComponentInstance;
 
 public class CreateInstance extends AbstractOperation implements Operation {
 
-	public static int BASE_CODE = 1000;
+	final static int BASE_CODE = 1000;
 
 	private Class<? extends Component> componentType;
 	private ComponentInstance parentInstance;
@@ -28,7 +28,7 @@ public class CreateInstance extends AbstractOperation implements Operation {
 
 	public CreateInstance(Class<? extends Component> componentType, 
 			ComponentInstance parentInstance) {
-		this(componentType,parentInstance,null,new Skip());
+		this(componentType,parentInstance,null,Skip.getInstance());
 	}
 
 	/**
@@ -70,6 +70,18 @@ public class CreateInstance extends AbstractOperation implements Operation {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public int hashCode() {
+		int newInstanceHashCode = 0;
+		if (newInstance != null)
+			newInstanceHashCode = newInstance.hashCode();			
+		return BASE_CODE 
+				+ componentType.hashCode() 
+				+ parentInstance.hashCode()
+				+ newInstanceHashCode
+				+ chainedOperation.hashCode();
 	}
 
 	@Override

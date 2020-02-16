@@ -13,6 +13,8 @@ import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
 public abstract class AbstractComponent implements Component {
 
+	final static int BASE_CODE = 11;
+
 	protected int cId;
 	protected Interface cInterface;
 	protected Store cStore;
@@ -27,7 +29,7 @@ public abstract class AbstractComponent implements Component {
 	/**
 	 * Constructors
 	 */
-	
+
 	public AbstractComponent(
 			Interface cInterface,
 			Rule cRule,
@@ -35,7 +37,7 @@ public abstract class AbstractComponent implements Component {
 			Pool cPool,
 			Component parent,
 			Map<Port,Action> portActions) {
-		
+
 		cId = ComponentsIDFactory.getInstance().getFreshId();
 		this.cInterface = cInterface;
 		this.cInterface.setOwner(this);
@@ -65,6 +67,7 @@ public abstract class AbstractComponent implements Component {
 	/**
 	 * @return the cInterface
 	 */
+	@Override
 	public Interface getInterface() {
 		return cInterface;
 	}
@@ -72,6 +75,7 @@ public abstract class AbstractComponent implements Component {
 	/**
 	 * @return the cPool
 	 */
+	@Override
 	public Pool getPool() {
 		return cPool;
 	}
@@ -86,11 +90,13 @@ public abstract class AbstractComponent implements Component {
 		this.cRule_cached = cRule.expandDeclarations();
 	}
 
+	@Override
 	public void addToPool(Component component) {
 		component.setParent(this);
 		this.cPool.add(component);
 	}
-	
+
+	@Override
 	public void removeFromPool(Component component) {
 		component.setParent(null);
 		this.cPool.remove(component);
@@ -103,6 +109,7 @@ public abstract class AbstractComponent implements Component {
 		this.cIterator.setInterface(cInterface);
 	}
 
+	@Override
 	public int getId() {
 		return cId;
 	}
@@ -110,6 +117,7 @@ public abstract class AbstractComponent implements Component {
 	/**
 	 * @return the store
 	 */
+	@Override
 	public Store getStore() {
 		return cStore;
 	}
@@ -122,6 +130,7 @@ public abstract class AbstractComponent implements Component {
 	 * @return the parent
 	 * @throws OrphanComponentException 
 	 */
+	@Override
 	public Component getParent() throws OrphanComponentException {
 		if (parent == null)
 			throw new OrphanComponentException(this);
@@ -135,6 +144,7 @@ public abstract class AbstractComponent implements Component {
 		this.parent = parent;
 	}
 
+	@Override
 	public Rule getRule() {
 		return cRule;
 	}
@@ -142,6 +152,11 @@ public abstract class AbstractComponent implements Component {
 	public void setRule(Rule cRule) {
 		this.cRule = cRule;
 		this.cRule_cached = cRule.expandDeclarations();
+	}
+
+	@Override
+	public Map<Port,Action> getPortActions() {
+		return portActions;
 	}
 
 	public void setPortActions(Map<Port,Action> portActions) {
@@ -166,7 +181,7 @@ public abstract class AbstractComponent implements Component {
 	public boolean isAtomic() {
 		return this.cPool.isEmpty();
 	}
-	
+
 	@Override
 	public int getPoolSize() {
 		return this.cPool.size();
@@ -229,6 +244,7 @@ public abstract class AbstractComponent implements Component {
 		return operations;
 	}
 
+	@Override
 	public String getInstanceName() {
 		return String.format("%s[%s]",this.getClass().getSimpleName(),cId);
 	}
@@ -236,18 +252,6 @@ public abstract class AbstractComponent implements Component {
 	@Override
 	public Port getPortByName(String portName) {
 		return cInterface.getPortByName(portName);
-	}
-
-	public String toString() {
-		String componentDescription = 
-				String.format("%s[%s]:\nInterface={%s}\nStore={%s}\nPool={%s}\nRule=%s",
-						this.getClass().getSimpleName(),
-						cId,
-						cInterface.toString(),
-						cStore.toString(),
-						cPool.toString(true,"\t"),
-						cRule.toString());
-		return componentDescription;
 	}
 
 	@Override
@@ -267,6 +271,7 @@ public abstract class AbstractComponent implements Component {
 					cRule.toString());					//7
 	}
 
+	@Override
 	public void refresh() {
 		cIterator = new ComponentInteractionIterator(cInterface);
 		cPool.refresh();
@@ -274,6 +279,7 @@ public abstract class AbstractComponent implements Component {
 		cRule_cached = cRule.expandDeclarations();
 	}
 
+	@Override
 	public void activatePort(Port port) {
 		if (portActions.containsKey(port))
 			portActions.get(port).accept(this);
@@ -283,9 +289,52 @@ public abstract class AbstractComponent implements Component {
 	public Set<Component> getComponentsFromPool() {
 		return cPool.getComponents();
 	}
-	
+
+	@Override
 	public Rule getCurrentRule() {
 		return cRule_cached;
+	}
+
+	@Override
+	public int hashCode() {
+		return BASE_CODE + getInstanceName().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Component) 
+			return equals((Component) o);
+		else
+			return false;
+	}
+
+	public boolean equals(Component component) {
+		boolean matching_parents;
+		try {
+			matching_parents = parent.equals(component.getParent());
+		} catch (OrphanComponentException e) {
+			matching_parents = parent == null;
+		}
+		return (cId == component.getId())
+				|| (	matching_parents
+						&& cInterface.equals(component.getInterface())
+						&& cStore.equals(component.getStore())
+						&& cPool.equals(component.getPool())
+						&& cRule.equals(component.getRule())
+						&& portActions.equals(component.getPortActions())
+						);
+	}
+
+	public String toString() {
+		String componentDescription = 
+				String.format("%s[%s]:\nInterface={%s}\nStore={%s}\nPool={%s}\nRule=%s",
+						this.getClass().getSimpleName(),
+						cId,
+						cInterface.toString(),
+						cStore.toString(),
+						cPool.toString(true,"\t"),
+						cRule.toString());
+		return componentDescription;
 	}
 
 }

@@ -50,5 +50,13 @@ public class TypeRestriction {
 			anyTypeInstance = new TypeRestriction();
 		return anyTypeInstance;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof TypeRestriction)
+			return equals((TypeRestriction) o);
+		else
+			return false;
+	}
 
 }

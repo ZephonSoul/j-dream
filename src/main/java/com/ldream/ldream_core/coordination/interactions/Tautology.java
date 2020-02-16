@@ -27,5 +27,10 @@ public class Tautology implements Formula {
 	public Formula bindActualComponent(ComponentInstance componentVariable, ActualComponentInstance actualComponent) {
 		return this;
 	}
+	
+	@Override
+	public boolean equals(Formula formula) {
+		return formula instanceof Tautology;
+	}
 
 }

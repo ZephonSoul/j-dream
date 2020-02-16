@@ -67,7 +67,7 @@ public class Interaction {
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Interaction) {
-			return equals((Interaction)o);
+			return equals((Interaction) o);
 		} else {
 			return false;
 		}

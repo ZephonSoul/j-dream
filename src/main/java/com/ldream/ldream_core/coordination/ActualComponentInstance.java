@@ -4,6 +4,8 @@ import com.ldream.ldream_core.components.Component;
 
 public class ActualComponentInstance implements ComponentInstance {
 	
+	public static int BASE_CODE = 555;
+	
 	private Component component;
 
 	public ActualComponentInstance(Component component) {
@@ -23,14 +25,19 @@ public class ActualComponentInstance implements ComponentInstance {
 	public void setActualComponent(Component component) {
 		this.component = component;
 	}
-
-	public boolean equals(ActualComponentInstance componentInstance) {
-		return this.component.equals(componentInstance.getComponent());
-	}
 	
 	@Override
 	public String getName() {
 		return component.getInstanceName();
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE + component.hashCode();
+	}
+	
+	public boolean equals(ActualComponentInstance instance) {
+		return component.equals(instance.getComponent());
 	}
 	
 	@Override

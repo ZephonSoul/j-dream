@@ -6,7 +6,7 @@ import com.ldream.ldream_core.coordination.ComponentInstance;
 
 public class Migrate extends AbstractOperation implements Operation {
 
-	public static int BASE_CODE = 10000;
+	final static int BASE_CODE = 5000;
 
 	private ComponentInstance targetInstance;
 	private ComponentInstance newParent;
@@ -45,6 +45,13 @@ public class Migrate extends AbstractOperation implements Operation {
 			//Best-effort delete (if component already orphan, do nothing)
 			//TODO: link logger to log event
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return BASE_CODE
+				+ targetInstance.hashCode()
+				+ newParent.hashCode();
 	}
 
 	@Override

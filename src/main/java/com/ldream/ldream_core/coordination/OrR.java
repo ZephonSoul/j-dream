@@ -28,7 +28,7 @@ public class OrR extends AbstractPILRule implements Rule {
 		cachedSat = sat;
 		return sat;
 	}
-	
+
 	@Override
 	public Rule expandDeclarations() {
 		if (rules.isEmpty())
@@ -56,6 +56,14 @@ public class OrR extends AbstractPILRule implements Rule {
 	@Override
 	protected String getConnectiveSymbol() {
 		return "||";
+	}
+
+	@Override
+	public boolean equals(Rule rule) {
+		if (rule instanceof OrR)
+			return equalSubRules((OrR) rule);
+		else
+			return false;
 	}
 
 }

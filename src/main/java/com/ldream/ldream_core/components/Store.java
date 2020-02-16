@@ -57,5 +57,17 @@ public class Store {
 	public String toString() {
 		return localVariables.values().stream().map(LocalVariable::toString).collect(Collectors.joining(","));
 	}
+	
+	public boolean equals(Store store) {
+		return localVariables.equals(store.getLocalVariables());
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Store)
+			return equals((Store) o);
+		else
+			return false;
+	}
 
 }

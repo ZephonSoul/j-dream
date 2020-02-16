@@ -19,11 +19,19 @@ public class Term implements Rule  {
 	}
 	
 	public Term(Formula constraint) {
-		this(constraint,new Skip());
+		this(constraint,Skip.getInstance());
 	}
 	
 	public Term(Operation ops) {
 		this(Tautology.getInstance(),ops);
+	}
+
+	public Operation getOperation() {
+		return operation;
+	}
+
+	public Object getConstraint() {
+		return constraint;
 	}
 
 	@Override
@@ -63,6 +71,14 @@ public class Term implements Rule  {
 	
 	public String toString() {
 		return String.format("(%s -> %s)", constraint.toString(), operation.toString());
+	}
+
+	@Override
+	public boolean equals(Rule rule) {
+		if (rule instanceof Term)
+			return constraint.equals(((Term) rule).getConstraint())
+					&& operation.equals(((Term) rule).getOperation());
+		return false;
 	}
 
 }

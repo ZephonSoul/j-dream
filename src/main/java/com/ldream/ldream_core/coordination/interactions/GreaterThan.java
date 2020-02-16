@@ -54,4 +54,12 @@ public class GreaterThan extends AbstractPredicate implements Predicate {
 		return ">";
 	}
 
+	@Override
+	public boolean equals(Formula formula) {
+		if (formula instanceof GreaterThan)
+			return equalTerms((GreaterThan) formula);
+		else
+			return false;
+	}
+
 }

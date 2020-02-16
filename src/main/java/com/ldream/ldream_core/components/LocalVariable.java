@@ -2,7 +2,7 @@ package com.ldream.ldream_core.components;
 
 public class LocalVariable {
 
-	public static int BASE_CODE = 777;
+	final static int BASE_CODE = 777;
 	
 	protected String name;
 	protected Number value;
@@ -56,6 +56,14 @@ public class LocalVariable {
 	public boolean equals(LocalVariable var) {
 		//TODO: make more robust comparing name and component owner
 		return getInstanceName().equals(var.getInstanceName());
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof LocalVariable)
+			return equals((LocalVariable) o);
+		else
+			return false;
 	}
 
 	/**

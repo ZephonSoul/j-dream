@@ -9,11 +9,11 @@ import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.expressions.Expression;
 
 public class Equals extends AbstractPredicate implements Predicate {
-	
+
 	public Equals(Expression... terms) {
 		super(terms);
 	}
-	
+
 	public Equals(List<Expression> terms) {
 		super(terms);
 	}
@@ -39,10 +39,18 @@ public class Equals extends AbstractPredicate implements Predicate {
 	public Predicate bindActualComponent(
 			ComponentInstance componentReference, 
 			ActualComponentInstance actualComponent) {
-		
+
 		return new Equals(terms.stream()
 				.map(t -> t.bindActualComponent(componentReference,actualComponent))
 				.collect(Collectors.toList()));
+	}
+
+	@Override
+	public boolean equals(Formula formula) {
+		if (formula instanceof Equals)
+			return equalTerms((Equals) formula);
+		else
+			return false;
 	}
 
 }

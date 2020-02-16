@@ -41,5 +41,13 @@ public class Or extends AbstractFormula implements Formula {
 	public String getConnectiveSymbol() {
 		return "\\/";
 	}
+	
+	@Override
+	public boolean equals(Formula formula) {
+		if (formula instanceof Or)
+			return equalSubformulas((Or) formula);
+		else
+			return false;
+	}
 
 }

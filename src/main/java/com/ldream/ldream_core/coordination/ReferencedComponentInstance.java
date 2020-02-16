@@ -4,6 +4,8 @@ import com.ldream.ldream_core.components.Component;
 
 public class ReferencedComponentInstance implements ComponentInstance {
 
+	final static int BASE_CODE = 111;
+
 	private String name;
 	
 	public ReferencedComponentInstance() {
@@ -13,15 +15,20 @@ public class ReferencedComponentInstance implements ComponentInstance {
 	public String getName() {
 		return name;
 	}
-
-	public boolean equals(ReferencedComponentInstance componentInstance) {
-		return name.equals(componentInstance.getName());
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE + name.hashCode();
+	}
+	
+	public boolean equals(ReferencedComponentInstance instance) {
+		return name.equals(instance.getName());
 	}
 	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof ReferencedComponentInstance)
-			return this.equals((ReferencedComponentInstance)o);
+			return equals((ReferencedComponentInstance) o);
 		else
 			return false;
 	}
@@ -43,8 +50,7 @@ public class ReferencedComponentInstance implements ComponentInstance {
 
 	@Override
 	public Component getComponent() {
-		// TODO raise exception
-		return null;
+		throw new UnboundReferenceException(this);
 	}
 	
 }
