@@ -58,7 +58,7 @@ public class ExecutionEngine implements Runnable {
 				snapshotSemantics,
 				executionStrategy.getClass().getSimpleName()));
 		
-		long startTime = System.currentTimeMillis();
+		long startTime = System.nanoTime();
 		long initPause = 0;
 
 		int cycles = 0;
@@ -98,11 +98,11 @@ public class ExecutionEngine implements Runnable {
 			}
 		}
 
-		long stopTime = System.currentTimeMillis();
-		long elapsedTime = stopTime - startTime;
+		long stopTime = System.nanoTime();
+		double elapsedTime = (stopTime - startTime)/1000000000.0;
 
 		System.out.println("============================");
-		System.out.println(String.format("Completed cycles: %s\nExecution time: %s ms",
+		System.out.println(String.format("Completed cycles: %s\nExecution time: %s s",
 				cycles,
 				elapsedTime));
 	}

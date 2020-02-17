@@ -42,7 +42,10 @@ public abstract class AbstractBinaryPredicate extends AbstractPredicate implemen
 	};
 	
 	public String toString() {
-		return term1.toString() + getPredicateSymbol() + term2.toString();
+		return String.format("%s %s %s",
+				term1.toString(),
+				getPredicateSymbol(),
+				term2.toString());
 	}	
 	
 	protected abstract boolean testValues(Value v1, Value v2);

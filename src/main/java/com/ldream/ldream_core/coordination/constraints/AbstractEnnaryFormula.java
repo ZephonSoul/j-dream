@@ -24,7 +24,7 @@ public abstract class AbstractEnnaryFormula extends AbstractFormula implements F
 
 	public String toString() {
 		return "(" + 
-				subformulas.stream().map(Formula::toString).collect(Collectors.joining(getConnectiveSymbol()))
+				subformulas.stream().map(Formula::toString).collect(Collectors.joining(" " + getConnectiveSymbol() + " "))
 				+ ")";
 	}
 	

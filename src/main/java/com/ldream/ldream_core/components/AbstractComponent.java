@@ -1,5 +1,6 @@
 package com.ldream.ldream_core.components;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -101,6 +102,15 @@ public abstract class AbstractComponent implements Component {
 	public void addToPool(Component component) {
 		component.setParent(this);
 		this.cPool.add(component);
+	}
+
+	@Override
+	public void addToPool(Component... component) {
+		Arrays.stream(component).forEach(
+				c -> { 
+					c.setParent(this); 
+					this.cPool.add(c);
+					});
 	}
 
 	@Override
@@ -309,6 +319,10 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public Rule getCurrentRule() {
+		if (cRule_cached == null) {
+			cRule.clearCache();
+			cRule_cached = cRule.expandDeclarations();
+		}
 		if (cPool.isEmpty())
 			return cRule_cached;
 		else

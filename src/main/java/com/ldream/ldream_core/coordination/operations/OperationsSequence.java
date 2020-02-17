@@ -73,7 +73,7 @@ public class OperationsSequence extends AbstractOperation implements Operation {
 	}
 	
 	public String toString() {
-		return "(" + String.join(";", getOperationsString()) + ")";
+		return "(" + String.join("; ", getOperationsString()) + ")";
 	}
 
 }

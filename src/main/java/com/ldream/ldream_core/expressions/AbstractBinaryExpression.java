@@ -36,13 +36,18 @@ public abstract class AbstractBinaryExpression extends AbstractExpression implem
 	public Expression getOperand2() {
 		return operand2;
 	}
+	
+	public boolean equalOperands(AbstractBinaryExpression ex) {
+		return operand1.equals(ex.getOperand1())
+				&& operand2.equals(ex.getOperand2());
+	}
 
 	@Override
 	public void evaluateOperands() {
 		if (operandValue1 == null)
 			operandValue1 = operand1.eval();
 		if (operandValue2 == null)
-			operandValue2 = operand1.eval();
+			operandValue2 = operand2.eval();
 	}
 
 	@Override
@@ -72,7 +77,11 @@ public abstract class AbstractBinaryExpression extends AbstractExpression implem
 	}
 
 	public String toString() {
-		return operand1.toString() + getOperatorSymbol() + operand2.toString();
+		return String.format("%s %s %s", 
+				operand1.toString(),
+				getOperatorSymbol(),
+				operand2.toString()
+				);
 	}
 
 	public abstract String getOperatorSymbol();

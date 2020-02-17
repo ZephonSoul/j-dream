@@ -49,6 +49,19 @@ public class SetValue extends AbstractValue implements Value, AdditiveValue {
 	public boolean contains(Value value) {
 		return rawSet.contains(value);
 	}
+	
+	public Value addValue(Value value) {
+		Set<Value> newRawSet = new HashSet<>(rawSet);
+		newRawSet.add(value);
+		return new SetValue(newRawSet);
+	}
+
+	public Value removeValue(Value v1) {
+		return new SetValue(
+				rawSet.stream().filter(v -> !v.equals(v1))
+				.collect(Collectors.toSet())
+				);
+	}
 
 	@Override
 	public boolean equals(Value value) {

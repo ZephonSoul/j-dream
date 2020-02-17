@@ -10,7 +10,7 @@ public class IncompatibleValueException extends RuntimeException {
 	
 	private static <T> String getMessage(Value v, Class<T> expectedValueClass) {
 		return String.format(
-				"Value %s not conforming to %s", 
+				"Value \"%s\" not conforming to %s", 
 				v.toString(),
 				expectedValueClass.getSimpleName());
 	}

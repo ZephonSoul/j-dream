@@ -32,7 +32,7 @@ public class Not extends AbstractUnaryFormula implements Formula {
 
 	@Override
 	public String toString() {
-		return "¬" + subformula.toString();
+		return String.format("¬(%s)",subformula.toString());
 	}
 
 	@Override

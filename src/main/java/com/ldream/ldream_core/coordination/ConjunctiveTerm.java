@@ -24,6 +24,9 @@ public class ConjunctiveTerm implements Rule  {
 		this.operation = operation;
 	}
 
+	public ConjunctiveTerm(Formula constraint,Formula requirement) {
+		this(constraint,requirement,Skip.getInstance());
+	}
 
 	public ConjunctiveTerm(Formula constraint,Operation ops) {
 		this(constraint,Tautology.getInstance(),ops);

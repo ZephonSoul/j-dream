@@ -25,7 +25,7 @@ public abstract class AbstractEnnaryPredicate extends AbstractPredicate implemen
 	}
 	
 	public String toString() {
-		return terms.stream().map(Expression::toString).collect(Collectors.joining(getPredicateSymbol()));
+		return terms.stream().map(Expression::toString).collect(Collectors.joining(" " + getPredicateSymbol() + " "));
 	}	
 	
 	public boolean equalTerms(AbstractEnnaryPredicate predicate) {

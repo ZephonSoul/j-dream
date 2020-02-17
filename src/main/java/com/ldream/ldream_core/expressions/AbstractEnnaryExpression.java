@@ -98,7 +98,7 @@ public abstract class AbstractEnnaryExpression extends AbstractExpression implem
 	public String toString() {
 		return Arrays.stream(operands)
 				.map(Expression::toString)
-				.collect(Collectors.joining(getOperatorSymbol()));
+				.collect(Collectors.joining(" " + getOperatorSymbol() + " "));
 	}
 
 	public abstract String getOperatorSymbol();

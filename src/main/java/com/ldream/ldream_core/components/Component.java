@@ -35,6 +35,8 @@ public interface Component {
 	public int getPoolSize();
 	
 	public void addToPool(Component component);
+	
+	public void addToPool(Component... component);
 
 	public void removeFromPool(Component component);
 	

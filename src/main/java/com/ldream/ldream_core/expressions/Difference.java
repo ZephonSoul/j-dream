@@ -45,9 +45,8 @@ public class Difference extends AbstractBinaryExpression {
 
 	@Override
 	public boolean equals(Expression ex) {
-		return (ex instanceof Difference) 
-				&& operand1.equals(((Difference) ex).getOperand1()) 
-				&& operand2.equals(((Difference) ex).getOperand2());
+		return (ex instanceof Difference)
+				&& equalOperands((Difference) ex);
 	}
 
 	@Override

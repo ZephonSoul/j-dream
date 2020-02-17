@@ -17,6 +17,12 @@ public class NumberValue extends PrimitiveValue<Number> implements AdditiveValue
 		if (!(value instanceof NumberValue))
 			throw new IncompatibleValueException(value, NumberValue.class);
 	}
+	
+	@Override
+	public boolean equals(Value value) {
+		return (value instanceof NumberValue)
+				&& rawValue.equals(((NumberValue) value).getRawValue());
+	}
 
 	@Override
 	public Value multiplyBy(FactorizableValue value) {
