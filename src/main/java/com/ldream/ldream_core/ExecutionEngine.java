@@ -50,7 +50,7 @@ public class ExecutionEngine implements Runnable {
 	@Override
 	public void run() {
 		System.out.println("============================");
-		System.out.println("DReAM execution engine 0.0.1");
+		System.out.println("DReAM execution engine 0.1.0");
 		System.out.println("============================");
 		System.out.println(String.format("interactive: %s\nMax cycles: %s\nSnapshot semantics: %s\nExec strategy: %s",
 				interactive,

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.AndR;
 import com.ldream.ldream_core.coordination.Interaction;
@@ -329,7 +328,7 @@ public abstract class AbstractComponent implements Component {
 			return new AndR(cRule_cached,
 					new AndR(cPool.getComponents().stream()
 							.map(Component::getCurrentRule)
-							.collect(Collectors.toList())));
+							.toArray(Rule[]::new)));
 	}
 
 	@Override

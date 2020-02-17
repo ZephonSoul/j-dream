@@ -11,10 +11,8 @@ import com.ldream.ldream_core.coordination.guards.*;
 import com.ldream.ldream_core.coordination.operations.Assign;
 import com.ldream.ldream_core.coordination.operations.OperationsSequence;
 import com.ldream.ldream_core.exec.GreedyStrategy;
-import com.ldream.ldream_core.expressions.Difference;
 import com.ldream.ldream_core.expressions.ReferencedVariable;
 import com.ldream.ldream_core.expressions.SetAdd;
-import com.ldream.ldream_core.expressions.SetRemove;
 import com.ldream.ldream_core.expressions.Sum;
 import com.ldream.ldream_core.output.ConsoleOutput;
 import com.ldream.ldream_core.output.DummyOutput;
@@ -231,9 +229,9 @@ public class MasterSlaves extends AbstractComponent implements Component {
 	}
 
 	public static void main(String[] args) {
-		MasterSlaves c = new MasterSlaves(5);
+		MasterSlaves c = new MasterSlaves(2);
 		
-		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new DummyOutput(),false,20);
+		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,5);
 		ex.setSnapshotSemantics(true);
 		ex.run();
 	}

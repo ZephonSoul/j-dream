@@ -1,7 +1,6 @@
 package com.ldream.ldream_core.coordination.constraints;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
@@ -10,10 +9,6 @@ import com.ldream.ldream_core.coordination.Interaction;
 public class And extends AbstractEnnaryFormula implements Formula {
 
 	public And(Formula... subformulas) {
-		super(subformulas);
-	}
-
-	public And(List<Formula> subformulas) {
 		super(subformulas);
 	}
 
@@ -34,9 +29,9 @@ public class And extends AbstractEnnaryFormula implements Formula {
 			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
 
-		return new And(subformulas.stream()
+		return new And(Arrays.stream(subformulas)
 				.map(f -> f.bindActualComponent(componentVariable, actualComponent))
-				.collect(Collectors.toList()));
+				.toArray(Formula[]::new));
 	}
 
 	public String getConnectiveSymbol() {

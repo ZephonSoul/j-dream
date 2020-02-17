@@ -1,7 +1,6 @@
 package com.ldream.ldream_core.coordination;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 import com.ldream.ldream_core.coordination.constraints.Contradiction;
 import com.ldream.ldream_core.coordination.constraints.Tautology;
@@ -28,25 +27,25 @@ public class FOILRule implements Rule {
 
 	@Override
 	public Rule expandDeclarations() {
-		Set<ActualComponentInstance> matchingInstances = 
+		ActualComponentInstance[] matchingInstances = 
 				declaration.getActualComponents();
 
 		switch(declaration.getQuantifier()) {
 		case FORALL:
-			if (matchingInstances.isEmpty())
+			if (matchingInstances.length == 0)
 				ruleInstance = new Term(Tautology.getInstance());
 			else
-				ruleInstance = new AndR(declaration.getActualComponents().stream()
+				ruleInstance = new AndR(Arrays.stream(matchingInstances)
 						.map(c -> rule.bindActualComponent(declaration.getVariable(), c))
-						.collect(Collectors.toList()));
+						.toArray(Rule[]::new));
 			break;
 		case EXISTS:
-			if (matchingInstances.isEmpty())
+			if (matchingInstances.length == 0)
 				ruleInstance = new Term(Contradiction.getInstance());
 			else
-				ruleInstance = new OrR(declaration.getActualComponents().stream()
+				ruleInstance = new OrR(Arrays.stream(matchingInstances)
 						.map(c -> rule.bindActualComponent(declaration.getVariable(), c))
-						.collect(Collectors.toList()));
+						.toArray(Rule[]::new));
 			break;
 		}
 		return ruleInstance;

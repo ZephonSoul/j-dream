@@ -1,8 +1,5 @@
 package com.ldream.ldream_core.coordination;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.ldream.ldream_core.Bindable;
 
 public class Declaration implements Bindable<Declaration> {
@@ -123,11 +120,11 @@ public class Declaration implements Bindable<Declaration> {
 		this.variable = variable;
 	}
 
-	public Set<ActualComponentInstance> getActualComponents() {
+	public ActualComponentInstance[] getActualComponents() {
 		return scope.getComponent().getComponentsFromPool().stream()
 				.filter(c -> type.match(c))
 				.map(c -> new ActualComponentInstance(c))
-				.collect(Collectors.toSet());
+				.toArray(ActualComponentInstance[]::new);
 	}
 
 	public boolean equals(Declaration cVar) {
