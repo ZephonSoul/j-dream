@@ -18,7 +18,7 @@ public class SimpleComponent extends AbstractComponent implements Component {
 		Port p1 = new Port("p1");
 		Port p2 = new Port("p2");
 		LocalVariable x = new LocalVariable("x",5,this);
-		setInterface(new Interface(p1,p2));
+		setInterface(p1,p2);
 		setRule(new OrR(
 				new Term(
 						Tautology.getInstance()
@@ -31,7 +31,7 @@ public class SimpleComponent extends AbstractComponent implements Component {
 						)
 				)
 				);
-		setStore(new Store(x));
+		setStore(x);
 	}
 
 	public static void main(String[] args) {

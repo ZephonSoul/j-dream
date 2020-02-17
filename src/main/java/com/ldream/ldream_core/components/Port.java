@@ -4,7 +4,7 @@ public class Port {
 
 	final static int BASE_CODE = 9;
 
-	private Component component;
+	private Component owner;
 	private String name;
 
 	public Port(String name) {
@@ -13,24 +13,24 @@ public class Port {
 
 	public Port(String name,Component component) {
 		this(name);
-		this.component = component;
+		this.owner = component;
 	}
 
 	public Component getComponent() {
-		return this.component;
+		return this.owner;
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
-	public void setComponent(Component component) {
-		this.component = component;
+	public void setOwner(Component newOwner) {
+		this.owner = newOwner;
 	}
 
 	public boolean equals(Port port) {
 		return (this.name.equals(port.getName()) 
-				&& this.component.equals(port.getComponent()));
+				&& this.owner.equals(port.getComponent()));
 	}
 
 	@Override
@@ -41,8 +41,8 @@ public class Port {
 	@Override
 	public int hashCode() {
 		int idCode = 1;
-		if (component != null) {
-			idCode = component.getId()*BASE_CODE;
+		if (owner != null) {
+			idCode = owner.getId()*BASE_CODE;
 		}
 		int nameCode = name.hashCode();
 
@@ -51,14 +51,14 @@ public class Port {
 
 	public String toString() {
 		String id = "";
-		if (component != null) {
-			id += component.getId();
+		if (owner != null) {
+			id += owner.getId();
 		}
 		return String.format("%s[%s]", name, id);
 	}
 
 	public void trigger() {
-		component.activatePort(this);
+		owner.activatePort(this);
 	}
 
 }

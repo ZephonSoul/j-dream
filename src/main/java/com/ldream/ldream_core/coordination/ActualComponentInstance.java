@@ -53,5 +53,9 @@ public class ActualComponentInstance implements ComponentInstance {
 
 		return this;
 	}
+	
+	public String toString() {
+		return getName();
+	}
 
 }

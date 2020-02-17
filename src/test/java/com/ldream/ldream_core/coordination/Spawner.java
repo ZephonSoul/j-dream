@@ -14,7 +14,7 @@ public class Spawner extends AbstractComponent {
 		super();
 		LocalVariable 	x = new LocalVariable("spawns",5,this),
 				y = new LocalVariable("spawned",0,this);
-		setStore(new Store(x,y));
+		setStore(x,y);
 		//ReferencedComponentInstance c = new ReferencedComponentInstance();
 		var d = new Declaration(
 				Quantifier.EXISTS,

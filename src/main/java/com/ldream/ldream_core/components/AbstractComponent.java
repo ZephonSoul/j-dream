@@ -91,6 +91,10 @@ public abstract class AbstractComponent implements Component {
 		this.cIterator.setPoolIterator(this.cPool.getInteractionIterator());
 		this.cRule_cached = cRule.expandDeclarations();
 	}
+	
+	public void setPool(Component... components) {
+		setPool(new Pool(components));
+	}
 
 	@Override
 	public void addToPool(Component component) {
@@ -110,6 +114,10 @@ public abstract class AbstractComponent implements Component {
 		this.interactionsIterator = new InteractionsIterator(cInterface);
 		this.cIterator.setInterface(cInterface);
 	}
+	
+	public void setInterface(Port... ports) {
+		setInterface(new Interface(this,ports));
+	}
 
 	@Override
 	public int getId() {
@@ -126,6 +134,10 @@ public abstract class AbstractComponent implements Component {
 
 	public void setStore(Store cStore) {
 		this.cStore = cStore;
+	}
+	
+	public void setStore(LocalVariable... vars) {
+		setStore(new Store(this,vars));
 	}
 
 	/**

@@ -43,11 +43,11 @@ public class Pool {
 		this.components = components;
 		interactionIterator = new PoolInteractionIterator(components);
 	}
-	
+
 	public void setComponentsParent(Component parent) {
 		components.stream().forEach(c -> c.setParent(parent));
 	}
-	
+
 	public PoolInteractionIterator getInteractionIterator() {
 		return interactionIterator;
 	}
@@ -70,14 +70,14 @@ public class Pool {
 		return components.stream().map(Component::getInstanceName).collect(Collectors.joining(","));
 	}
 
-//	public Interaction getAllowedInteraction() {
-//		return Interaction.mergeAll(
-//				components.stream()
-//				.map(Component::getAllowedInteractions)
-//				.toArray(Interaction[]::new)
-//				);
-//	}
-	
+	//	public Interaction getAllowedInteraction() {
+	//		return Interaction.mergeAll(
+	//				components.stream()
+	//				.map(Component::getAllowedInteractions)
+	//				.toArray(Interaction[]::new)
+	//				);
+	//	}
+
 	public Interaction getAllowedInteraction() {
 		return interactionIterator.next();
 	}
@@ -87,7 +87,7 @@ public class Pool {
 		List<Interaction[]> componentsInteractions = 
 				components.stream().map(Component::getAllAllowedInteractions).collect(Collectors.toList());
 		int[] interactionCounter = new int[components.size()];
-		
+
 		boolean moreCombinations = false;
 		while(true) {
 			Interaction inter = new Interaction();
@@ -110,7 +110,7 @@ public class Pool {
 		}
 		return allowedInteractions;
 	}
-	
+
 	public OperationsSet getOperationsForInteraction(Interaction interaction) {
 		OperationsSet opSet = new OperationsSet();
 		for (Component c : components) {
@@ -134,12 +134,12 @@ public class Pool {
 	public int size() {
 		return components.size();
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		return (o instanceof Pool) && equals((Pool) o);
 	}
-	
+
 	public boolean equals(Pool pool) {
 		return components.equals(pool.getComponents());
 	}

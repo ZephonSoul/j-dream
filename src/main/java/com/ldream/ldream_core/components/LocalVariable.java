@@ -6,7 +6,7 @@ public class LocalVariable {
 
 	protected String name;
 	protected Number value;
-	protected Component component;
+	protected Component owner;
 
 	public LocalVariable(String name, Number value) {
 		this.name = name;
@@ -15,7 +15,7 @@ public class LocalVariable {
 
 	public LocalVariable(String name, Number value, Component component) {
 		this(name,value);
-		this.component = component;
+		this.owner = component;
 	}
 
 	public LocalVariable(String name) {
@@ -38,6 +38,14 @@ public class LocalVariable {
 	 */
 	public void setValue(Number value) {
 		this.value = value;
+	}
+	
+	public Component getOwner() {
+		return owner;
+	}
+	
+	public void setOwner(Component newOwner) {
+		this.owner = newOwner;
 	}
 
 	/**
@@ -77,8 +85,8 @@ public class LocalVariable {
 	 */
 	public String getInstanceName() {
 		String name = this.name;
-		if (component != null)
-			name += "[" + component.getId() + "]";
+		if (owner != null)
+			name += "[" + owner.getId() + "]";
 		return name;
 	}
 
