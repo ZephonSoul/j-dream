@@ -4,6 +4,12 @@ import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.values.Value;
 
+/**
+ * @deprecated
+ * Constant expressions are no longer necessary as Value instances
+ * directly extend Expressions and can be used as constants
+ */
+@Deprecated
 public class Constant implements Expression {
 
 	private Value value;

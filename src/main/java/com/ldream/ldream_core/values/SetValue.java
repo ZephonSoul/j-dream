@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.ldream.ldream_core.coordination.ActualComponentInstance;
+import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.expressions.Expression;
+
 public class SetValue extends AbstractValue implements Value, AdditiveValue {
 	
 	protected Set<Value> rawSet;
@@ -79,6 +83,29 @@ public class SetValue extends AbstractValue implements Value, AdditiveValue {
 				rawSet.stream().map(Value::toString)
 				.collect(Collectors.joining(","))
 				+ "}";
+	}
+
+	@Override
+	public Value eval() {
+		return this;
+	}
+
+	@Override
+	public void evaluateOperands() {}
+
+	@Override
+	public void clearCache() {}
+
+	@Override
+	public boolean equals(Expression ex) {
+		return (ex instanceof SetValue)
+				&& equals((SetValue) ex);
+	}
+
+	@Override
+	public Expression bindActualComponent(ComponentInstance componentReference,
+			ActualComponentInstance actualComponent) {
+		return this;
 	}
 	
 }
