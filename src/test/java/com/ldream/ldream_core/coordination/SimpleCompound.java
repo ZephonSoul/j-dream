@@ -12,6 +12,7 @@ import com.ldream.ldream_core.coordination.operations.*;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.*;
 import com.ldream.ldream_core.output.ConsoleOutput;
+import com.ldream.ldream_core.values.NumberValue;
 
 public class SimpleCompound extends AbstractComponent {
 
@@ -34,7 +35,7 @@ public class SimpleCompound extends AbstractComponent {
 		Rule target = new FOILRule(d,new AndR(
 				new Term(
 						new PortReference(d.getVariable(),"p1"),
-						new Assign(new ReferencedVariable(d.getVariable(),"x"), new Sum(new ReferencedVariable(d.getVariable(),"x"),new Constant(1)))
+						new Assign(new ReferencedVariable(d.getVariable(),"x"), new Sum(new ReferencedVariable(d.getVariable(),"x"),new Constant(new NumberValue(1))))
 						)
 				)
 				);

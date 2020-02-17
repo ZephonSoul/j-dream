@@ -5,11 +5,13 @@ import java.util.List;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.values.AdditiveValue;
+import com.ldream.ldream_core.values.IncompatibleValueException;
+import com.ldream.ldream_core.values.Value;
 
-@SuppressWarnings("serial")
 public class Sum extends AbstractEnnaryExpression {
 
-	public Sum(Expression[] operands, Number[] operandsValue) {
+	public Sum(Expression[] operands, Value[] operandsValue) {
 		super(operands,operandsValue);
 	}
 
@@ -22,13 +24,13 @@ public class Sum extends AbstractEnnaryExpression {
 	}
 
 	@Override
-	public Number getNeutralValue() {
-		return 0;
-	}
-
-	@Override
-	public Number op(Number n1, Number n2) {
-		return n1.doubleValue() + n2.doubleValue();
+	public Value op(Value v1, Value v2) {
+		if (!(v1 instanceof AdditiveValue))
+			throw new IncompatibleValueException(v1,AdditiveValue.class);
+		if (!(v2 instanceof AdditiveValue))
+			throw new IncompatibleValueException(v2,AdditiveValue.class);
+		
+		return ((AdditiveValue) v1).add((AdditiveValue) v2);
 	}
 
 	@Override

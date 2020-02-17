@@ -9,6 +9,7 @@ import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.Constant;
 import com.ldream.ldream_core.expressions.PoolSize;
 import com.ldream.ldream_core.output.ConsoleOutput;
+import com.ldream.ldream_core.values.NumberValue;
 
 public class Swapper extends AbstractComponent {
 
@@ -21,7 +22,7 @@ public class Swapper extends AbstractComponent {
 		
 		Rule cRule = new FOILRule(d, 
 				new ConjunctiveTerm(
-						new GreaterThan(new PoolSize(new ActualComponentInstance(s1)),new Constant(4)),
+						new GreaterThan(new PoolSize(new ActualComponentInstance(s1)),new Constant(new NumberValue(4))),
 						new Migrate(d.getVariable(),new ActualComponentInstance(d1))
 						));
 		setRule(cRule);

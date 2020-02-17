@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.ldream.ldream_core.values.Value;
+
 public class Store {
 
 	private Map<String,LocalVariable> localVariables;
@@ -45,7 +47,7 @@ public class Store {
 		this.localVariables = localVariables;
 	}
 
-	public void setVarValue(String varName, Number varValue) {
+	public void setVarValue(String varName, Value varValue) {
 		if (localVariables.containsKey(varName)) {
 			localVariables.get(varName).setValue(varValue);
 		}

@@ -7,24 +7,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ldream.ldream_core.values.Value;
+
 /**
  * @author alessandro
  *
  */
-@SuppressWarnings("serial")
 public abstract class AbstractEnnaryExpression extends AbstractExpression implements Expression {
 
 	protected Expression[] operands;
-	protected Number[] operandsValue;
+	protected Value[] operandsValue;
 
 	public AbstractEnnaryExpression(Expression[] operands,
-			Number[] operandsValue) {
+			Value[] operandsValue) {
 		this.operands = operands;
 		this.operandsValue = operandsValue;
 	}
 
 	public AbstractEnnaryExpression(Expression... operands) {
-		this(operands,new Number[operands.length]);
+		this(operands,new Value[operands.length]);
 	}
 
 	public AbstractEnnaryExpression(List<Expression> operands) {
@@ -58,35 +59,40 @@ public abstract class AbstractEnnaryExpression extends AbstractExpression implem
 
 	@Override
 	public boolean allOperandsValued() {
-		for (Number operandValue : operandsValue)
+		for (Value operandValue : operandsValue)
 			if (operandValue == null)
 				return false;
 		return true;
 	}
 
 	@Override
-	public Number computeResult() {
+	public Value computeResult() {
 		// check if all parameters are integer
-		boolean int_operands = true;
-		for (Number n : operandsValue) {
-			if (n.intValue() != (int)n.doubleValue()) {
-				int_operands = false;
-				break;
-			}
-		}
-		Number result = getNeutralValue();
-		for (Number n : operandsValue)
-			result = op(result,n);
+//		boolean int_operands = true;
+//		for (Value n : operandsValue) {
+//			if (n.intValue() != (int)n.doubleValue()) {
+//				int_operands = false;
+//				break;
+//			}
+//		}
+//		Value result = getNeutralValue();
+//		for (Value n : operandsValue)
+//			result = op(result,n);
 		// return integer result if all params are integer AND the result is integer
-		if (int_operands && (result.intValue() == (int)result.doubleValue()))
-			return result.intValue();
-		else
-			return result;
+//		if (int_operands && (result.intValue() == (int)result.doubleValue()))
+//			return result.intValue();
+//		else
+//			return result;
+		Value result = operandsValue[0];
+		if (operandsValue.length > 1)
+			for (int i=1; i<operandsValue.length; i++)
+				result = op(result,operandsValue[i]);
+		return result;
 	}
 
 	@Override
 	public void clearCache() {
-		operandsValue = new Number[operands.length];
+		operandsValue = new Value[operands.length];
 	}
 
 	public String toString() {
@@ -97,8 +103,6 @@ public abstract class AbstractEnnaryExpression extends AbstractExpression implem
 
 	public abstract String getOperatorSymbol();
 
-	public abstract Number getNeutralValue();
-
-	public abstract Number op(Number n1,Number n2);
+	public abstract Value op(Value v1,Value v2);
 
 }

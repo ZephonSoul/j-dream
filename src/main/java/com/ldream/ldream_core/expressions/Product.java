@@ -8,15 +8,17 @@ import java.util.List;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.values.FactorizableValue;
+import com.ldream.ldream_core.values.IncompatibleValueException;
+import com.ldream.ldream_core.values.Value;
 
 /**
  * @author alessandro
  *
  */
-@SuppressWarnings("serial")
 public class Product extends AbstractEnnaryExpression {
 	
-	public Product(Expression[] operands,Number[] operandsValue) {
+	public Product(Expression[] operands,Value[] operandsValue) {
 		super(operands,operandsValue);
 	}
 	
@@ -29,13 +31,13 @@ public class Product extends AbstractEnnaryExpression {
 	}
 
 	@Override
-	public Number getNeutralValue() {
-		return 1;
-	}
+	public Value op(Value v1, Value v2) {
+		if (!(v1 instanceof FactorizableValue))
+			throw new IncompatibleValueException(v1,FactorizableValue.class);
+		if (!(v2 instanceof FactorizableValue))
+			throw new IncompatibleValueException(v2,FactorizableValue.class);
 
-	@Override
-	public Number op(Number n1, Number n2) {
-		return n1.doubleValue() * n2.doubleValue();
+		return ((FactorizableValue) v1).multiplyBy((FactorizableValue) v2);
 	}
 
 	@Override

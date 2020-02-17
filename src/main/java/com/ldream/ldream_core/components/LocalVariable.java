@@ -1,42 +1,40 @@
 package com.ldream.ldream_core.components;
 
+import com.ldream.ldream_core.values.Value;
+
 public class LocalVariable {
 
 	final static int BASE_CODE = 777;
 
 	protected String name;
-	protected Number value;
+	protected Value value;
 	protected Component owner;
 
-	public LocalVariable(String name, Number value) {
+	public LocalVariable(String name, Value value) {
 		this.name = name;
 		this.value = value;
 	}
 
-	public LocalVariable(String name, Number value, Component component) {
+	public LocalVariable(String name, Value value, Component component) {
 		this(name,value);
 		this.owner = component;
 	}
 
-	public LocalVariable(String name) {
-		this(name,0);
-	}
-
-	public LocalVariable(Number value) {
+	public LocalVariable(Value value) {
 		this("x"+(int)(Math.random()*30000),value);
 	}
 
 	/**
 	 * @return the value
 	 */
-	public Number getValue() {
+	public Value getValue() {
 		return value;
 	}
 
 	/**
 	 * @param value the value to set
 	 */
-	public void setValue(Number value) {
+	public void setValue(Value value) {
 		this.value = value;
 	}
 	

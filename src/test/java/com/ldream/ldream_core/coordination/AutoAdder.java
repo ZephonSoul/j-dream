@@ -10,13 +10,14 @@ import com.ldream.ldream_core.expressions.ActualVariable;
 import com.ldream.ldream_core.expressions.Constant;
 import com.ldream.ldream_core.expressions.Sum;
 import com.ldream.ldream_core.output.ConsoleOutput;
+import com.ldream.ldream_core.values.NumberValue;
 
 public class AutoAdder extends AbstractComponent {
 
 	public AutoAdder() {
-		LocalVariable x = new LocalVariable("val",0);
+		LocalVariable x = new LocalVariable("val",new NumberValue(0));
 		setStore(x);
-		setRule(new Term(new Assign(new ActualVariable(x),new Sum(new ActualVariable(x),new Constant(1)))));
+		setRule(new Term(new Assign(new ActualVariable(x),new Sum(new ActualVariable(x),new Constant(new NumberValue(1))))));
 	}
 	
 	public static void main(String[] args) {

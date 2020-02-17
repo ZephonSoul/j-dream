@@ -6,6 +6,7 @@ import java.util.Set;
 import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.coordination.Rule;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
+import com.ldream.ldream_core.values.Value;
 
 public interface Component {
 	
@@ -13,7 +14,7 @@ public interface Component {
 	
 	public void setParent(Component parent);
 
-	public void setStoreVar(String varName,Number val) throws InvalidLocalVariableException;
+	public void setStoreVar(String varName, Value val) throws InvalidLocalVariableException;
 	
 	public LocalVariable getLocalVariable(String varName) throws InvalidLocalVariableException;
 	

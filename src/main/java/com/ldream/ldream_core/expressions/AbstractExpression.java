@@ -1,7 +1,8 @@
 package com.ldream.ldream_core.expressions;
 
-@SuppressWarnings("serial")
-public abstract class AbstractExpression extends Number implements Expression {
+import com.ldream.ldream_core.values.Value;
+
+public abstract class AbstractExpression implements Expression {
 
 	@Override
 	public boolean equals(Object o) {
@@ -10,27 +11,7 @@ public abstract class AbstractExpression extends Number implements Expression {
 	}
 
 	@Override
-	public int intValue() {
-		return eval().intValue();
-	}
-
-	@Override
-	public long longValue() {
-		return eval().longValue();
-	}
-
-	@Override
-	public float floatValue() {
-		return eval().floatValue();
-	}
-
-	@Override
-	public double doubleValue() {
-		return eval().doubleValue();
-	}
-
-	@Override
-	public Number eval() {
+	public Value eval() {
 		evaluateOperands();
 		if (allOperandsValued()) {
 			return computeResult();
@@ -40,7 +21,7 @@ public abstract class AbstractExpression extends Number implements Expression {
 			return null;
 	}
 
-	protected abstract Number computeResult();
+	protected abstract Value computeResult();
 
 	protected abstract boolean allOperandsValued();
 

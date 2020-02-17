@@ -4,13 +4,14 @@ import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.TypeRestriction;
 import com.ldream.ldream_core.coordination.UnboundReferenceException;
+import com.ldream.ldream_core.values.NumberValue;
+import com.ldream.ldream_core.values.Value;
 
-@SuppressWarnings("serial")
 public class PoolSize extends AbstractExpression implements Expression {
 
 	private ComponentInstance componentInstance;
 	private TypeRestriction type;
-	private Number value;
+	private Value value;
 
 	/**
 	 * @param componentInstance
@@ -20,7 +21,7 @@ public class PoolSize extends AbstractExpression implements Expression {
 	public PoolSize(
 			ComponentInstance componentInstance, 
 			TypeRestriction type, 
-			Number value) {
+			Value value) {
 		this.componentInstance = componentInstance;
 		this.type = type;
 		this.value = value;
@@ -63,8 +64,10 @@ public class PoolSize extends AbstractExpression implements Expression {
 	@Override
 	public void evaluateOperands() {
 		if (value == null)
-			if (componentInstance instanceof ActualComponentInstance)
-				value = ((ActualComponentInstance) componentInstance).getComponent().getPoolSize();
+			if (componentInstance instanceof ActualComponentInstance) {
+				int size = ((ActualComponentInstance) componentInstance).getComponent().getPoolSize();
+				value = new NumberValue(size);
+				}
 			else
 				throw new UnboundReferenceException(componentInstance);
 	}
@@ -75,7 +78,7 @@ public class PoolSize extends AbstractExpression implements Expression {
 	}
 
 	@Override
-	public Number computeResult() {
+	public Value computeResult() {
 		return value;
 	}
 

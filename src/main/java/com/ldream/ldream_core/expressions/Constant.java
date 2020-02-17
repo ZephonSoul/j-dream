@@ -2,16 +2,17 @@ package com.ldream.ldream_core.expressions;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.values.Value;
 
 public class Constant implements Expression {
 
-	private Number value;
+	private Value value;
 	
-	public Constant(Number value) {
+	public Constant(Value value) {
 		this.value = value;
 	}
 	
-	public Number getValue() {
+	public Value getValue() {
 		return value;
 	}
 	
@@ -21,7 +22,7 @@ public class Constant implements Expression {
 	
 	@Override
 	public int hashCode() {
-		return value.intValue();
+		return value.hashCode();
 	}
 	
 	@Override
@@ -44,7 +45,7 @@ public class Constant implements Expression {
 	}
 
 	@Override
-	public Number eval() {
+	public Value eval() {
 		return value;
 	}
 

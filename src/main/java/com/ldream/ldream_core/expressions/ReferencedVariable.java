@@ -3,8 +3,8 @@ package com.ldream.ldream_core.expressions;
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.UnboundReferenceException;
+import com.ldream.ldream_core.values.Value;
 
-@SuppressWarnings("serial")
 public class ReferencedVariable extends AbstractExpression implements VariableExpression {
 
 	private ComponentInstance componentInstance;
@@ -64,7 +64,7 @@ public class ReferencedVariable extends AbstractExpression implements VariableEx
 	public void evaluateOperands() {	}
 
 	@Override
-	public Number computeResult() {
+	public Value computeResult() {
 		throw new UnboundReferenceException(componentInstance);
 	}
 

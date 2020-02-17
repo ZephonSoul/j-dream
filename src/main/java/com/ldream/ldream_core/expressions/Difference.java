@@ -5,27 +5,29 @@ package com.ldream.ldream_core.expressions;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.values.AdditiveValue;
+import com.ldream.ldream_core.values.IncompatibleValueException;
+import com.ldream.ldream_core.values.Value;
 
 /**
  * @author alessandro
  *
  */
-@SuppressWarnings("serial")
 public class Difference extends AbstractBinaryExpression {
-	
+
 	public Difference(
 			Expression operand1,
 			Expression operand2,
-			Number operandValue1,
-			Number operandValue2) {
-		
+			Value operandValue1,
+			Value operandValue2) {
+
 		super(operand1,operand2,operandValue1,operandValue2);
 	}
 
 	public Difference(
 			Expression operand1,
 			Expression operand2) {
-		
+
 		super(operand1,operand2);
 	}
 
@@ -54,8 +56,13 @@ public class Difference extends AbstractBinaryExpression {
 	}
 
 	@Override
-	public Number op(Number n1, Number n2) {
-		return n1.doubleValue() - n2.doubleValue();
+	public Value op(Value v1, Value v2) {
+		if (!(v1 instanceof AdditiveValue))
+			throw new IncompatibleValueException(v1,AdditiveValue.class);
+		if (!(v2 instanceof AdditiveValue))
+			throw new IncompatibleValueException(v2,AdditiveValue.class);
+		
+		return ((AdditiveValue) v1).subtract((AdditiveValue) v2);
 	}
 
 }

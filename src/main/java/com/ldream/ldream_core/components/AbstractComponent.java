@@ -12,6 +12,7 @@ import com.ldream.ldream_core.coordination.Rule;
 import com.ldream.ldream_core.coordination.Term;
 import com.ldream.ldream_core.coordination.interactions.Tautology;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
+import com.ldream.ldream_core.values.Value;
 
 public abstract class AbstractComponent implements Component {
 
@@ -182,7 +183,7 @@ public abstract class AbstractComponent implements Component {
 	}
 
 	@Override
-	public void setStoreVar(String varName, Number varValue) throws InvalidLocalVariableException {
+	public void setStoreVar(String varName, Value varValue) throws InvalidLocalVariableException {
 		cStore.setVarValue(varName,varValue);
 	}
 

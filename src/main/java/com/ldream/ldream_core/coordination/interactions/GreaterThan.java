@@ -5,8 +5,10 @@ import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
-import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.expressions.Expression;
+import com.ldream.ldream_core.values.IncompatibleValueException;
+import com.ldream.ldream_core.values.OrderedValue;
+import com.ldream.ldream_core.values.Value;
 
 public class GreaterThan extends AbstractPredicate implements Predicate {
 
@@ -29,29 +31,17 @@ public class GreaterThan extends AbstractPredicate implements Predicate {
 	}
 
 	@Override
-	public boolean sat(Interaction i) {
-		boolean sat = true,
-				skip = true;
-		double 	term_value = terms.get(0).eval().doubleValue(),
-				lesser_term;
-		for (Expression term : terms) {
-			if (skip)
-				skip = false;
-			else {
-				lesser_term = term.eval().doubleValue();
-				sat = term_value > lesser_term;
-				if (!sat)
-					break;
-				else
-					term_value = lesser_term;
-			}
-		}
-		return sat;
-	}
-
-	@Override
 	protected String getPredicateSymbol() {
 		return ">";
+	}
+	
+	@Override
+	protected boolean testValues(Value v1, Value v2) {
+		if (!(v1 instanceof OrderedValue))
+			throw new IncompatibleValueException(v1, OrderedValue.class);
+		if (!(v2 instanceof OrderedValue))
+			throw new IncompatibleValueException(v2, OrderedValue.class);
+		return ((OrderedValue) v1).greaterThan((OrderedValue) v2);
 	}
 
 	@Override

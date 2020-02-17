@@ -3,12 +3,12 @@ package com.ldream.ldream_core.expressions;
 import com.ldream.ldream_core.components.LocalVariable;
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.values.Value;
 
-@SuppressWarnings("serial")
 public class ActualVariable extends AbstractExpression implements VariableExpression {
 	
 	private LocalVariable localVariable;
-	private Number variableValue;
+	private Value variableValue;
 	
 	public ActualVariable(LocalVariable localVariable) {
 		this.localVariable = localVariable;
@@ -19,7 +19,7 @@ public class ActualVariable extends AbstractExpression implements VariableExpres
 	}
 
 	@Override
-	public Number eval() {
+	public Value eval() {
 		return localVariable.getValue();
 	}
 
@@ -54,7 +54,7 @@ public class ActualVariable extends AbstractExpression implements VariableExpres
 	}
 
 	@Override
-	public Number computeResult() {
+	public Value computeResult() {
 		return variableValue;
 	}
 

@@ -12,6 +12,7 @@ import com.ldream.ldream_core.expressions.Constant;
 import com.ldream.ldream_core.expressions.ReferencedVariable;
 import com.ldream.ldream_core.expressions.Sum;
 import com.ldream.ldream_core.output.ConsoleOutput;
+import com.ldream.ldream_core.values.NumberValue;
 
 public class IdentityChecker extends AbstractComponent implements Component {
 
@@ -26,7 +27,7 @@ public class IdentityChecker extends AbstractComponent implements Component {
 								new PortReference(d.getVariable(),"p1")
 								),
 						new Assign(new ReferencedVariable(d.getVariable(),"x"),
-								new Sum(new ReferencedVariable(d.getVariable(),"x"),new Constant(1)))
+								new Sum(new ReferencedVariable(d.getVariable(),"x"),new Constant(new NumberValue(1))))
 				)));
 	}
 	

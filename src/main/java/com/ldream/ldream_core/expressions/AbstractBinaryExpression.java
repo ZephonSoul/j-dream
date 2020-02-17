@@ -1,16 +1,17 @@
 package com.ldream.ldream_core.expressions;
 
-@SuppressWarnings("serial")
+import com.ldream.ldream_core.values.Value;
+
 public abstract class AbstractBinaryExpression extends AbstractExpression implements Expression {
 
 	protected Expression operand1,operand2;
-	protected Number operandValue1,operandValue2;
+	protected Value operandValue1,operandValue2;
 	
 	public AbstractBinaryExpression(
 			Expression operand1,
 			Expression operand2,
-			Number operandValue1,
-			Number operandValue2) {
+			Value operandValue1,
+			Value operandValue2) {
 		
 		this.operand1 = operand1;
 		this.operand2 = operand2;
@@ -51,16 +52,16 @@ public abstract class AbstractBinaryExpression extends AbstractExpression implem
 	}
 
 	@Override
-	public Number computeResult() {
+	public Value computeResult() {
 		// check if all operands are integer
-		boolean int_operands = 
-				(operandValue1.intValue() == (int)operandValue1.doubleValue())
-				&& (operandValue2.intValue() == (int)operandValue2.doubleValue());
-		Number result = op(operandValue1,operandValue2);
+//		boolean int_operands = 
+//				(operandValue1.intValue() == (int)operandValue1.doubleValue())
+//				&& (operandValue2.intValue() == (int)operandValue2.doubleValue());
+		Value result = op(operandValue1,operandValue2);
 		// return integer result if all operands are integer AND the result is integer
-		if (int_operands && (result.intValue() == (int)result.doubleValue()))
-			return result.intValue();
-		else
+//		if (int_operands && (result.intValue() == (int)result.doubleValue()))
+//			return result.intValue();
+//		else
 			return result;
 	}
 
@@ -76,6 +77,6 @@ public abstract class AbstractBinaryExpression extends AbstractExpression implem
 
 	public abstract String getOperatorSymbol();
 
-	public abstract Number op(Number n1,Number n2);
+	public abstract Value op(Value v1,Value v2);
 
 }

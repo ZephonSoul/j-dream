@@ -7,13 +7,14 @@ import com.ldream.ldream_core.coordination.operations.*;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.*;
 import com.ldream.ldream_core.output.ConsoleOutput;
+import com.ldream.ldream_core.values.NumberValue;
 
 public class Spawner extends AbstractComponent {
 
 	public Spawner() {
 		super();
-		LocalVariable 	x = new LocalVariable("spawns",5,this),
-				y = new LocalVariable("spawned",0,this);
+		LocalVariable 	x = new LocalVariable("spawns",new NumberValue(5),this),
+				y = new LocalVariable("spawned",new NumberValue(0),this);
 		setStore(x,y);
 		//ReferencedComponentInstance c = new ReferencedComponentInstance();
 		var d = new Declaration(
@@ -35,11 +36,11 @@ public class Spawner extends AbstractComponent {
 //				)
 //				);
 		setRule(new ConjunctiveTerm(
-						new LessThan(new ActualVariable(y),new Constant(5)),
+						new LessThan(new ActualVariable(y),new Constant(new NumberValue(5))),
 						new OperationsSequence(
 								new CreateInstance(DummyComponent.class,new ActualComponentInstance(this)),
-								new Assign(new ActualVariable(x),new Difference(new ActualVariable(x),new Constant(1))),
-								new Assign(new ActualVariable(y),new Sum(new ActualVariable(y),new Constant(1)))				)
+								new Assign(new ActualVariable(x),new Difference(new ActualVariable(x),new Constant(new NumberValue(1)))),
+								new Assign(new ActualVariable(y),new Sum(new ActualVariable(y),new Constant(new NumberValue(1))))				)
 						));
 	}
 

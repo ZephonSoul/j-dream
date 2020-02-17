@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
-import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.expressions.Expression;
+import com.ldream.ldream_core.values.Value;
 
 public class Equals extends AbstractPredicate implements Predicate {
 
@@ -16,18 +16,6 @@ public class Equals extends AbstractPredicate implements Predicate {
 
 	public Equals(List<Expression> terms) {
 		super(terms);
-	}
-
-	@Override
-	public boolean sat(Interaction i) {
-		boolean sat = true;
-		Number term_value = terms.get(0).eval();
-		for (Expression term : terms) {
-			sat = term_value.equals(term.eval());
-			if (!sat)
-				break;
-		}
-		return sat;
 	}
 
 	@Override
@@ -49,6 +37,11 @@ public class Equals extends AbstractPredicate implements Predicate {
 	public boolean equals(Formula formula) {
 		return (formula instanceof Equals)
 				&& equalTerms((Equals) formula);
+	}
+
+	@Override
+	protected boolean testValues(Value v1, Value v2) {
+		return v1.equals(v2);
 	}
 
 }

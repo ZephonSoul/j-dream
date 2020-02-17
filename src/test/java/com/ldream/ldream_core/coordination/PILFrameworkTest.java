@@ -22,6 +22,7 @@ import com.ldream.ldream_core.coordination.operations.Operation;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 import com.ldream.ldream_core.coordination.operations.Skip;
 import com.ldream.ldream_core.expressions.*;
+import com.ldream.ldream_core.values.NumberValue;
 
 public class PILFrameworkTest {
 
@@ -32,10 +33,10 @@ public class PILFrameworkTest {
 	Predicate sp1,sp2,sp3;
 	LocalVariable lvar1,lvar2;
 	Rule ru1,ru2;
-	Constant 	n0 = new Constant(0),
-				n1 = new Constant(1),
-				n2 = new Constant(2),
-				n3 = new Constant(3);
+	Constant 	n0 = new Constant(new NumberValue(0)),
+				n1 = new Constant(new NumberValue(1)),
+				n2 = new Constant(new NumberValue(2)),
+				n3 = new Constant(new NumberValue(3));
 
 	@BeforeEach
 	void init() {
@@ -54,17 +55,17 @@ public class PILFrameworkTest {
 		sp2 = new Equals(n1,n2);
 		sp3 = new Equals(
 				new Sum(n2,n1),n3,
-				new Product(n2,new Constant(1.5),n1)
+				new Product(n2,new Constant(new NumberValue(1.5)),n1)
 				);
-		lvar1 = new LocalVariable("x1",0);
-		lvar2 = new LocalVariable("x2",5);
+		lvar1 = new LocalVariable("x1",new NumberValue(0));
+		lvar2 = new LocalVariable("x2",new NumberValue(5));
 	}
 	
 	@Test
 	@DisplayName("Check equations")
 	void eqnTest() {
 		Expression eq = new Sum(n2,n3,n1);
-		assertEquals(eq.eval(),6);
+		assertEquals(eq.eval(),new NumberValue(6));
 	}
 
 	@Test
@@ -130,11 +131,11 @@ public class PILFrameworkTest {
 	void assignmentTest() {
 		Operation op = new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3));
 		op.evaluateOperands();
-		assertEquals(lvar1.getValue(),0);
-		assertEquals(lvar2.getValue(),5);
+		assertEquals(lvar1.getValue(),new NumberValue(0));
+		assertEquals(lvar2.getValue(),new NumberValue(5));
 		op.execute();
-		assertEquals(lvar1.getValue(),8);
-		assertEquals(lvar2.getValue(),5);
+		assertEquals(lvar1.getValue(),new NumberValue(8));
+		assertEquals(lvar2.getValue(),new NumberValue(5));
 	}
 	
 	@Test
@@ -144,12 +145,12 @@ public class PILFrameworkTest {
 		Operation op2 = new Assign(new ActualVariable(lvar2), new Product(new ActualVariable(lvar1),n3));
 		op1.evaluateOperands();
 		op2.evaluateOperands();
-		assertEquals(lvar1.getValue(),0);
-		assertEquals(lvar2.getValue(),5);
+		assertEquals(lvar1.getValue(),new NumberValue(0));
+		assertEquals(lvar2.getValue(),new NumberValue(5));
 		op1.execute();
 		op2.execute();
-		assertEquals(lvar1.getValue(),8);
-		assertEquals(lvar2.getValue(),0);
+		assertEquals(lvar1.getValue(),new NumberValue(8));
+		assertEquals(lvar2.getValue(),new NumberValue(0));
 	}
 	
 	@Test

@@ -10,6 +10,7 @@ import com.ldream.ldream_core.coordination.operations.*;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.*;
 import com.ldream.ldream_core.output.ConsoleOutput;
+import com.ldream.ldream_core.values.NumberValue;
 
 public class SimpleComponent extends AbstractComponent implements Component {
 
@@ -17,17 +18,25 @@ public class SimpleComponent extends AbstractComponent implements Component {
 		super();
 		Port p1 = new Port("p1");
 		Port p2 = new Port("p2");
-		LocalVariable x = new LocalVariable("x",5,this);
+		LocalVariable x = new LocalVariable("x",new NumberValue(5),this);
 		setInterface(p1,p2);
 		setRule(new OrR(
 				new Term(
 						Tautology.getInstance()
 						),
 				new Term(new PortAtom(p1),
-						new Assign(new ActualVariable(x),new Sum(new Constant(10),new Constant(5),new ActualVariable(x)))
+						new Assign(new ActualVariable(x),
+								new Sum(
+										new Constant(new NumberValue(10)),
+										new Constant(new NumberValue(5)),
+										new ActualVariable(x)))
 						),
 				new Term(new PortAtom(p2),
-						new Assign(new ActualVariable(x),new Product(new Constant(2),new Constant(3),new ActualVariable(x)))
+						new Assign(new ActualVariable(x),
+								new Product(
+										new Constant(new NumberValue(2)),
+										new Constant(new NumberValue(3)),
+										new ActualVariable(x)))
 						)
 				)
 				);
