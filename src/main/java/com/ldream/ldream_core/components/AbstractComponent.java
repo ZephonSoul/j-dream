@@ -10,7 +10,7 @@ import com.ldream.ldream_core.coordination.AndR;
 import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.coordination.Rule;
 import com.ldream.ldream_core.coordination.Term;
-import com.ldream.ldream_core.coordination.interactions.Tautology;
+import com.ldream.ldream_core.coordination.constraints.Tautology;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 import com.ldream.ldream_core.values.Value;
 

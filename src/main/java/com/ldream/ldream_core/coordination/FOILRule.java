@@ -3,8 +3,8 @@ package com.ldream.ldream_core.coordination;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.coordination.interactions.Contradiction;
-import com.ldream.ldream_core.coordination.interactions.Tautology;
+import com.ldream.ldream_core.coordination.constraints.Contradiction;
+import com.ldream.ldream_core.coordination.constraints.Tautology;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
 public class FOILRule implements Rule {

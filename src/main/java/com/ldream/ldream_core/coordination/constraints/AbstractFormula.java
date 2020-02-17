@@ -1,4 +1,4 @@
-package com.ldream.ldream_core.coordination.interactions;
+package com.ldream.ldream_core.coordination.constraints;
 
 public abstract class AbstractFormula implements Formula {
 		

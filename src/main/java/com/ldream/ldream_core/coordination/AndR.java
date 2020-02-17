@@ -3,7 +3,7 @@ package com.ldream.ldream_core.coordination;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.coordination.interactions.Tautology;
+import com.ldream.ldream_core.coordination.constraints.Tautology;
 
 public class AndR extends AbstractPILRule implements Rule {
 

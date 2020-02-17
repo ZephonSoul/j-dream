@@ -3,7 +3,7 @@ package com.ldream.ldream_core.coordination;
 import com.ldream.ldream_core.ExecutionEngine;
 import com.ldream.ldream_core.components.AbstractComponent;
 import com.ldream.ldream_core.components.Pool;
-import com.ldream.ldream_core.coordination.interactions.GreaterThan;
+import com.ldream.ldream_core.coordination.guards.GreaterThan;
 import com.ldream.ldream_core.coordination.operations.Migrate;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.Constant;

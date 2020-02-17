@@ -3,7 +3,7 @@ package com.ldream.ldream_core.coordination;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.coordination.interactions.Contradiction;
+import com.ldream.ldream_core.coordination.constraints.Contradiction;
 
 public class OrR extends AbstractPILRule implements Rule {
 

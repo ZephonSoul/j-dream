@@ -1,4 +1,4 @@
-package com.ldream.ldream_core.coordination.interactions;
+package com.ldream.ldream_core.coordination.constraints;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +40,7 @@ public class And extends AbstractEnnaryFormula implements Formula {
 	}
 
 	public String getConnectiveSymbol() {
-		return "/\\";
+		return "Ʌ";
 	}
 
 	@Override

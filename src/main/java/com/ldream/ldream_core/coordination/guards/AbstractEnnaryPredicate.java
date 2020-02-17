@@ -1,4 +1,4 @@
-package com.ldream.ldream_core.coordination.interactions;
+package com.ldream.ldream_core.coordination.guards;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,15 +8,15 @@ import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.expressions.Expression;
 import com.ldream.ldream_core.values.Value;
 
-public abstract class AbstractPredicate implements Predicate {
+public abstract class AbstractEnnaryPredicate extends AbstractPredicate implements Predicate {
 
 	List<Expression> terms;
 	
-	public AbstractPredicate(Expression... terms) {
+	public AbstractEnnaryPredicate(Expression... terms) {
 		this.terms = Arrays.asList(terms);
 	}
 	
-	public AbstractPredicate(List<Expression> terms) {
+	public AbstractEnnaryPredicate(List<Expression> terms) {
 		this.terms = terms;
 	}
 	
@@ -28,13 +28,8 @@ public abstract class AbstractPredicate implements Predicate {
 		return terms.stream().map(Expression::toString).collect(Collectors.joining(getPredicateSymbol()));
 	}	
 	
-	public boolean equalTerms(AbstractPredicate predicate) {
+	public boolean equalTerms(AbstractEnnaryPredicate predicate) {
 		return terms.equals(predicate.getTerms());
-	}
-	
-	@Override
-	public boolean equals(Object o) {
-		return (o instanceof Predicate)	&& equals((Predicate) o);
 	}
 	
 	@Override

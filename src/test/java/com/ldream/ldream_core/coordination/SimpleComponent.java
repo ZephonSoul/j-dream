@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.ldream.ldream_core.ExecutionEngine;
 import com.ldream.ldream_core.components.*;
-import com.ldream.ldream_core.coordination.interactions.*;
+import com.ldream.ldream_core.coordination.constraints.*;
 import com.ldream.ldream_core.coordination.operations.*;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.*;

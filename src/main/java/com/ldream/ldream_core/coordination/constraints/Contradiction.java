@@ -1,24 +1,24 @@
-package com.ldream.ldream_core.coordination.interactions;
+package com.ldream.ldream_core.coordination.constraints;
 
 import com.ldream.ldream_core.coordination.Interaction;
 
-public class Tautology extends AbstractConstantFormula implements Formula {
+public class Contradiction extends AbstractConstantFormula implements Formula {
 	
-	private static Tautology instance;
+	private static Contradiction instance;
 	
-	public static Tautology getInstance() {
+	public static Contradiction getInstance() {
 		if (instance == null)
-			instance = new Tautology();
+			instance = new Contradiction();
 		return instance;
 	}
 
 	@Override
 	public boolean sat(Interaction i) {
-		return true;
+		return false;
 	}
 	
 	public String toString() {
-		return "TRUE";
+		return "FALSE";
 	}
 	
 	@Override

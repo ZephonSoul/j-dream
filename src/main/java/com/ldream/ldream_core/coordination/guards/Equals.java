@@ -1,14 +1,15 @@
-package com.ldream.ldream_core.coordination.interactions;
+package com.ldream.ldream_core.coordination.guards;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
+import com.ldream.ldream_core.coordination.constraints.Formula;
 import com.ldream.ldream_core.expressions.Expression;
 import com.ldream.ldream_core.values.Value;
 
-public class Equals extends AbstractPredicate implements Predicate {
+public class Equals extends AbstractEnnaryPredicate implements Predicate {
 
 	public Equals(Expression... terms) {
 		super(terms);

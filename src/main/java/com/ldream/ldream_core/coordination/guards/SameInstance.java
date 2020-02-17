@@ -1,4 +1,4 @@
-package com.ldream.ldream_core.coordination.interactions;
+package com.ldream.ldream_core.coordination.guards;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,6 +8,7 @@ import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.coordination.UnboundReferenceException;
+import com.ldream.ldream_core.coordination.constraints.Formula;
 
 public class SameInstance implements Predicate {
 	
