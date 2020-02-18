@@ -12,6 +12,8 @@ public interface Rule extends Bindable<Rule> {
 	public Rule expandDeclarations();
 	
 	public boolean equals(Rule rule);
+	
+	public int hashCode();
 
 	public void clearCache();
 	

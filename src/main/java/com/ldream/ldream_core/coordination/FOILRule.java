@@ -1,6 +1,7 @@
 package com.ldream.ldream_core.coordination;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.constraints.Contradiction;
 import com.ldream.ldream_core.coordination.constraints.Tautology;
@@ -37,7 +38,7 @@ public class FOILRule implements Rule {
 			else
 				ruleInstance = new AndR(Arrays.stream(matchingInstances)
 						.map(c -> rule.bindActualComponent(declaration.getVariable(), c))
-						.toArray(Rule[]::new));
+						.collect(Collectors.toSet()));
 			break;
 		case EXISTS:
 			if (matchingInstances.length == 0)
@@ -45,7 +46,7 @@ public class FOILRule implements Rule {
 			else
 				ruleInstance = new OrR(Arrays.stream(matchingInstances)
 						.map(c -> rule.bindActualComponent(declaration.getVariable(), c))
-						.toArray(Rule[]::new));
+						.collect(Collectors.toSet()));
 			break;
 		}
 		return ruleInstance;

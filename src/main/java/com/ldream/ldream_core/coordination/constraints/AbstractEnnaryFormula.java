@@ -1,25 +1,30 @@
 package com.ldream.ldream_core.coordination.constraints;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.Interaction;
 
 public abstract class AbstractEnnaryFormula extends AbstractFormula implements Formula {
 
-	Formula[] subformulas;
+	Set<Formula> subformulas;
 
-	public AbstractEnnaryFormula(Formula... subformulas) {
+	public AbstractEnnaryFormula(Set<Formula> subformulas) {
 		this.subformulas = subformulas;
 	}
+	
+	public AbstractEnnaryFormula(Formula... subformulas) {
+		this.subformulas = Arrays.stream(subformulas).collect(Collectors.toSet());
+	}
 
-	public Formula[] getSubformulas() {
+	public Set<Formula> getSubformulas() {
 		return subformulas;
 	}
 
 	public String toString() {
 		return "(" + 
-				Arrays.stream(subformulas)
+				subformulas.stream()
 		.map(Formula::toString)
 		.collect(Collectors.joining(" " + getConnectiveSymbol() + " "))
 		+ ")";
@@ -27,7 +32,7 @@ public abstract class AbstractEnnaryFormula extends AbstractFormula implements F
 
 	@Override
 	public void clearCache() {
-		Arrays.stream(subformulas).forEach(Formula::clearCache);
+		subformulas.stream().forEach(Formula::clearCache);
 	}
 
 	public boolean equalSubformulas(AbstractEnnaryFormula formula) {

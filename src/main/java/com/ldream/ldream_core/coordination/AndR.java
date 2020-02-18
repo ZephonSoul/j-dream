@@ -1,11 +1,15 @@
 package com.ldream.ldream_core.coordination;
 
-import java.util.Arrays;
+import java.util.Set;
 
 import com.ldream.ldream_core.coordination.constraints.Tautology;
 
 public class AndR extends AbstractPILRule implements Rule {
 
+	public AndR(Set<Rule> rules) {
+		super(rules);
+	}
+	
 	public AndR(Rule... rules) {
 		super(rules);
 	}
@@ -26,11 +30,11 @@ public class AndR extends AbstractPILRule implements Rule {
 	
 	@Override
 	public Rule expandDeclarations() {
-		if (rules.length == 0)
+		if (rules.isEmpty())
 			return new Term(Tautology.getInstance());
 		else
 			return new AndR(
-					Arrays.stream(rules)
+					rules.stream()
 					.map(Rule::expandDeclarations)
 					.toArray(Rule[]::new));
 	}
@@ -40,10 +44,10 @@ public class AndR extends AbstractPILRule implements Rule {
 			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
 
-		if (rules.length == 0)
+		if (rules.isEmpty())
 			return new Term(Tautology.getInstance());
 		else
-			return new AndR(Arrays.stream(rules)
+			return new AndR(rules.stream()
 					.map(r -> r.bindActualComponent(componentVariable, actualComponent))
 					.toArray(Rule[]::new));
 	}

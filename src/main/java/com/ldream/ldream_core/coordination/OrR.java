@@ -1,11 +1,15 @@
 package com.ldream.ldream_core.coordination;
 
-import java.util.Arrays;
+import java.util.Set;
 
 import com.ldream.ldream_core.coordination.constraints.Contradiction;
 
 public class OrR extends AbstractPILRule implements Rule {
 
+	public OrR(Set<Rule> rules) {
+		super(rules);
+	}
+	
 	public OrR(Rule... rules) {
 		super(rules);
 	}
@@ -26,11 +30,11 @@ public class OrR extends AbstractPILRule implements Rule {
 
 	@Override
 	public Rule expandDeclarations() {
-		if (rules.length == 0)
+		if (rules.isEmpty())
 			return new Term(Contradiction.getInstance());
 		else
 			return new OrR(
-					Arrays.stream(rules)
+					rules.stream()
 					.map(Rule::expandDeclarations)
 					.toArray(Rule[]::new));
 	}
@@ -40,10 +44,10 @@ public class OrR extends AbstractPILRule implements Rule {
 			ComponentInstance componentVariable, 
 			ActualComponentInstance actualComponent) {
 
-		if (rules.length == 0)
+		if (rules.isEmpty())
 			return new Term(Contradiction.getInstance());
 		else
-			return new OrR(Arrays.stream(rules)
+			return new OrR(rules.stream()
 					.map(r -> r.bindActualComponent(componentVariable, actualComponent))
 					.toArray(Rule[]::new));
 	}

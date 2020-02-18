@@ -1,21 +1,26 @@
 package com.ldream.ldream_core.coordination;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
 public abstract class AbstractPILRule implements Rule {
 
-	Rule[] rules;
+	Set<Rule> rules;
 	Interaction cachedInteraction;
 	boolean cachedSat;
 	
-	public AbstractPILRule(Rule... rules) {
+	public AbstractPILRule(Set<Rule> rules) {
 		this.rules = rules;
 	}
+	
+	public AbstractPILRule(Rule... rules) {
+		this.rules = Arrays.stream(rules).collect(Collectors.toSet());
+	}
 
-	private Rule[] getRules() {
+	private Set<Rule> getRules() {
 		return rules;
 	}
 	
@@ -49,7 +54,7 @@ public abstract class AbstractPILRule implements Rule {
 	
 	@Override
 	public void clearCache() {
-		Arrays.stream(rules).forEach(Rule::clearCache);
+		rules.stream().forEach(Rule::clearCache);
 	}
 	
 	protected boolean equalSubRules(AbstractPILRule rule) {
@@ -57,7 +62,7 @@ public abstract class AbstractPILRule implements Rule {
 	}
 
 	public String toString() {
-		return "(" + Arrays.stream(rules).map(Rule::toString)
+		return "(" + rules.stream().map(Rule::toString)
 				.collect(Collectors.joining(" " + getConnectiveSymbol() +" ")) + ")";
 	}
 	
