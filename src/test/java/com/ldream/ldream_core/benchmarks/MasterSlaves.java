@@ -203,6 +203,7 @@ public class MasterSlaves extends AbstractComponent implements Component {
 								new SameInstance(m,m2)
 								)
 						));
+		ru1 = new Term(new AtMost(new NumberValue(1),new TypeRestriction(Master.class),"connect"));
 		
 		s = forall_slaves.getVariable();
 		Declaration ds2 = new Declaration(
@@ -221,6 +222,7 @@ public class MasterSlaves extends AbstractComponent implements Component {
 								new SameInstance(s,s2)
 								)
 						));
+		ru2 = new Term(new AtMost(new NumberValue(1),new TypeRestriction(Slave.class),"bind"));
 		
 		Rule globalRule = new AndR(rc1,rc2,rc3,rc4,ru1,ru2,new OrR(rd1,rd2));
 		
@@ -229,9 +231,9 @@ public class MasterSlaves extends AbstractComponent implements Component {
 	}
 
 	public static void main(String[] args) {
-		MasterSlaves c = new MasterSlaves(2);
+		MasterSlaves c = new MasterSlaves(5);
 		
-		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,5);
+		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,20);
 		ex.setSnapshotSemantics(true);
 		ex.run();
 	}
