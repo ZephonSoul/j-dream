@@ -1,4 +1,4 @@
-package com.ldream.ldream_core.coordination.guards;
+package com.ldream.ldream_core.coordination.predicates;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,11 +6,12 @@ import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
-import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.coordination.UnboundReferenceException;
 import com.ldream.ldream_core.coordination.constraints.Formula;
 
-public class SameInstance implements Predicate {
+public class SameInstance extends AbstractPredicate implements Predicate {
+	
+	public final static int BASE_CODE = 3;
 	
 	List<ComponentInstance> components;
 	
@@ -27,7 +28,7 @@ public class SameInstance implements Predicate {
 	}
 
 	@Override
-	public boolean sat(Interaction i) {
+	public boolean sat() {
 		int id = -1;
 		for (ComponentInstance c : components) {
 			if (!(c instanceof ActualComponentInstance))
@@ -70,6 +71,11 @@ public class SameInstance implements Predicate {
 		return "(" + 
 				components.stream().map(ComponentInstance::toString).collect(Collectors.joining("="))
 				+ ")";
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
 	}
 
 }

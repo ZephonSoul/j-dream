@@ -66,6 +66,12 @@ public abstract class AbstractPILRule implements Rule {
 				.collect(Collectors.joining(" " + getConnectiveSymbol() +" ")) + ")";
 	}
 	
+	@Override
+	public int hashCode() {
+		return this.getClass().hashCode() +
+				rules.stream().mapToInt(Rule::hashCode).sum();
+	}
+	
 	protected abstract boolean checkSat(Interaction i);
 	
 	protected abstract String getConnectiveSymbol();

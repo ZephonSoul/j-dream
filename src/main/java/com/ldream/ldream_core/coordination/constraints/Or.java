@@ -8,6 +8,8 @@ import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 
 public class Or extends AbstractEnnaryFormula implements Formula {
+	
+	private static final int BASE_CODE = 7;
 
 	public Or(Set<Formula> subformulas) {
 		super(subformulas);
@@ -20,6 +22,11 @@ public class Or extends AbstractEnnaryFormula implements Formula {
 	@Override
 	public boolean sat(Interaction i) {
 		return subformulas.stream().anyMatch(f -> f.sat(i));
+	}
+
+	@Override
+	public boolean sat() {
+		return subformulas.stream().anyMatch(f -> f.sat());
 	}
 
 	@Override
@@ -41,5 +48,9 @@ public class Or extends AbstractEnnaryFormula implements Formula {
 		return (formula instanceof Or)
 				&& equalSubformulas((Or) formula);
 	}
-
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
+	}
 }

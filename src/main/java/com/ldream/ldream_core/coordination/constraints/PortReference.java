@@ -6,6 +6,8 @@ import com.ldream.ldream_core.coordination.Interaction;
 
 public class PortReference extends AbstractFormula implements Formula {
 	
+	private static final int BASE_CODE = 25;
+	
 	private ComponentInstance componentInstance;
 
 	private String portName;
@@ -57,6 +59,11 @@ public class PortReference extends AbstractFormula implements Formula {
 		return (formula instanceof PortReference)
 			&& componentInstance.equals(((PortReference) formula).getComponentInstance())
 			&& portName.equals(((PortReference) formula).getPortName());
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE + componentInstance.hashCode() + portName.hashCode();
 	}
 
 }

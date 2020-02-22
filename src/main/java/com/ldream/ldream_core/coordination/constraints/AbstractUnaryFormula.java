@@ -25,5 +25,10 @@ public abstract class AbstractUnaryFormula extends AbstractFormula implements Fo
 	public void clearCache() {
 		subformula.clearCache();
 	}
+	
+	@Override
+	public int hashCode() {
+		return this.getClass().hashCode() + subformula.hashCode();
+	}
 
 }

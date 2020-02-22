@@ -1,10 +1,13 @@
 package com.ldream.ldream_core.coordination;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.constraints.Tautology;
 
 public class AndR extends AbstractPILRule implements Rule {
+	
+	private static final int BASE_CODE = 30;
 
 	public AndR(Set<Rule> rules) {
 		super(rules);
@@ -36,7 +39,7 @@ public class AndR extends AbstractPILRule implements Rule {
 			return new AndR(
 					rules.stream()
 					.map(Rule::expandDeclarations)
-					.toArray(Rule[]::new));
+					.collect(Collectors.toSet()));
 	}
 
 	@Override
@@ -49,7 +52,7 @@ public class AndR extends AbstractPILRule implements Rule {
 		else
 			return new AndR(rules.stream()
 					.map(r -> r.bindActualComponent(componentVariable, actualComponent))
-					.toArray(Rule[]::new));
+					.collect(Collectors.toSet()));
 	}
 
 	protected String getConnectiveSymbol() {
@@ -59,6 +62,11 @@ public class AndR extends AbstractPILRule implements Rule {
 	@Override
 	public boolean equals(Rule rule) {
 		return (rule instanceof AndR) && equalSubRules((AndR) rule);
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
 	}
 
 }

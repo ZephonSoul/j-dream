@@ -83,6 +83,7 @@ public class FOILRule implements Rule {
 	public void clearCache() {
 		ruleInstance = null;
 		rule.clearCache();
+		declaration.clearCache();
 	}
 
 	@Override
@@ -97,6 +98,11 @@ public class FOILRule implements Rule {
 		return (rule instanceof FOILRule)
 			&& declaration.equals(((FOILRule) rule).getDeclaration())
 			&& rule.equals(((FOILRule) rule).getRule());
+	}
+	
+	@Override
+	public int hashCode() {
+		return declaration.hashCode() + rule.hashCode();
 	}
 
 }

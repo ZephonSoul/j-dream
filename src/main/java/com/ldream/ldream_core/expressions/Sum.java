@@ -10,6 +10,8 @@ import com.ldream.ldream_core.values.IncompatibleValueException;
 import com.ldream.ldream_core.values.Value;
 
 public class Sum extends AbstractEnnaryExpression {
+	
+	public static final int BASE_CODE = 231;
 
 	public Sum(Expression[] operands, Value[] operandsValue) {
 		super(operands,operandsValue);
@@ -47,6 +49,11 @@ public class Sum extends AbstractEnnaryExpression {
 				.map(e -> e.bindActualComponent(componentVariable, actualComponent))
 				.toArray(Expression[]::new),
 				operandsValue);
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
 	}
 
 }

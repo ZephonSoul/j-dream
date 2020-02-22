@@ -86,5 +86,10 @@ public class Term implements Rule  {
 	public String toString() {
 		return String.format("(%s -> %s)", constraint.toString(), operation.toString());
 	}
+	
+	@Override
+	public int hashCode() {
+		return constraint.hashCode() + operation.hashCode();
+	}
 
 }

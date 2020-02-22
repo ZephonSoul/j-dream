@@ -1,4 +1,6 @@
-package com.ldream.ldream_core.coordination.guards;
+package com.ldream.ldream_core.coordination.predicates;
+
+import java.util.Arrays;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
@@ -8,46 +10,45 @@ import com.ldream.ldream_core.values.IncompatibleValueException;
 import com.ldream.ldream_core.values.SetValue;
 import com.ldream.ldream_core.values.Value;
 
-public class InSet extends AbstractBinaryPredicate implements Predicate {
+public class Superset extends AbstractEnnaryPredicate implements Predicate {
 	
+	public final static int BASE_CODE = 151;
 	
-	/**
-	 * @param term1 element to test set inclusion
-	 * @param term2 set against which set inclusion is tested
-	 */
-	public InSet(Expression term1, Expression term2) {
-		super(term1,term2);
+	public Superset(Expression... terms) {
+		super(terms);
 	}
 
 	@Override
 	public boolean equals(Formula formula) {
-		return (formula instanceof InSet)
-				&& term1.equals(((InSet) formula).getTerm1())
-				&& term2.equals(((InSet) formula).getTerm2());
+		return (formula instanceof Superset)
+				&& equalTerms((Superset) formula);
 	}
 
 	@Override
 	public Formula bindActualComponent(ComponentInstance componentReference, ActualComponentInstance actualComponent) {
-		return new InSet(
-				term1.bindActualComponent(componentReference, actualComponent),
-				term2.bindActualComponent(componentReference, actualComponent));
+		return new Superset(
+				Arrays.stream(terms)
+				.map(t -> t.bindActualComponent(componentReference, actualComponent))
+				.toArray(Expression[]::new));
 	}
 
 	@Override
 	protected boolean testValues(Value v1, Value v2) {
+		if (!(v1 instanceof SetValue))
+			throw new IncompatibleValueException(v1, SetValue.class);
 		if (!(v2 instanceof SetValue))
 			throw new IncompatibleValueException(v2, SetValue.class);
-		return ((SetValue) v2).contains(v1);
+		return ((SetValue) v1).isSupersetOf((SetValue) v2);
 	}
 
 	@Override
 	protected String getPredicateSymbol() {
-		return "ϵ";
+		return "»";
 	}
-
+	
 	@Override
-	protected boolean isCommutative() {
-		return false;
+	public int hashCode() {
+		return BASE_CODE;
 	}
 
 }

@@ -7,8 +7,8 @@ import com.ldream.ldream_core.components.Port;
 import com.ldream.ldream_core.coordination.AndR;
 import com.ldream.ldream_core.coordination.ConjunctiveTerm;
 import com.ldream.ldream_core.coordination.constraints.PortAtom;
-import com.ldream.ldream_core.coordination.guards.Equals;
 import com.ldream.ldream_core.coordination.operations.Assign;
+import com.ldream.ldream_core.coordination.predicates.Equals;
 import com.ldream.ldream_core.expressions.ActualVariable;
 import com.ldream.ldream_core.values.NumberValue;
 

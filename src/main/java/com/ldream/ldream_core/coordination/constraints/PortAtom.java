@@ -6,6 +6,8 @@ import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 
 public class PortAtom extends AbstractFormula implements Formula {
+	
+	private static final int BASE_CODE = 313;
 
 	private Port port;
 
@@ -20,6 +22,7 @@ public class PortAtom extends AbstractFormula implements Formula {
 		return port;
 	}
 
+	@Override
 	public boolean sat(Interaction i) {
 		return i.contains(this.port);
 	}
@@ -39,5 +42,9 @@ public class PortAtom extends AbstractFormula implements Formula {
 				&& port.equals(((PortAtom) formula).getPort());
 	}
 
+	@Override
+	public int hashCode() {
+		return BASE_CODE + port.hashCode();
+	}
 
 }

@@ -8,6 +8,8 @@ import com.ldream.ldream_core.values.NumberValue;
 import com.ldream.ldream_core.values.Value;
 
 public class PoolSize extends AbstractExpression implements Expression {
+	
+	public static final int BASE_CODE = 31;
 
 	private ComponentInstance componentInstance;
 	private TypeRestriction type;
@@ -99,6 +101,11 @@ public class PoolSize extends AbstractExpression implements Expression {
 	@Override
 	public void clearCache() {
 		value = null;
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE + componentInstance.hashCode() + type.hashCode();
 	}
 
 }

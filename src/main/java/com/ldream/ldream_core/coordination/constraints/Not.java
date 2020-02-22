@@ -5,6 +5,8 @@ import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 
 public class Not extends AbstractUnaryFormula implements Formula {
+	
+	private static final int BASE_CODE = 0;
 
 	public Not(Formula subformula) {
 		super(subformula);
@@ -21,6 +23,11 @@ public class Not extends AbstractUnaryFormula implements Formula {
 	public boolean sat(Interaction i) {
 		return !(subformula.sat(i));
 	}
+	
+	@Override
+	public boolean sat() {
+		return !(subformula.sat());
+	}
 
 	@Override
 	public Formula bindActualComponent(
@@ -33,6 +40,11 @@ public class Not extends AbstractUnaryFormula implements Formula {
 	@Override
 	public String toString() {
 		return String.format("¬(%s)",subformula.toString());
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE - 2*(subformula.hashCode());
 	}
 
 	@Override

@@ -121,4 +121,9 @@ public class ConjunctiveTerm implements Rule  {
 				operation.toString());
 	}
 
+	@Override
+	public int hashCode() {
+		return constraint.hashCode() + requirement.hashCode() + operation.hashCode();
+	}
+	
 }

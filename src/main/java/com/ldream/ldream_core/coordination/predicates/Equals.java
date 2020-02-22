@@ -1,7 +1,6 @@
-package com.ldream.ldream_core.coordination.guards;
+package com.ldream.ldream_core.coordination.predicates;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
@@ -10,12 +9,10 @@ import com.ldream.ldream_core.expressions.Expression;
 import com.ldream.ldream_core.values.Value;
 
 public class Equals extends AbstractEnnaryPredicate implements Predicate {
+	
+	public final static int BASE_CODE = 0;
 
 	public Equals(Expression... terms) {
-		super(terms);
-	}
-
-	public Equals(List<Expression> terms) {
 		super(terms);
 	}
 
@@ -29,9 +26,9 @@ public class Equals extends AbstractEnnaryPredicate implements Predicate {
 			ComponentInstance componentReference, 
 			ActualComponentInstance actualComponent) {
 
-		return new Equals(terms.stream()
+		return new Equals(Arrays.stream(terms)
 				.map(t -> t.bindActualComponent(componentReference,actualComponent))
-				.collect(Collectors.toList()));
+				.toArray(Expression[]::new));
 	}
 
 	@Override
@@ -43,6 +40,11 @@ public class Equals extends AbstractEnnaryPredicate implements Predicate {
 	@Override
 	protected boolean testValues(Value v1, Value v2) {
 		return v1.equals(v2);
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
 	}
 
 }

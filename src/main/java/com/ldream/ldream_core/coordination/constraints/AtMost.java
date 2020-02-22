@@ -9,7 +9,9 @@ import com.ldream.ldream_core.expressions.Expression;
 import com.ldream.ldream_core.values.IncompatibleValueException;
 import com.ldream.ldream_core.values.NumberValue;
 
-public class AtMost implements Formula {
+public class AtMost extends AbstractFormula implements Formula {
+	
+	private static final int BASE_CODE = 23;
 	
 	private Expression maxInstances;
 	private TypeRestriction types;
@@ -95,6 +97,14 @@ public class AtMost implements Formula {
 				maxInstances.toString(),
 				types.toString(),
 				port);
+	}
+
+	@Override
+	public int hashCode() {
+		int portHash = 0;
+		if (portName != null)
+			portHash = portName.hashCode();
+		return BASE_CODE + maxInstances.hashCode() + types.hashCode() + portHash;
 	}
 
 }

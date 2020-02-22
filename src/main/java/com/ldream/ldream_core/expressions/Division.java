@@ -14,6 +14,8 @@ import com.ldream.ldream_core.values.Value;
  *
  */
 public class Division extends AbstractBinaryExpression {
+	
+	public static final int BASE_CODE = 707;
 
 	public Division(
 			Expression operand1,
@@ -63,6 +65,11 @@ public class Division extends AbstractBinaryExpression {
 			throw new IncompatibleValueException(v2,FactorizableValue.class);
 
 		return ((FactorizableValue) v1).divideBy((FactorizableValue) v2);
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
 	}
 
 }

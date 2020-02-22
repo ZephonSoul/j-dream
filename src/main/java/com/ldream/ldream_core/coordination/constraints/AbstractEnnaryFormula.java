@@ -38,6 +38,12 @@ public abstract class AbstractEnnaryFormula extends AbstractFormula implements F
 	public boolean equalSubformulas(AbstractEnnaryFormula formula) {
 		return subformulas.equals(formula.getSubformulas());
 	}
+	
+	@Override
+	public int hashCode() {
+		return this.getClass().hashCode() +
+				subformulas.stream().mapToInt(Formula::hashCode).sum();
+	}
 
 	@Override
 	public abstract boolean sat(Interaction i);

@@ -10,4 +10,9 @@ public abstract class AbstractFormula implements Formula {
 	@Override
 	public void clearCache() {}
 	
+	@Override
+	public boolean sat() {
+		throw new RuntimeSatisfactionCheckException(this);
+	}
+	
 }

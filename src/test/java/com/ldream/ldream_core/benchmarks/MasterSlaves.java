@@ -7,9 +7,9 @@ import com.ldream.ldream_core.components.AbstractComponent;
 import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.coordination.*;
 import com.ldream.ldream_core.coordination.constraints.*;
-import com.ldream.ldream_core.coordination.guards.*;
 import com.ldream.ldream_core.coordination.operations.Assign;
 import com.ldream.ldream_core.coordination.operations.OperationsSequence;
+import com.ldream.ldream_core.coordination.predicates.*;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.ReferencedVariable;
 import com.ldream.ldream_core.expressions.SetAdd;
@@ -233,7 +233,7 @@ public class MasterSlaves extends AbstractComponent implements Component {
 	public static void main(String[] args) {
 		MasterSlaves c = new MasterSlaves(5);
 		
-		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new ConsoleOutput(),false,20);
+		ExecutionEngine ex = new ExecutionEngine(c,GreedyStrategy.getInstance(),new DummyOutput(),false,20);
 		ex.setSnapshotSemantics(true);
 		ex.run();
 	}

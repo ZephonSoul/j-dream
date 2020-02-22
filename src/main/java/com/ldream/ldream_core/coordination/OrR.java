@@ -1,10 +1,13 @@
 package com.ldream.ldream_core.coordination;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.constraints.Contradiction;
 
 public class OrR extends AbstractPILRule implements Rule {
+	
+	private static final int BASE_CODE = 11;
 
 	public OrR(Set<Rule> rules) {
 		super(rules);
@@ -36,7 +39,7 @@ public class OrR extends AbstractPILRule implements Rule {
 			return new OrR(
 					rules.stream()
 					.map(Rule::expandDeclarations)
-					.toArray(Rule[]::new));
+					.collect(Collectors.toSet()));
 	}
 
 	@Override
@@ -49,7 +52,7 @@ public class OrR extends AbstractPILRule implements Rule {
 		else
 			return new OrR(rules.stream()
 					.map(r -> r.bindActualComponent(componentVariable, actualComponent))
-					.toArray(Rule[]::new));
+					.collect(Collectors.toSet()));
 	}
 
 	@Override
@@ -60,6 +63,11 @@ public class OrR extends AbstractPILRule implements Rule {
 	@Override
 	public boolean equals(Rule rule) {
 		return (rule instanceof OrR) 	&& equalSubRules((OrR) rule);
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
 	}
 
 }

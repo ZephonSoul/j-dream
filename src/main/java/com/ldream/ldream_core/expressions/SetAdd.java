@@ -8,6 +8,8 @@ import com.ldream.ldream_core.values.Value;
 
 public class SetAdd extends AbstractBinaryExpression implements Expression {
 	
+	public static final int BASE_CODE = 11;
+	
 	public SetAdd(
 			Expression operand1,
 			Expression operand2,
@@ -47,6 +49,11 @@ public class SetAdd extends AbstractBinaryExpression implements Expression {
 		if (!(v2 instanceof SetValue))
 			throw new IncompatibleValueException(v2, SetValue.class);
 		return ((SetValue) v2).addValue(v1);
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
 	}
 
 }

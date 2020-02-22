@@ -8,6 +8,8 @@ import com.ldream.ldream_core.components.Component;
 
 @SuppressWarnings("rawtypes")
 public class TypeRestriction {
+	
+	private static final int BASE_CODE = 13;
 
 	private Set<Class> types;
 	private static TypeRestriction anyTypeInstance;
@@ -53,6 +55,14 @@ public class TypeRestriction {
 	public boolean equals(Object o) {
 		return (o instanceof TypeRestriction)
 				&& equals((TypeRestriction) o);
+	}
+	
+	@Override
+	public int hashCode() {
+		if (matchAny())
+			return BASE_CODE;
+		else
+			return types.stream().mapToInt(Class::hashCode).sum();
 	}
 
 }

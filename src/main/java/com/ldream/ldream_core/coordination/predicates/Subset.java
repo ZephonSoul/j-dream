@@ -1,7 +1,6 @@
-package com.ldream.ldream_core.coordination.guards;
+package com.ldream.ldream_core.coordination.predicates;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
@@ -13,11 +12,9 @@ import com.ldream.ldream_core.values.Value;
 
 public class Subset extends AbstractEnnaryPredicate implements Predicate {
 	
-	public Subset(Expression... terms) {
-		super(terms);
-	}
+	public final static int BASE_CODE = 51;
 	
-	public Subset(List<Expression> terms) {
+	public Subset(Expression... terms) {
 		super(terms);
 	}
 
@@ -30,10 +27,9 @@ public class Subset extends AbstractEnnaryPredicate implements Predicate {
 	@Override
 	public Formula bindActualComponent(ComponentInstance componentReference, ActualComponentInstance actualComponent) {
 		return new Subset(
-				terms.stream()
+				Arrays.stream(terms)
 				.map(t -> t.bindActualComponent(componentReference, actualComponent))
-				.collect(Collectors.toList())
-				);
+				.toArray(Expression[]::new));
 	}
 
 	@Override
@@ -48,6 +44,11 @@ public class Subset extends AbstractEnnaryPredicate implements Predicate {
 	@Override
 	protected String getPredicateSymbol() {
 		return "«";
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
 	}
 
 }

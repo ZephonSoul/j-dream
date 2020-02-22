@@ -1,6 +1,5 @@
-package com.ldream.ldream_core.coordination.guards;
+package com.ldream.ldream_core.coordination.predicates;
 
-import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.expressions.Expression;
 import com.ldream.ldream_core.values.Value;
 
@@ -37,7 +36,7 @@ public abstract class AbstractBinaryPredicate extends AbstractPredicate implemen
 	}
 	
 	@Override
-	public boolean sat(Interaction i) {
+	public boolean sat() {
 		return testValues(term1.eval(),term2.eval());
 	};
 	
@@ -46,7 +45,13 @@ public abstract class AbstractBinaryPredicate extends AbstractPredicate implemen
 				term1.toString(),
 				getPredicateSymbol(),
 				term2.toString());
-	}	
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.getClass().hashCode() + 
+				term1.hashCode() + term2.hashCode();
+	}
 	
 	protected abstract boolean testValues(Value v1, Value v2);
 	

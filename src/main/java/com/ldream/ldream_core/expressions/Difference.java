@@ -14,6 +14,8 @@ import com.ldream.ldream_core.values.Value;
  *
  */
 public class Difference extends AbstractBinaryExpression {
+	
+	public static final int BASE_CODE = 101;
 
 	public Difference(
 			Expression operand1,
@@ -62,6 +64,11 @@ public class Difference extends AbstractBinaryExpression {
 			throw new IncompatibleValueException(v2,AdditiveValue.class);
 		
 		return ((AdditiveValue) v1).subtract((AdditiveValue) v2);
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
 	}
 
 }

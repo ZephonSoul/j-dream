@@ -18,6 +18,8 @@ import com.ldream.ldream_core.values.Value;
  */
 public class Product extends AbstractEnnaryExpression {
 	
+	public static final int BASE_CODE = 55;
+	
 	public Product(Expression[] operands,Value[] operandsValue) {
 		super(operands,operandsValue);
 	}
@@ -54,5 +56,10 @@ public class Product extends AbstractEnnaryExpression {
 				.map(e -> e.bindActualComponent(componentVariable, actualComponent))
 				.toArray(Expression[]::new),
 				operandsValue);
+	}
+	
+	@Override
+	public int hashCode() {
+		return BASE_CODE;
 	}
 }

@@ -17,8 +17,7 @@ public abstract class AbstractExpression implements Expression {
 			return computeResult();
 		}
 		else
-			//TODO: throw exception
-			return null;
+			throw new EvaluationRuntimeException(this);
 	}
 
 	protected abstract Value computeResult();

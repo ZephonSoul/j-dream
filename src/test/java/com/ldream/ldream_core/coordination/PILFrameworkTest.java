@@ -15,12 +15,12 @@ import com.ldream.ldream_core.coordination.constraints.Formula;
 import com.ldream.ldream_core.coordination.constraints.Or;
 import com.ldream.ldream_core.coordination.constraints.PortAtom;
 import com.ldream.ldream_core.coordination.constraints.Tautology;
-import com.ldream.ldream_core.coordination.guards.Equals;
-import com.ldream.ldream_core.coordination.guards.Predicate;
 import com.ldream.ldream_core.coordination.operations.Assign;
 import com.ldream.ldream_core.coordination.operations.Operation;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 import com.ldream.ldream_core.coordination.operations.Skip;
+import com.ldream.ldream_core.coordination.predicates.Equals;
+import com.ldream.ldream_core.coordination.predicates.Predicate;
 import com.ldream.ldream_core.expressions.*;
 import com.ldream.ldream_core.values.NumberValue;
 
