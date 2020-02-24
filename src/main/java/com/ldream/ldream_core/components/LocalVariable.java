@@ -1,6 +1,6 @@
 package com.ldream.ldream_core.components;
 
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.Value;
 
 public class LocalVariable {
 

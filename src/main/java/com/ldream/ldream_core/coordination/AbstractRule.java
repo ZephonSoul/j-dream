@@ -6,17 +6,17 @@ import java.util.stream.Collectors;
 
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
-public abstract class AbstractPILRule implements Rule {
+public abstract class AbstractRule implements Rule {
 
 	Set<Rule> rules;
 	Interaction cachedInteraction;
 	boolean cachedSat;
 	
-	public AbstractPILRule(Set<Rule> rules) {
+	public AbstractRule(Set<Rule> rules) {
 		this.rules = rules;
 	}
 	
-	public AbstractPILRule(Rule... rules) {
+	public AbstractRule(Rule... rules) {
 		this.rules = Arrays.stream(rules).collect(Collectors.toSet());
 	}
 
@@ -57,7 +57,7 @@ public abstract class AbstractPILRule implements Rule {
 		rules.stream().forEach(Rule::clearCache);
 	}
 	
-	protected boolean equalSubRules(AbstractPILRule rule) {
+	protected boolean equalSubRules(AbstractRule rule) {
 		return rules.equals(rule.getRules());
 	}
 

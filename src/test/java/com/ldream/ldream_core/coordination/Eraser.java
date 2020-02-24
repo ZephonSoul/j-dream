@@ -3,6 +3,7 @@ package com.ldream.ldream_core.coordination;
 import com.ldream.ldream_core.ExecutionEngine;
 import com.ldream.ldream_core.components.*;
 import com.ldream.ldream_core.coordination.constraints.*;
+import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
 import com.ldream.ldream_core.coordination.operations.*;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.output.ConsoleOutput;

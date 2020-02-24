@@ -2,7 +2,7 @@ package com.ldream.ldream_core.coordination;
 
 import com.ldream.ldream_core.Bindable;
 import com.ldream.ldream_core.coordination.constraints.Formula;
-import com.ldream.ldream_core.coordination.constraints.Tautology;
+import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
 
 public class Declaration implements Bindable<Declaration> {
 

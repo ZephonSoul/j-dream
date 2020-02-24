@@ -6,8 +6,8 @@ import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.coordination.TypeRestriction;
 import com.ldream.ldream_core.expressions.Expression;
-import com.ldream.ldream_core.values.IncompatibleValueException;
-import com.ldream.ldream_core.values.NumberValue;
+import com.ldream.ldream_core.expressions.values.IncompatibleValueException;
+import com.ldream.ldream_core.expressions.values.NumberValue;
 
 public class AtMost extends AbstractFormula implements Formula {
 	

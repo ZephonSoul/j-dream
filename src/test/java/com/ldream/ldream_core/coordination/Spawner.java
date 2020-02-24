@@ -3,12 +3,12 @@ package com.ldream.ldream_core.coordination;
 import com.ldream.ldream_core.ExecutionEngine;
 import com.ldream.ldream_core.components.*;
 import com.ldream.ldream_core.coordination.constraints.*;
+import com.ldream.ldream_core.coordination.constraints.predicates.LessThan;
 import com.ldream.ldream_core.coordination.operations.*;
-import com.ldream.ldream_core.coordination.predicates.LessThan;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.*;
+import com.ldream.ldream_core.expressions.values.NumberValue;
 import com.ldream.ldream_core.output.ConsoleOutput;
-import com.ldream.ldream_core.values.NumberValue;
 
 public class Spawner extends AbstractComponent {
 

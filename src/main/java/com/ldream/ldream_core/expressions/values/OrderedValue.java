@@ -1,4 +1,4 @@
-package com.ldream.ldream_core.values;
+package com.ldream.ldream_core.expressions.values;
 
 public interface OrderedValue extends Value {
 

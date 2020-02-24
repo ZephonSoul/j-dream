@@ -8,9 +8,9 @@ import java.util.List;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
-import com.ldream.ldream_core.values.FactorizableValue;
-import com.ldream.ldream_core.values.IncompatibleValueException;
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.FactorizableValue;
+import com.ldream.ldream_core.expressions.values.IncompatibleValueException;
+import com.ldream.ldream_core.expressions.values.Value;
 
 /**
  * @author alessandro

@@ -9,8 +9,8 @@ import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.ActualVariable;
 import com.ldream.ldream_core.expressions.Constant;
 import com.ldream.ldream_core.expressions.Sum;
+import com.ldream.ldream_core.expressions.values.NumberValue;
 import com.ldream.ldream_core.output.ConsoleOutput;
-import com.ldream.ldream_core.values.NumberValue;
 
 public class AutoAdder extends AbstractComponent {
 

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.Value;
 
 public class Store {
 

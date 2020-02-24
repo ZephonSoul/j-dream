@@ -1,4 +1,4 @@
-package com.ldream.ldream_core.coordination.predicates;
+package com.ldream.ldream_core.coordination.constraints.predicates;
 
 import java.util.Arrays;
 
@@ -6,9 +6,9 @@ import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.constraints.Formula;
 import com.ldream.ldream_core.expressions.Expression;
-import com.ldream.ldream_core.values.IncompatibleValueException;
-import com.ldream.ldream_core.values.OrderedValue;
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.IncompatibleValueException;
+import com.ldream.ldream_core.expressions.values.OrderedValue;
+import com.ldream.ldream_core.expressions.values.Value;
 
 public class GreaterThan extends AbstractEnnaryPredicate implements Predicate {
 	

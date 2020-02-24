@@ -3,17 +3,17 @@ package com.ldream.ldream_core.coordination;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.coordination.constraints.Contradiction;
+import com.ldream.ldream_core.coordination.constraints.predicates.Contradiction;
 
-public class OrR extends AbstractPILRule implements Rule {
+public class OrRule extends AbstractRule implements Rule {
 	
 	private static final int BASE_CODE = 11;
 
-	public OrR(Set<Rule> rules) {
+	public OrRule(Set<Rule> rules) {
 		super(rules);
 	}
 	
-	public OrR(Rule... rules) {
+	public OrRule(Rule... rules) {
 		super(rules);
 	}
 
@@ -36,7 +36,7 @@ public class OrR extends AbstractPILRule implements Rule {
 		if (rules.isEmpty())
 			return new Term(Contradiction.getInstance());
 		else
-			return new OrR(
+			return new OrRule(
 					rules.stream()
 					.map(Rule::expandDeclarations)
 					.collect(Collectors.toSet()));
@@ -50,7 +50,7 @@ public class OrR extends AbstractPILRule implements Rule {
 		if (rules.isEmpty())
 			return new Term(Contradiction.getInstance());
 		else
-			return new OrR(rules.stream()
+			return new OrRule(rules.stream()
 					.map(r -> r.bindActualComponent(componentVariable, actualComponent))
 					.collect(Collectors.toSet()));
 	}
@@ -62,7 +62,7 @@ public class OrR extends AbstractPILRule implements Rule {
 
 	@Override
 	public boolean equals(Rule rule) {
-		return (rule instanceof OrR) 	&& equalSubRules((OrR) rule);
+		return (rule instanceof OrRule) 	&& equalSubRules((OrRule) rule);
 	}
 	
 	@Override

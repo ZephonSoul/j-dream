@@ -3,13 +3,13 @@ package com.ldream.ldream_core.coordination;
 import com.ldream.ldream_core.ExecutionEngine;
 import com.ldream.ldream_core.components.AbstractComponent;
 import com.ldream.ldream_core.components.Pool;
+import com.ldream.ldream_core.coordination.constraints.predicates.GreaterThan;
 import com.ldream.ldream_core.coordination.operations.Migrate;
-import com.ldream.ldream_core.coordination.predicates.GreaterThan;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.Constant;
 import com.ldream.ldream_core.expressions.PoolSize;
+import com.ldream.ldream_core.expressions.values.NumberValue;
 import com.ldream.ldream_core.output.ConsoleOutput;
-import com.ldream.ldream_core.values.NumberValue;
 
 public class Swapper extends AbstractComponent {
 

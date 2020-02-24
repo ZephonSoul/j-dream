@@ -4,8 +4,8 @@ import com.ldream.ldream_core.components.AbstractComponent;
 import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.components.LocalVariable;
 import com.ldream.ldream_core.components.Port;
-import com.ldream.ldream_core.values.NumberValue;
-import com.ldream.ldream_core.values.SetValue;
+import com.ldream.ldream_core.expressions.values.NumberValue;
+import com.ldream.ldream_core.expressions.values.SetValue;
 
 public class Master extends AbstractComponent implements Component {
 

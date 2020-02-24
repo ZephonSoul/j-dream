@@ -1,6 +1,6 @@
 package com.ldream.ldream_core.expressions;
 
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.Value;
 
 public abstract class AbstractBinaryExpression extends AbstractExpression implements Expression {
 

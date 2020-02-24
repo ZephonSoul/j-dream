@@ -3,17 +3,17 @@ package com.ldream.ldream_core.coordination;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.coordination.constraints.Tautology;
+import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
 
-public class AndR extends AbstractPILRule implements Rule {
+public class AndRule extends AbstractRule implements Rule {
 	
 	private static final int BASE_CODE = 30;
 
-	public AndR(Set<Rule> rules) {
+	public AndRule(Set<Rule> rules) {
 		super(rules);
 	}
 	
-	public AndR(Rule... rules) {
+	public AndRule(Rule... rules) {
 		super(rules);
 	}
 
@@ -36,7 +36,7 @@ public class AndR extends AbstractPILRule implements Rule {
 		if (rules.isEmpty())
 			return new Term(Tautology.getInstance());
 		else
-			return new AndR(
+			return new AndRule(
 					rules.stream()
 					.map(Rule::expandDeclarations)
 					.collect(Collectors.toSet()));
@@ -50,7 +50,7 @@ public class AndR extends AbstractPILRule implements Rule {
 		if (rules.isEmpty())
 			return new Term(Tautology.getInstance());
 		else
-			return new AndR(rules.stream()
+			return new AndRule(rules.stream()
 					.map(r -> r.bindActualComponent(componentVariable, actualComponent))
 					.collect(Collectors.toSet()));
 	}
@@ -61,7 +61,7 @@ public class AndR extends AbstractPILRule implements Rule {
 
 	@Override
 	public boolean equals(Rule rule) {
-		return (rule instanceof AndR) && equalSubRules((AndR) rule);
+		return (rule instanceof AndRule) && equalSubRules((AndRule) rule);
 	}
 	
 	@Override

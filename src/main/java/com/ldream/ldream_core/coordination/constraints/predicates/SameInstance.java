@@ -1,4 +1,4 @@
-package com.ldream.ldream_core.coordination.predicates;
+package com.ldream.ldream_core.coordination.constraints.predicates;
 
 import java.util.Arrays;
 import java.util.List;

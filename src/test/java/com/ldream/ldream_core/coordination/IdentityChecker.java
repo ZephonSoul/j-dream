@@ -5,14 +5,14 @@ import com.ldream.ldream_core.components.AbstractComponent;
 import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.coordination.constraints.And;
 import com.ldream.ldream_core.coordination.constraints.PortReference;
+import com.ldream.ldream_core.coordination.constraints.predicates.SameInstance;
 import com.ldream.ldream_core.coordination.operations.Assign;
-import com.ldream.ldream_core.coordination.predicates.SameInstance;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.Constant;
 import com.ldream.ldream_core.expressions.ReferencedVariable;
 import com.ldream.ldream_core.expressions.Sum;
+import com.ldream.ldream_core.expressions.values.NumberValue;
 import com.ldream.ldream_core.output.ConsoleOutput;
-import com.ldream.ldream_core.values.NumberValue;
 
 public class IdentityChecker extends AbstractComponent implements Component {
 

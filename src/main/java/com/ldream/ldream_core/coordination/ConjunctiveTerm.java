@@ -1,7 +1,7 @@
 package com.ldream.ldream_core.coordination;
 
 import com.ldream.ldream_core.coordination.constraints.Formula;
-import com.ldream.ldream_core.coordination.constraints.Tautology;
+import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
 import com.ldream.ldream_core.coordination.operations.Operation;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 import com.ldream.ldream_core.coordination.operations.Skip;

@@ -7,18 +7,18 @@ import com.ldream.ldream_core.components.AbstractComponent;
 import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.coordination.*;
 import com.ldream.ldream_core.coordination.constraints.*;
+import com.ldream.ldream_core.coordination.constraints.predicates.*;
 import com.ldream.ldream_core.coordination.operations.Assign;
 import com.ldream.ldream_core.coordination.operations.OperationsSequence;
-import com.ldream.ldream_core.coordination.predicates.*;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.ReferencedVariable;
 import com.ldream.ldream_core.expressions.SetAdd;
 import com.ldream.ldream_core.expressions.Sum;
+import com.ldream.ldream_core.expressions.values.NumberValue;
+import com.ldream.ldream_core.expressions.values.SetValue;
+import com.ldream.ldream_core.expressions.values.Value;
 import com.ldream.ldream_core.output.ConsoleOutput;
 import com.ldream.ldream_core.output.DummyOutput;
-import com.ldream.ldream_core.values.NumberValue;
-import com.ldream.ldream_core.values.SetValue;
-import com.ldream.ldream_core.values.Value;
 
 public class MasterSlaves extends AbstractComponent implements Component {
 
@@ -224,7 +224,7 @@ public class MasterSlaves extends AbstractComponent implements Component {
 						));
 		ru2 = new Term(new AtMost(new NumberValue(1),new TypeRestriction(Slave.class),"bind"));
 		
-		Rule globalRule = new AndR(rc1,rc2,rc3,rc4,ru1,ru2,new OrR(rd1,rd2));
+		Rule globalRule = new AndRule(rc1,rc2,rc3,rc4,ru1,ru2,new OrRule(rd1,rd2));
 		
 		setRule(globalRule);
 		refresh();

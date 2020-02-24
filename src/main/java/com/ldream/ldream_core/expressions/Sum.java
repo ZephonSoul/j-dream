@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
-import com.ldream.ldream_core.values.AdditiveValue;
-import com.ldream.ldream_core.values.IncompatibleValueException;
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.AdditiveValue;
+import com.ldream.ldream_core.expressions.values.IncompatibleValueException;
+import com.ldream.ldream_core.expressions.values.Value;
 
 public class Sum extends AbstractEnnaryExpression {
 	

@@ -4,13 +4,13 @@ import com.ldream.ldream_core.components.AbstractComponent;
 import com.ldream.ldream_core.components.Component;
 import com.ldream.ldream_core.components.LocalVariable;
 import com.ldream.ldream_core.components.Port;
-import com.ldream.ldream_core.coordination.AndR;
+import com.ldream.ldream_core.coordination.AndRule;
 import com.ldream.ldream_core.coordination.ConjunctiveTerm;
 import com.ldream.ldream_core.coordination.constraints.PortAtom;
+import com.ldream.ldream_core.coordination.constraints.predicates.Equals;
 import com.ldream.ldream_core.coordination.operations.Assign;
-import com.ldream.ldream_core.coordination.predicates.Equals;
 import com.ldream.ldream_core.expressions.ActualVariable;
-import com.ldream.ldream_core.values.NumberValue;
+import com.ldream.ldream_core.expressions.values.NumberValue;
 
 public class Slave extends AbstractComponent implements Component {
 
@@ -28,7 +28,7 @@ public class Slave extends AbstractComponent implements Component {
 		setInterface(bind,serve);
 
 		setRule(
-				new AndR(
+				new AndRule(
 						new ConjunctiveTerm(
 								new PortAtom(bind),
 								new Equals(new ActualVariable(cLoc),waiting),

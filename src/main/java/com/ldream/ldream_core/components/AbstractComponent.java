@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.ldream.ldream_core.coordination.AndR;
+import com.ldream.ldream_core.coordination.AndRule;
 import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.coordination.Rule;
 import com.ldream.ldream_core.coordination.Term;
-import com.ldream.ldream_core.coordination.constraints.Tautology;
+import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.Value;
 
 public abstract class AbstractComponent implements Component {
 
@@ -325,8 +325,8 @@ public abstract class AbstractComponent implements Component {
 		if (cPool.isEmpty())
 			return cRule_cached;
 		else
-			return new AndR(cRule_cached,
-					new AndR(cPool.getComponents().stream()
+			return new AndRule(cRule_cached,
+					new AndRule(cPool.getComponents().stream()
 							.map(Component::getCurrentRule)
 							.toArray(Rule[]::new)));
 	}

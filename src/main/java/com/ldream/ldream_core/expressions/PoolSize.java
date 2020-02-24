@@ -4,8 +4,8 @@ import com.ldream.ldream_core.coordination.ActualComponentInstance;
 import com.ldream.ldream_core.coordination.ComponentInstance;
 import com.ldream.ldream_core.coordination.TypeRestriction;
 import com.ldream.ldream_core.coordination.UnboundReferenceException;
-import com.ldream.ldream_core.values.NumberValue;
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.NumberValue;
+import com.ldream.ldream_core.expressions.values.Value;
 
 public class PoolSize extends AbstractExpression implements Expression {
 	

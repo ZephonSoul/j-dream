@@ -3,8 +3,8 @@ package com.ldream.ldream_core.coordination;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import com.ldream.ldream_core.coordination.constraints.Contradiction;
-import com.ldream.ldream_core.coordination.constraints.Tautology;
+import com.ldream.ldream_core.coordination.constraints.predicates.Contradiction;
+import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
 public class FOILRule implements Rule {
@@ -36,7 +36,7 @@ public class FOILRule implements Rule {
 			if (matchingInstances.length == 0)
 				ruleInstance = new Term(Tautology.getInstance());
 			else
-				ruleInstance = new AndR(Arrays.stream(matchingInstances)
+				ruleInstance = new AndRule(Arrays.stream(matchingInstances)
 						.map(c -> rule.bindActualComponent(declaration.getVariable(), c))
 						.collect(Collectors.toSet()));
 			break;
@@ -44,7 +44,7 @@ public class FOILRule implements Rule {
 			if (matchingInstances.length == 0)
 				ruleInstance = new Term(Contradiction.getInstance());
 			else
-				ruleInstance = new OrR(Arrays.stream(matchingInstances)
+				ruleInstance = new OrRule(Arrays.stream(matchingInstances)
 						.map(c -> rule.bindActualComponent(declaration.getVariable(), c))
 						.collect(Collectors.toSet()));
 			break;

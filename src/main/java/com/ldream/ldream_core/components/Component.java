@@ -6,7 +6,7 @@ import java.util.Set;
 import com.ldream.ldream_core.coordination.Interaction;
 import com.ldream.ldream_core.coordination.Rule;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.Value;
 
 public interface Component {
 	

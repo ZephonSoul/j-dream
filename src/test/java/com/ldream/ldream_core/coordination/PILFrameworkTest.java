@@ -14,15 +14,15 @@ import com.ldream.ldream_core.coordination.constraints.And;
 import com.ldream.ldream_core.coordination.constraints.Formula;
 import com.ldream.ldream_core.coordination.constraints.Or;
 import com.ldream.ldream_core.coordination.constraints.PortAtom;
-import com.ldream.ldream_core.coordination.constraints.Tautology;
+import com.ldream.ldream_core.coordination.constraints.predicates.Equals;
+import com.ldream.ldream_core.coordination.constraints.predicates.Predicate;
+import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
 import com.ldream.ldream_core.coordination.operations.Assign;
 import com.ldream.ldream_core.coordination.operations.Operation;
 import com.ldream.ldream_core.coordination.operations.OperationsSet;
 import com.ldream.ldream_core.coordination.operations.Skip;
-import com.ldream.ldream_core.coordination.predicates.Equals;
-import com.ldream.ldream_core.coordination.predicates.Predicate;
 import com.ldream.ldream_core.expressions.*;
-import com.ldream.ldream_core.values.NumberValue;
+import com.ldream.ldream_core.expressions.values.NumberValue;
 
 public class PILFrameworkTest {
 
@@ -157,7 +157,7 @@ public class PILFrameworkTest {
 	@DisplayName("Test rule: {p1,p3} |= (p1 -> assign(...) & p3 -> skip)")
 	void RuleTest1() {
 		Operation op = new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3));
-		ru1 = new AndR(new Term(fp1, op),new Term(fp3));
+		ru1 = new AndRule(new Term(fp1, op),new Term(fp3));
 		assertTrue(ru1.sat(i1));
 		OperationsSet res = ru1.getOperationsForInteraction(i1);
 		System.out.println(res.toString() + "\t" + res.hashCode());
@@ -170,7 +170,7 @@ public class PILFrameworkTest {
 	@DisplayName("Test rule: {p1} |= (p1 -> assign(...) || p3 -> skip)")
 	void RuleTest2() {
 		Operation op = new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3));
-		ru1 = new OrR(new Term(fp1, op),new Term(fp3));
+		ru1 = new OrRule(new Term(fp1, op),new Term(fp3));
 		assertTrue(ru1.sat(i2));
 		OperationsSet res = ru1.getOperationsForInteraction(i2);
 		System.out.println(res.toString() + "\t" + res.hashCode());

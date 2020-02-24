@@ -1,7 +1,7 @@
-package com.ldream.ldream_core.coordination.predicates;
+package com.ldream.ldream_core.coordination.constraints.predicates;
 
 import com.ldream.ldream_core.expressions.Expression;
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.Value;
 
 public abstract class AbstractBinaryPredicate extends AbstractPredicate implements Predicate {
 

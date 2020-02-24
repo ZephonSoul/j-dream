@@ -6,11 +6,12 @@ import java.util.Set;
 import com.ldream.ldream_core.ExecutionEngine;
 import com.ldream.ldream_core.components.*;
 import com.ldream.ldream_core.coordination.constraints.*;
+import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
 import com.ldream.ldream_core.coordination.operations.*;
 import com.ldream.ldream_core.exec.GreedyStrategy;
 import com.ldream.ldream_core.expressions.*;
+import com.ldream.ldream_core.expressions.values.NumberValue;
 import com.ldream.ldream_core.output.ConsoleOutput;
-import com.ldream.ldream_core.values.NumberValue;
 
 public class SimpleComponent extends AbstractComponent implements Component {
 
@@ -20,7 +21,7 @@ public class SimpleComponent extends AbstractComponent implements Component {
 		Port p2 = new Port("p2");
 		LocalVariable x = new LocalVariable("x",new NumberValue(5),this);
 		setInterface(p1,p2);
-		setRule(new OrR(
+		setRule(new OrRule(
 				new Term(
 						Tautology.getInstance()
 						),

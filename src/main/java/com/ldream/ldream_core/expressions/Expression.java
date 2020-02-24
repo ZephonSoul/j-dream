@@ -1,7 +1,7 @@
 package com.ldream.ldream_core.expressions;
 
 import com.ldream.ldream_core.Bindable;
-import com.ldream.ldream_core.values.Value;
+import com.ldream.ldream_core.expressions.values.Value;
 
 public interface Expression extends Bindable<Expression> {
 
