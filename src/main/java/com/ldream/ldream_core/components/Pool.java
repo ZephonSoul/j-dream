@@ -1,5 +1,6 @@
 package com.ldream.ldream_core.components;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,23 +11,41 @@ import com.ldream.ldream_core.coordination.operations.OperationsSet;
 
 public class Pool {
 
+	private Component owner;
 	private Set<Component> components;
 	private PoolInteractionIterator interactionIterator;
-
-	public Pool() {
-		components = new HashSet<>();
-	}
-
-	public Pool(Set<Component> components) {
+	
+	public Pool(Component owner, Set<Component> components) {
+		this.owner = owner;
 		this.components = components;
 		interactionIterator = new PoolInteractionIterator(components);
 	}
 
+	public Pool(Set<Component> components) {
+		this(null,components);
+	}
+
 	public Pool(Component... components) {
-		this();
-		for (Component component : components)
-			this.components.add(component);
-		interactionIterator = new PoolInteractionIterator(components);
+		this(null,Arrays.stream(components).collect(Collectors.toSet()));
+	}
+	
+	public Pool() {
+		this(null,new HashSet<>());
+	}
+
+	/**
+	 * @return the owner
+	 */
+	public Component getOwner() {
+		return owner;
+	}
+	
+	/**
+	 * @param owner the owner to set
+	 */
+	public void setOwner(Component owner) {
+		this.owner = owner;
+		components.stream().forEach(c -> c.setParent(owner));
 	}
 
 	/**
@@ -44,10 +63,6 @@ public class Pool {
 		interactionIterator = new PoolInteractionIterator(components);
 	}
 
-	public void setComponentsParent(Component parent) {
-		components.stream().forEach(c -> c.setParent(parent));
-	}
-
 	public PoolInteractionIterator getInteractionIterator() {
 		return interactionIterator;
 	}
@@ -57,12 +72,23 @@ public class Pool {
 	}
 
 	public void add(Component component) {
-		components.add(component);
-		refresh();
+		if (!(component.equals(owner))) {
+			components.add(component);
+			component.setParent(owner);
+			refresh();
+		}
+		else
+			throw new OwnerPoolLoopException(component);
 	}
 
 	public void remove(Component component) {
 		components.remove(component);
+		try {
+			if (owner.equals(component.getParent()))
+				component.setParent(null);
+		} catch (OrphanComponentException e) {
+			// Component already orphan
+		}
 		refresh();
 	}
 

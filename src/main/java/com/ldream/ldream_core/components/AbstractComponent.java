@@ -46,7 +46,7 @@ public abstract class AbstractComponent implements Component {
 		this.cInterface.setOwner(this);
 		this.cStore = cStore;
 		this.cPool = cPool;
-		this.cPool.setComponentsParent(this);
+		this.cPool.setOwner(this);
 		this.parent = parent;
 		this.cRule = cRule;
 		this.cRule_cached = cRule.expandDeclarations();
@@ -88,7 +88,7 @@ public abstract class AbstractComponent implements Component {
 	 */
 	public void setPool(Pool pool) {
 		this.cPool = pool;
-		this.cPool.setComponentsParent(this);
+		this.cPool.setOwner(this);
 		this.cIterator.setPoolIterator(this.cPool.getInteractionIterator());
 		this.cRule_cached = cRule.expandDeclarations();
 	}
@@ -99,22 +99,16 @@ public abstract class AbstractComponent implements Component {
 
 	@Override
 	public void addToPool(Component component) {
-		component.setParent(this);
 		this.cPool.add(component);
 	}
 
 	@Override
 	public void addToPool(Component... component) {
-		Arrays.stream(component).forEach(
-				c -> { 
-					c.setParent(this); 
-					this.cPool.add(c);
-					});
+		Arrays.stream(component).forEach(c -> this.cPool.add(c));
 	}
 
 	@Override
 	public void removeFromPool(Component component) {
-		component.setParent(null);
 		this.cPool.remove(component);
 	}
 
