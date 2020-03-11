@@ -22,7 +22,7 @@ public class PoolInteractionIterator {
 	}
 
 	public PoolInteractionIterator(Set<Component> components) {
-		this.components = (Component[]) components.toArray();
+		this.components = components.toArray(Component[]::new);
 		setup();
 	}
 
