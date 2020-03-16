@@ -72,7 +72,7 @@ public class Pool {
 	}
 
 	public void add(Component component) {
-		if (!(component.equals(owner))) {
+		if (!(component.equals(owner)) && !(owner.hasAncestor(component))) {
 			components.add(component);
 			component.setParent(owner);
 			refresh();
