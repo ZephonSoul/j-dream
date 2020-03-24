@@ -60,4 +60,6 @@ public interface Component {
 
 	public Map<Port,Action> getPortActions();
 
+	public boolean hasAncestor(Component component);
+
 }

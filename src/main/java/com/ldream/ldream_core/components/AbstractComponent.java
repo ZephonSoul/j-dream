@@ -352,6 +352,10 @@ public abstract class AbstractComponent implements Component {
 						&& portActions.equals(component.getPortActions())
 						);
 	}
+	
+	public boolean hasAncestor(Component component) {		
+		return (parent != null) && (parent.equals(component) || parent.hasAncestor(component));
+	}
 
 	public String toString() {
 		String componentDescription = 
