@@ -1,15 +1,22 @@
 package com.ldream.ldream_core.coordination;
 
-import com.ldream.ldream_core.ExecutionEngine;
-import com.ldream.ldream_core.components.AbstractComponent;
-import com.ldream.ldream_core.components.Pool;
-import com.ldream.ldream_core.coordination.constraints.predicates.GreaterThan;
-import com.ldream.ldream_core.coordination.operations.Migrate;
-import com.ldream.ldream_core.exec.GreedyStrategy;
-import com.ldream.ldream_core.expressions.Constant;
-import com.ldream.ldream_core.expressions.PoolSize;
-import com.ldream.ldream_core.expressions.values.NumberValue;
-import com.ldream.ldream_core.output.ConsoleOutput;
+import com.dream.core.ExecutionEngine;
+import com.dream.core.components.AbstractComponent;
+import com.dream.core.components.Pool;
+import com.dream.core.coordination.ActualComponentInstance;
+import com.dream.core.coordination.ConjunctiveTerm;
+import com.dream.core.coordination.Declaration;
+import com.dream.core.coordination.FOILRule;
+import com.dream.core.coordination.Quantifier;
+import com.dream.core.coordination.ReferencedComponentInstance;
+import com.dream.core.coordination.Rule;
+import com.dream.core.coordination.constraints.predicates.GreaterThan;
+import com.dream.core.coordination.operations.Migrate;
+import com.dream.core.expressions.Constant;
+import com.dream.core.expressions.PoolSize;
+import com.dream.core.expressions.values.NumberValue;
+import com.dream.exec.GreedyStrategy;
+import com.dream.exec.output.ConsoleOutput;
 
 public class Swapper extends AbstractComponent {
 

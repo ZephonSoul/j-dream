@@ -6,23 +6,27 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.ldream.ldream_core.components.Component;
-import com.ldream.ldream_core.components.LocalVariable;
-import com.ldream.ldream_core.components.Port;
-import com.ldream.ldream_core.coordination.Interaction;
-import com.ldream.ldream_core.coordination.constraints.And;
-import com.ldream.ldream_core.coordination.constraints.Formula;
-import com.ldream.ldream_core.coordination.constraints.Or;
-import com.ldream.ldream_core.coordination.constraints.PortAtom;
-import com.ldream.ldream_core.coordination.constraints.predicates.Equals;
-import com.ldream.ldream_core.coordination.constraints.predicates.Predicate;
-import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
-import com.ldream.ldream_core.coordination.operations.Assign;
-import com.ldream.ldream_core.coordination.operations.Operation;
-import com.ldream.ldream_core.coordination.operations.OperationsSet;
-import com.ldream.ldream_core.coordination.operations.Skip;
-import com.ldream.ldream_core.expressions.*;
-import com.ldream.ldream_core.expressions.values.NumberValue;
+import com.dream.core.components.Component;
+import com.dream.core.components.LocalVariable;
+import com.dream.core.components.Port;
+import com.dream.core.coordination.AndRule;
+import com.dream.core.coordination.Interaction;
+import com.dream.core.coordination.OrRule;
+import com.dream.core.coordination.Rule;
+import com.dream.core.coordination.Term;
+import com.dream.core.coordination.constraints.And;
+import com.dream.core.coordination.constraints.Formula;
+import com.dream.core.coordination.constraints.Or;
+import com.dream.core.coordination.constraints.PortAtom;
+import com.dream.core.coordination.constraints.predicates.Equals;
+import com.dream.core.coordination.constraints.predicates.Predicate;
+import com.dream.core.coordination.constraints.predicates.Tautology;
+import com.dream.core.coordination.operations.Assign;
+import com.dream.core.coordination.operations.Operation;
+import com.dream.core.coordination.operations.OperationsSet;
+import com.dream.core.coordination.operations.Skip;
+import com.dream.core.expressions.*;
+import com.dream.core.expressions.values.NumberValue;
 
 public class PILFrameworkTest {
 

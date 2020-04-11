@@ -1,14 +1,18 @@
 package com.ldream.ldream_core.coordination;
 
-import com.ldream.ldream_core.ExecutionEngine;
-import com.ldream.ldream_core.components.*;
-import com.ldream.ldream_core.coordination.constraints.*;
-import com.ldream.ldream_core.coordination.constraints.predicates.LessThan;
-import com.ldream.ldream_core.coordination.operations.*;
-import com.ldream.ldream_core.exec.GreedyStrategy;
-import com.ldream.ldream_core.expressions.*;
-import com.ldream.ldream_core.expressions.values.NumberValue;
-import com.ldream.ldream_core.output.ConsoleOutput;
+import com.dream.core.ExecutionEngine;
+import com.dream.core.components.*;
+import com.dream.core.coordination.ActualComponentInstance;
+import com.dream.core.coordination.ConjunctiveTerm;
+import com.dream.core.coordination.Declaration;
+import com.dream.core.coordination.Quantifier;
+import com.dream.core.coordination.constraints.*;
+import com.dream.core.coordination.constraints.predicates.LessThan;
+import com.dream.core.coordination.operations.*;
+import com.dream.core.expressions.*;
+import com.dream.core.expressions.values.NumberValue;
+import com.dream.exec.GreedyStrategy;
+import com.dream.exec.output.ConsoleOutput;
 
 public class Spawner extends AbstractComponent {
 
