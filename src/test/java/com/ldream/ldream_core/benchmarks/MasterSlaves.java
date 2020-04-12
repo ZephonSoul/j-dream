@@ -1,24 +1,24 @@
 package com.ldream.ldream_core.benchmarks;
 
-import com.dream.core.ExecutionEngine;
-import com.dream.core.components.AbstractComponent;
-import com.dream.core.components.Component;
-import com.dream.core.coordination.*;
-import com.dream.core.coordination.constraints.*;
-import com.dream.core.coordination.constraints.predicates.*;
-import com.dream.core.coordination.operations.Assign;
-import com.dream.core.coordination.operations.OperationsSequence;
-import com.dream.core.expressions.ReferencedVariable;
-import com.dream.core.expressions.SetAdd;
-import com.dream.core.expressions.Sum;
-import com.dream.core.expressions.values.NumberValue;
-import com.dream.core.expressions.values.SetValue;
-import com.dream.core.expressions.values.Value;
-import com.dream.exec.GreedyStrategy;
-import com.dream.exec.output.ConsoleOutput;
-import com.dream.exec.output.DummyOutput;
+import com.ldream.ldream_core.ExecutionEngine;
 import com.ldream.ldream_core.benchmarks.masterslaves.Master;
 import com.ldream.ldream_core.benchmarks.masterslaves.Slave;
+import com.ldream.ldream_core.components.AbstractComponent;
+import com.ldream.ldream_core.components.Component;
+import com.ldream.ldream_core.coordination.*;
+import com.ldream.ldream_core.coordination.constraints.*;
+import com.ldream.ldream_core.coordination.constraints.predicates.*;
+import com.ldream.ldream_core.coordination.operations.Assign;
+import com.ldream.ldream_core.coordination.operations.OperationsSequence;
+import com.ldream.ldream_core.exec.GreedyStrategy;
+import com.ldream.ldream_core.expressions.ReferencedVariable;
+import com.ldream.ldream_core.expressions.SetAdd;
+import com.ldream.ldream_core.expressions.Sum;
+import com.ldream.ldream_core.expressions.values.NumberValue;
+import com.ldream.ldream_core.expressions.values.SetValue;
+import com.ldream.ldream_core.expressions.values.Value;
+import com.ldream.ldream_core.output.ConsoleOutput;
+import com.ldream.ldream_core.output.DummyOutput;
 
 public class MasterSlaves extends AbstractComponent implements Component {
 

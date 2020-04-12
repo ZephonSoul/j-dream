@@ -2,25 +2,17 @@ package com.ldream.ldream_core.coordination;
 
 import java.util.Set;
 
-import com.dream.core.ExecutionEngine;
-import com.dream.core.components.AbstractComponent;
-import com.dream.core.components.Component;
-import com.dream.core.components.Pool;
-import com.dream.core.coordination.ActualComponentInstance;
-import com.dream.core.coordination.AndRule;
-import com.dream.core.coordination.Declaration;
-import com.dream.core.coordination.FOILRule;
-import com.dream.core.coordination.Quantifier;
-import com.dream.core.coordination.Rule;
-import com.dream.core.coordination.Term;
-import com.dream.core.coordination.TypeRestriction;
-import com.dream.core.coordination.constraints.And;
-import com.dream.core.coordination.constraints.PortReference;
-import com.dream.core.coordination.operations.*;
-import com.dream.core.expressions.*;
-import com.dream.core.expressions.values.NumberValue;
-import com.dream.exec.GreedyStrategy;
-import com.dream.exec.output.ConsoleOutput;
+import com.ldream.ldream_core.ExecutionEngine;
+import com.ldream.ldream_core.components.AbstractComponent;
+import com.ldream.ldream_core.components.Component;
+import com.ldream.ldream_core.components.Pool;
+import com.ldream.ldream_core.coordination.constraints.And;
+import com.ldream.ldream_core.coordination.constraints.PortReference;
+import com.ldream.ldream_core.coordination.operations.*;
+import com.ldream.ldream_core.exec.GreedyStrategy;
+import com.ldream.ldream_core.expressions.*;
+import com.ldream.ldream_core.expressions.values.NumberValue;
+import com.ldream.ldream_core.output.ConsoleOutput;
 
 public class SimpleCompound extends AbstractComponent {
 

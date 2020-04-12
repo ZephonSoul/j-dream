@@ -3,18 +3,15 @@ package com.ldream.ldream_core.coordination;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.dream.core.ExecutionEngine;
-import com.dream.core.components.*;
-import com.dream.core.coordination.Interaction;
-import com.dream.core.coordination.OrRule;
-import com.dream.core.coordination.Term;
-import com.dream.core.coordination.constraints.*;
-import com.dream.core.coordination.constraints.predicates.Tautology;
-import com.dream.core.coordination.operations.*;
-import com.dream.core.expressions.*;
-import com.dream.core.expressions.values.NumberValue;
-import com.dream.exec.GreedyStrategy;
-import com.dream.exec.output.ConsoleOutput;
+import com.ldream.ldream_core.ExecutionEngine;
+import com.ldream.ldream_core.components.*;
+import com.ldream.ldream_core.coordination.constraints.*;
+import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
+import com.ldream.ldream_core.coordination.operations.*;
+import com.ldream.ldream_core.exec.GreedyStrategy;
+import com.ldream.ldream_core.expressions.*;
+import com.ldream.ldream_core.expressions.values.NumberValue;
+import com.ldream.ldream_core.output.ConsoleOutput;
 
 public class SimpleComponent extends AbstractComponent implements Component {
 

@@ -1,17 +1,12 @@
 package com.ldream.ldream_core.coordination;
 
-import com.dream.core.ExecutionEngine;
-import com.dream.core.components.*;
-import com.dream.core.coordination.ActualComponentInstance;
-import com.dream.core.coordination.Declaration;
-import com.dream.core.coordination.FOILRule;
-import com.dream.core.coordination.Quantifier;
-import com.dream.core.coordination.Term;
-import com.dream.core.coordination.constraints.*;
-import com.dream.core.coordination.constraints.predicates.Tautology;
-import com.dream.core.coordination.operations.*;
-import com.dream.exec.GreedyStrategy;
-import com.dream.exec.output.ConsoleOutput;
+import com.ldream.ldream_core.ExecutionEngine;
+import com.ldream.ldream_core.components.*;
+import com.ldream.ldream_core.coordination.constraints.*;
+import com.ldream.ldream_core.coordination.constraints.predicates.Tautology;
+import com.ldream.ldream_core.coordination.operations.*;
+import com.ldream.ldream_core.exec.GreedyStrategy;
+import com.ldream.ldream_core.output.ConsoleOutput;
 
 public class Eraser extends AbstractComponent {
 
