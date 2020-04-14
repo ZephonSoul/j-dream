@@ -1,0 +1,216 @@
+package com.dream.core.coordination;
+
+import com.dream.core.Bindable;
+import com.dream.core.Caching;
+import com.dream.core.coordination.constraints.Formula;
+import com.dream.core.coordination.constraints.predicates.Tautology;
+import com.dream.core.entities.CoordinatingEntity;
+
+public class Declaration implements Bindable<Declaration>, Caching {
+
+	private Quantifier quantifier;
+	private EntityInstance scope;
+	private TypeRestriction type;
+	private EntityInstanceReference variable;
+	private Formula instanceFilter;
+
+	/**
+	 * @param quantifier
+	 * @param scope
+	 * @param type
+	 * @param variable
+	 * @param instanceFilter
+	 */
+	public Declaration(Quantifier quantifier, 
+			EntityInstance scope, 
+			TypeRestriction type,
+			Formula instanceFilter,
+			EntityInstanceReference variable) {
+
+		this.quantifier = quantifier;
+		this.scope = scope;
+		this.type = type;
+		this.variable = variable;
+		this.instanceFilter = instanceFilter;
+	}
+
+	public Declaration(
+			Quantifier quantifier, 
+			EntityInstance scope, 
+			TypeRestriction type, 
+			EntityInstanceReference variable) {
+
+		this(quantifier,scope,type,Tautology.getInstance(),variable);
+	}
+
+	public Declaration(
+			Quantifier quantifier, 
+			EntityInstance scope, 
+			TypeRestriction type, 
+			Formula instanceFilter) {
+
+		this(quantifier,scope,type,instanceFilter,new EntityInstanceReference());
+	}
+
+	public Declaration(
+			Quantifier quantifier, 
+			EntityInstance scope) {
+
+		this(
+				quantifier,
+				scope,
+				new TypeRestriction(),
+				Tautology.getInstance(),
+				new EntityInstanceReference()
+				);
+	}
+
+	public Declaration(
+			Quantifier quantifier, 
+			EntityInstance scope, 
+			TypeRestriction type) {
+
+		this(
+				quantifier, 
+				scope, 
+				type,
+				Tautology.getInstance(),
+				new EntityInstanceReference()
+				);
+	}
+
+	public Declaration(
+			Quantifier quantifier,
+			EntityInstance scope, 
+			EntityInstanceReference variable) {
+
+		this(
+				quantifier, 
+				scope, 
+				new TypeRestriction(),
+				Tautology.getInstance(),
+				variable
+				);
+	}
+
+	/**
+	 * @return the quantifier
+	 */
+	public Quantifier getQuantifier() {
+		return quantifier;
+	}
+
+	/**
+	 * @return the scope
+	 */
+	public EntityInstance getScope() {
+		return scope;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public TypeRestriction getType() {
+		return type;
+	}
+
+	/**
+	 * @return the instanceFilter
+	 */
+	public Formula getInstanceFilter() {
+		return instanceFilter;
+	}
+
+	/**
+	 * @return the variable
+	 */
+	public EntityInstanceReference getVariable() {
+		return variable;
+	}
+
+	/**
+	 * @param instanceFilter the instanceFilter to set
+	 */
+	public void setInstanceFilter(Formula instanceFilter) {
+		this.instanceFilter = instanceFilter;
+	}
+
+	public EntityInstanceActual[] getActualEntities() {
+		if (scope.getActualEntity() instanceof CoordinatingEntity) {
+			if (instanceFilter instanceof Tautology)
+				return ((CoordinatingEntity) scope.getActualEntity()).getPool().stream()
+						.filter(e -> type.match(e))
+						.map(e -> new EntityInstanceActual(e))
+						.toArray(EntityInstanceActual[]::new);
+			else
+				return ((CoordinatingEntity) scope.getActualEntity()).getPool().stream()
+						.filter(e -> type.match(e))
+						.map(e -> new EntityInstanceActual(e))
+						.filter(actual -> instanceFilter.bindEntityReference(variable, actual).sat())
+						.toArray(EntityInstanceActual[]::new);
+		} else {
+			throw new IllegalScopeException(scope.getActualEntity());
+		}
+	}
+
+	public boolean equals(Declaration cVar) {
+		return quantifier.equals(cVar.getQuantifier())
+				&& scope.equals(cVar.getScope())
+				&& type.equals(cVar.getType())
+				&& variable.equals(cVar.getVariable());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof Declaration)
+				&& equals((Declaration)o);
+	}
+
+	@Override
+	public String toString() {
+		String filterString = "";
+		if (!(instanceFilter instanceof Tautology))
+			filterString = "(" + instanceFilter.toString() + ")";
+		return String.format("%s(%s.%s):[%s%s]",
+				quantifier.toString(),
+				scope.getName(),
+				variable.getName(),
+				type.toString(),
+				filterString);
+	}
+
+	@Override
+	public Declaration bindEntityReference(
+			EntityInstanceReference entityReference, 
+			EntityInstanceActual entityActual) {
+
+		if (scope.equals(entityReference))
+			return new Declaration(
+					quantifier,
+					entityActual,
+					type,
+					instanceFilter.bindEntityReference(entityReference, entityActual),
+					variable
+					);
+		else
+			return new Declaration(
+					quantifier,
+					scope,
+					type,
+					instanceFilter.bindEntityReference(entityReference, entityActual),
+					variable
+					);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return quantifier.hashCode() + scope.hashCode() + type.hashCode() + variable.hashCode();
+	}
+
+	@Override
+	public void clearCache() {
+		instanceFilter.clearCache();
+	}
+
+}
