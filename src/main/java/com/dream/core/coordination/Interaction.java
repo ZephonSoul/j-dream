@@ -90,5 +90,12 @@ public class Interaction {
 		ports.stream().forEach(Port::trigger);
 		
 	}
+	
+	public boolean involvesEntity(EntityInstanceActual entity) {
+		for (Port p : ports)
+			if (p.getEntity().equals(entity.getActualEntity()))
+				return true;
+		return false;
+	}
 
 }

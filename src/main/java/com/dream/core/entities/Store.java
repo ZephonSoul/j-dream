@@ -33,6 +33,11 @@ public class Store {
 				.collect(Collectors.toMap(LocalVariable::getName, Function.identity())));
 	}
 
+	public Store(LocalVariable... localVariables) {
+		this.localVariables = Arrays.stream(localVariables)
+				.collect(Collectors.toMap(LocalVariable::getName, Function.identity()));
+	}
+
 	/**
 	 * @return the localVariables
 	 */

@@ -25,7 +25,7 @@ public abstract class AbstractInteractingEntity
 extends AbstractEntity
 implements InteractingEntity, Caching {
 	
-	final static boolean greedy_cache_update = true;
+	final static boolean greedy_cache_update = false;
 	
 	protected Store store;
 	protected Map<String,Port> cInterface;
@@ -42,6 +42,7 @@ implements InteractingEntity, Caching {
 		this.store = store;
 		this.cInterface = cInterface;
 		setInterfaceOwner();
+		store.setOwner(this);
 		clearCache();
 	}
 	
@@ -113,6 +114,7 @@ implements InteractingEntity, Caching {
 	@Override
 	public void setInterface(Map<String,Port> cInterface) {
 		this.cInterface = cInterface;
+		setInterfaceOwner();
 		clearCache();
 	}
 	
@@ -168,7 +170,7 @@ implements InteractingEntity, Caching {
 		return interactionsIterator.next();
 	}
 	
-	private void updateCache() {
+	protected void updateCache() {
 		interactionsIterator = new EntityInteractionsIterator(cInterface.values());
 		dirtyCache = false;
 	}
