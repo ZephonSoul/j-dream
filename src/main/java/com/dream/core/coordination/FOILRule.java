@@ -3,9 +3,10 @@ package com.dream.core.coordination;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.predicates.Contradiction;
 import com.dream.core.coordination.constraints.predicates.Tautology;
-import com.dream.core.coordination.operations.OperationsSet;
+import com.dream.core.operations.OperationsSet;
 
 public class FOILRule implements Rule {
 
@@ -37,7 +38,7 @@ public class FOILRule implements Rule {
 				ruleInstance = new Term(Tautology.getInstance());
 			else
 				ruleInstance = new AndRule(Arrays.stream(matchingInstances)
-						.map(c -> rule.bindEntityReference(declaration.getVariable(), c))
+						.map(c -> rule.bindInstance(declaration.getVariable(), c))
 						.collect(Collectors.toSet()));
 			break;
 		case EXISTS:
@@ -45,25 +46,25 @@ public class FOILRule implements Rule {
 				ruleInstance = new Term(Contradiction.getInstance());
 			else
 				ruleInstance = new OrRule(Arrays.stream(matchingInstances)
-						.map(c -> rule.bindEntityReference(declaration.getVariable(), c))
+						.map(c -> rule.bindInstance(declaration.getVariable(), c))
 						.collect(Collectors.toSet()));
 			break;
 		}
 		return ruleInstance;
 	}
 
-	@Override
-	public Rule bindEntityReference(
-			EntityInstanceReference componentReference,
-			EntityInstanceActual actualComponent) {
-
-		ruleInstance = new FOILRule(
-				declaration.bindEntityReference(componentReference, actualComponent),
-				rule
-				);
-		ruleInstance = ruleInstance.expandDeclarations().bindEntityReference(componentReference, actualComponent);
-		return ruleInstance;
-	}
+//	@Override
+//	public Rule bindEntityReference(
+//			EntityInstanceRef componentReference,
+//			EntityInstanceActual actualComponent) {
+//
+//		ruleInstance = new FOILRule(
+//				declaration.bindEntityReference(componentReference, actualComponent),
+//				rule
+//				);
+//		ruleInstance = ruleInstance.expandDeclarations().bindInstance(componentReference, actualComponent);
+//		return ruleInstance;
+//	}
 
 	@Override
 	public boolean sat(Interaction i) {
@@ -103,6 +104,16 @@ public class FOILRule implements Rule {
 	@Override
 	public int hashCode() {
 		return declaration.hashCode() + rule.hashCode();
+	}
+
+	@Override
+	public <I> Rule bindInstance(Instance<I> reference, Instance<I> actual) {
+		ruleInstance = new FOILRule(
+				declaration.bindInstance(reference, actual),
+				rule
+				);
+		ruleInstance = ruleInstance.expandDeclarations().bindInstance(reference, actual);
+		return ruleInstance;
 	}
 
 }

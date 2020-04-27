@@ -1,4 +1,4 @@
-package com.dream.core.coordination.operations;
+package com.dream.core.operations;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -1,8 +1,8 @@
 package com.dream.core.expressions;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.coordination.EntityInstance;
+import com.dream.core.coordination.EntityInstanceActual;
 import com.dream.core.coordination.TypeRestriction;
 import com.dream.core.coordination.UnboundReferenceException;
 import com.dream.core.coordination.constraints.IncompatibleEntityReference;
@@ -10,7 +10,7 @@ import com.dream.core.entities.CoordinatingEntity;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.expressions.values.Value;
 
-public class PoolSize extends AbstractExpression implements Expression {
+public class PoolSize extends AbstractExpression {
 
 	public static final int BASE_CODE = 31;
 
@@ -27,21 +27,22 @@ public class PoolSize extends AbstractExpression implements Expression {
 			EntityInstance entityInstance, 
 			TypeRestriction type, 
 			Value value) {
+
 		this.entityInstance = entityInstance;
 		this.type = type;
 		this.value = value;
 	}
 
 	/**
-	 * @param componentInstance
+	 * @param entityInstance
 	 * @param type
 	 */
-	public PoolSize(EntityInstance componentInstance, TypeRestriction type) {
-		this(componentInstance,type,null);
+	public PoolSize(EntityInstance entityInstance, TypeRestriction type) {
+		this(entityInstance,type,null);
 	}
 
-	public PoolSize(EntityInstance componentInstance) {
-		this(componentInstance,TypeRestriction.anyType());
+	public PoolSize(EntityInstance entityInstance) {
+		this(entityInstance,TypeRestriction.anyType());
 	}
 
 	public EntityInstance getComponentInstance() {
@@ -53,13 +54,13 @@ public class PoolSize extends AbstractExpression implements Expression {
 	}
 
 	@Override
-	public Expression bindEntityReference(
-			EntityInstanceReference entityReference,
-			EntityInstanceActual entityActual) {
+	public <I> Expression bindInstance(
+			Instance<I> reference,
+			Instance<I> actual) {
 
-		if (this.entityInstance.equals(entityReference))
+		if (this.entityInstance.equals(reference))
 			return new PoolSize(
-					entityActual,
+					(EntityInstance) actual,
 					type,
 					value);
 		else
@@ -68,13 +69,13 @@ public class PoolSize extends AbstractExpression implements Expression {
 
 	@Override
 	public void evaluateOperands() {
-		if (value == null)
+		if (value == null) 
 			if (entityInstance instanceof EntityInstanceActual) {
-				if (entityInstance.getActualEntity() instanceof CoordinatingEntity) {
-					int size = ((CoordinatingEntity) entityInstance.getActualEntity()).getPoolSize();
+				if (entityInstance.getActual() instanceof CoordinatingEntity) {
+					int size = ((CoordinatingEntity) entityInstance.getActual()).getPoolSize();
 					value = new NumberValue(size);
 				} else
-					throw new IncompatibleEntityReference(entityInstance.getActualEntity(),this.toString());
+					throw new IncompatibleEntityReference(entityInstance,this.toString());
 			}
 			else
 				throw new UnboundReferenceException(entityInstance);

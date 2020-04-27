@@ -1,10 +1,11 @@
 package com.dream.core.coordination;
 
+import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.Formula;
 import com.dream.core.coordination.constraints.predicates.Tautology;
-import com.dream.core.coordination.operations.Operation;
-import com.dream.core.coordination.operations.OperationsSet;
-import com.dream.core.coordination.operations.Skip;
+import com.dream.core.operations.Operation;
+import com.dream.core.operations.OperationsSet;
+import com.dream.core.operations.Skip;
 
 public class Term implements Rule  {
 
@@ -55,14 +56,14 @@ public class Term implements Rule  {
 			return new OperationsSet();
 	}
 
-	@Override
-	public Rule bindEntityReference(
-			EntityInstanceReference componentReference, 
-			EntityInstanceActual actualComponent) {
-
-		return new Term(constraint.bindEntityReference(componentReference,actualComponent),
-				operation.bindEntityReference(componentReference,actualComponent));
-	}
+//	@Override
+//	public Rule bindEntityReference(
+//			EntityInstanceRef componentReference, 
+//			EntityInstanceActual actualComponent) {
+//
+//		return new Term(constraint.bindInstance(componentReference,actualComponent),
+//				operation.bindInstance(componentReference,actualComponent));
+//	}
 
 	@Override
 	public Rule expandDeclarations() {
@@ -86,10 +87,20 @@ public class Term implements Rule  {
 	public String toString() {
 		return String.format("(%s -> %s)", constraint.toString(), operation.toString());
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return constraint.hashCode() + operation.hashCode();
+	}
+
+	@Override
+	public <I> Rule bindInstance(
+			Instance<I> reference, 
+			Instance<I> actual) {
+
+		return new Term(
+				constraint.bindInstance(	reference,actual),
+				operation.bindInstance(reference,actual));
 	}
 
 }

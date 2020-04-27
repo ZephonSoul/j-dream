@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
 import com.dream.core.expressions.Expression;
 
 public class SetValue extends AbstractValue implements Value, AdditiveValue {
@@ -113,12 +111,6 @@ public class SetValue extends AbstractValue implements Value, AdditiveValue {
 	public boolean equals(Expression ex) {
 		return (ex instanceof SetValue)
 				&& equals((SetValue) ex);
-	}
-
-	@Override
-	public Expression bindEntityReference(EntityInstanceReference componentReference,
-			EntityInstanceActual actualComponent) {
-		return this;
 	}
 	
 }

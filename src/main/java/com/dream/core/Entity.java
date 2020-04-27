@@ -9,8 +9,8 @@ import java.util.Set;
 import org.json.simple.JSONObject;
 
 import com.dream.core.coordination.Interaction;
-import com.dream.core.coordination.operations.OperationsSet;
 import com.dream.core.entities.NoAdmissibleInteractionsException;
+import com.dream.core.operations.OperationsSet;
 
 /**
  * @author Alessandro Maggi

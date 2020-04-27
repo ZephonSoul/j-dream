@@ -12,7 +12,7 @@ import org.json.simple.JSONObject;
 
 import com.dream.core.Caching;
 import com.dream.core.coordination.Interaction;
-import com.dream.core.coordination.operations.OperationsSet;
+import com.dream.core.operations.OperationsSet;
 
 /**
  * @author Alessandro Maggi

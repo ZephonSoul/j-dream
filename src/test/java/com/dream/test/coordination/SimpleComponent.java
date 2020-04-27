@@ -9,11 +9,12 @@ import com.dream.core.coordination.OrRule;
 import com.dream.core.coordination.Term;
 import com.dream.core.coordination.constraints.*;
 import com.dream.core.coordination.constraints.predicates.Tautology;
-import com.dream.core.coordination.operations.*;
 import com.dream.core.entities.*;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.*;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.operations.Assign;
+import com.dream.core.operations.OperationsSet;
 import com.dream.core.output.ConsoleOutput;
 
 public class SimpleComponent extends AbstractLightComponent {
@@ -29,18 +30,18 @@ public class SimpleComponent extends AbstractLightComponent {
 						Tautology.getInstance()
 						),
 				new Term(new PortAtom(p1),
-						new Assign(new ActualVariable(x),
+						new Assign(new VariableActual(x),
 								new Sum(
 										new Constant(new NumberValue(10)),
 										new Constant(new NumberValue(5)),
-										new ActualVariable(x)))
+										new VariableActual(x)))
 						),
 				new Term(new PortAtom(p2),
-						new Assign(new ActualVariable(x),
+						new Assign(new VariableActual(x),
 								new Product(
 										new Constant(new NumberValue(2)),
 										new Constant(new NumberValue(3)),
-										new ActualVariable(x)))
+										new VariableActual(x)))
 						)
 				)
 				);

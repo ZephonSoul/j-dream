@@ -1,18 +1,18 @@
 package com.dream.core.coordination;
 
-public class EntityVariableNamesFactory {
+public class EntityRefNamesFactory {
 
-	private static EntityVariableNamesFactory factoryInstance;
+	private static EntityRefNamesFactory factoryInstance;
 	
 	private int variableIdCounter;
 	
-	public EntityVariableNamesFactory() {
+	public EntityRefNamesFactory() {
 		this.variableIdCounter = 0;
 	}
 	
-	public static EntityVariableNamesFactory getInstance() {
+	public static EntityRefNamesFactory getInstance() {
 		if (factoryInstance==null)
-			factoryInstance = new EntityVariableNamesFactory();
+			factoryInstance = new EntityRefNamesFactory();
 		return factoryInstance;
 	}
 

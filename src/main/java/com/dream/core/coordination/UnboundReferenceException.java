@@ -1,17 +1,19 @@
 package com.dream.core.coordination;
 
+import com.dream.core.Instance;
+
 public class UnboundReferenceException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public UnboundReferenceException(EntityInstance componentReference) {
-		super(getMessage(componentReference));
+	public UnboundReferenceException(Instance<?> reference) {
+		super(getMessage(reference));
 	}
 	
-	private static String getMessage(EntityInstance componentReference) {
+	private static String getMessage(Instance<?> reference) {
 		return String.format(
 				"Cannot resolve unbound reference %s", 
-				componentReference.getName());
+				reference.getName());
 	}
 	
 }

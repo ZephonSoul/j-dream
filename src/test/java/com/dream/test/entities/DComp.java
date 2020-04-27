@@ -3,7 +3,6 @@ package com.dream.test.entities;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,7 +10,6 @@ import com.dream.core.Entity;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.coordination.Term;
 import com.dream.core.coordination.constraints.PortAtom;
-import com.dream.core.coordination.operations.Assign;
 import com.dream.core.entities.AbstractComponent;
 import com.dream.core.entities.InteractingEntity;
 import com.dream.core.entities.LocalVariable;
@@ -20,8 +18,9 @@ import com.dream.core.entities.Store;
 import com.dream.core.entities.behavior.ControlLocation;
 import com.dream.core.entities.behavior.LTS;
 import com.dream.core.entities.behavior.Transition;
-import com.dream.core.expressions.ActualVariable;
+import com.dream.core.expressions.VariableActual;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.operations.Assign;
 
 public class DComp extends AbstractComponent implements InteractingEntity {
 
@@ -43,13 +42,13 @@ public class DComp extends AbstractComponent implements InteractingEntity {
 				a,
 				new Term(
 						new PortAtom(cInterface.get("p")),
-						new Assign(new ActualVariable(store.getLocalVariable("x")), new NumberValue(10))),
+						new Assign(new VariableActual(store.getLocalVariable("x")), new NumberValue(10))),
 				b),
 				t_ba = new Transition(
 						b,
 						new Term(
 								new PortAtom(cInterface.get("q")),
-								new Assign(new ActualVariable(store.getLocalVariable("x")), new NumberValue(0))),
+								new Assign(new VariableActual(store.getLocalVariable("x")), new NumberValue(0))),
 						a);
 		HashMap<ControlLocation,Set<Transition>> transitions = new HashMap<>();
 		transitions.put(a, new HashSet<Transition>());

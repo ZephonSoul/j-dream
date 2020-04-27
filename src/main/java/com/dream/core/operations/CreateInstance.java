@@ -1,26 +1,27 @@
-package com.dream.core.coordination.operations;
+package com.dream.core.operations;
 
 import java.lang.reflect.InvocationTargetException;
 
 import com.dream.core.coordination.EntityInstanceActual;
 import com.dream.core.Entity;
+import com.dream.core.Instance;
 import com.dream.core.coordination.EntityInstance;
-import com.dream.core.coordination.EntityInstanceReference;
-import com.dream.core.coordination.constraints.IncompatibleEntityReference;
+import com.dream.core.coordination.EntityInstanceRef;
+import com.dream.core.coordination.IllegalScopeException;
 import com.dream.core.entities.CoordinatingEntity;
 
-public class CreateInstance extends AbstractOperation implements Operation {
+public class CreateInstance extends AbstractOperation {
 
 	final static int BASE_CODE = 1000;
 
 	private Class<? extends Entity> entityType;
 	private EntityInstance parentInstance;
-	private EntityInstanceReference newInstance;
+	private EntityInstanceRef newInstance;
 	private Operation chainedOperation;
 
 	public CreateInstance(Class<? extends Entity> entityType, 
 			EntityInstance parentInstance, 
-			EntityInstanceReference newInstance,
+			EntityInstanceRef newInstance,
 			Operation chainedOperation) {
 
 		this.entityType = entityType;
@@ -33,11 +34,15 @@ public class CreateInstance extends AbstractOperation implements Operation {
 			EntityInstance parentInstance) {
 		this(entityType,parentInstance,null,Skip.getInstance());
 	}
+	
+	public CreateInstance() {
+		
+	}
 
 	/**
 	 * @return the newInstance
 	 */
-	public EntityInstanceReference getNewInstance() {
+	public EntityInstanceRef getNewInstance() {
 		return newInstance;
 	}
 
@@ -62,13 +67,14 @@ public class CreateInstance extends AbstractOperation implements Operation {
 
 	@Override
 	public void execute() {
-		if (parentInstance.getActualEntity() instanceof CoordinatingEntity) {
+		CoordinatingEntity parentEntity = (CoordinatingEntity) parentInstance.getActual();
+		if (parentEntity instanceof CoordinatingEntity)
 			try {
-				Entity newComponent = entityType.getConstructor().newInstance();
-				((CoordinatingEntity)parentInstance.getActualEntity()).addToPool(newComponent);
-				if (newInstance instanceof EntityInstanceReference) {
-					chainedOperation = chainedOperation.bindEntityReference(
-							newInstance, new EntityInstanceActual(newComponent));
+				Entity newActualInstance = entityType.getConstructor().newInstance();
+				parentEntity.addToPool(newActualInstance);
+				if (newInstance instanceof EntityInstanceRef) {
+					chainedOperation = chainedOperation.bindInstance(
+							newInstance, new EntityInstanceActual(newActualInstance));
 					chainedOperation.evaluateOperands();
 				}
 				chainedOperation.execute();
@@ -77,8 +83,8 @@ public class CreateInstance extends AbstractOperation implements Operation {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else
-			throw new IncompatibleEntityReference(parentInstance.getActualEntity(),this.toString());
+		else
+			throw new IllegalScopeException(parentEntity, toString());
 	}
 
 	@Override
@@ -95,27 +101,27 @@ public class CreateInstance extends AbstractOperation implements Operation {
 
 	@Override
 	public boolean equals(Operation op) {
-		return (op instanceof CreateInstance)
-				&& parentInstance.equals(((CreateInstance) op).getParentInstance())
-				&& entityType.equals(((CreateInstance) op).getEntityType())
-				&& newInstance.equals(((CreateInstance) op).getNewInstance());
+		if (op instanceof CreateInstance && newInstance != null)
+			return parentInstance.equals(((CreateInstance) op).getParentInstance())
+					&& entityType.equals(((CreateInstance) op).getEntityType())
+					&& newInstance.equals(((CreateInstance) op).getNewInstance());
+		else
+			//every instance creation is unique
+			//unless it is forcefully bound to the same EntityInstanceReference
+			return super.lowLevelEquals(op);
 	}
 
 	@Override
-	public Operation bindEntityReference(
-			EntityInstanceReference entityReference, 
-			EntityInstanceActual entityActual) {
+	public <I> Operation bindInstance(
+			Instance<I> reference, 
+			Instance<I> actual) {
 
-		if (parentInstance.equals(entityReference)) {
-			return new CreateInstance(
-					entityType,
-					entityActual,
-					newInstance,
-					chainedOperation
-					);
-		}
-		else
-			return this;
+		return new CreateInstance(
+				entityType,
+				parentInstance.bindInstance(reference, actual),
+				newInstance,
+				chainedOperation.bindInstance(reference, actual)
+				);
 	}
 
 	@Override

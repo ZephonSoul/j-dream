@@ -1,8 +1,10 @@
 package com.dream.core.coordination;
 
 import com.dream.core.Entity;
+import com.dream.core.Instance;
 
-public class EntityInstanceActual implements EntityInstance {
+public class EntityInstanceActual 
+implements EntityInstance {
 
 	public static int BASE_CODE = 555;
 
@@ -30,7 +32,7 @@ public class EntityInstanceActual implements EntityInstance {
 	}
 
 	public boolean equals(EntityInstanceActual instance) {
-		return entity.equals(instance.getActualEntity());
+		return entity.equals(instance.getActual());
 	}
 
 	@Override
@@ -40,9 +42,9 @@ public class EntityInstanceActual implements EntityInstance {
 	}
 
 	@Override
-	public EntityInstance bindEntityReference(
-			EntityInstanceReference entityReference, 
-			EntityInstanceActual entityActual) {
+	public <I> EntityInstance bindInstance(
+			Instance<I> reference, 
+			Instance<I> actual) {
 
 		return this;
 	}
@@ -52,8 +54,16 @@ public class EntityInstanceActual implements EntityInstance {
 	}
 
 	@Override
-	public Entity getActualEntity() {
+	public Entity getActual() {
 		return entity;
 	}
+
+//	@Override
+//	public <I> EntityInstance bindInstance(
+//			Instance<I> reference, 
+//			Instance<I> actual) {
+//		
+//		return this;
+//	}
 
 }

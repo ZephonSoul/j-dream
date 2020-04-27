@@ -1,7 +1,5 @@
 package com.dream.core.expressions;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
 import com.dream.core.expressions.values.Value;
 
 /**
@@ -10,7 +8,7 @@ import com.dream.core.expressions.values.Value;
  * directly extend Expressions and can be used as constants
  */
 @Deprecated
-public class Constant implements Expression {
+public class Constant extends AbstractExpression {
 
 	private Value value;
 	
@@ -43,14 +41,6 @@ public class Constant implements Expression {
 	}
 
 	@Override
-	public Expression bindEntityReference(
-			EntityInstanceReference componentVariable, 
-			EntityInstanceActual actualComponent) {
-		
-		return this;
-	}
-
-	@Override
 	public Value eval() {
 		return value;
 	}
@@ -60,5 +50,15 @@ public class Constant implements Expression {
 	
 	@Override
 	public void clearCache() {}
+
+	@Override
+	protected Value computeResult() {
+		return value;
+	}
+
+	@Override
+	protected boolean allOperandsValued() {
+		return true;
+	}
 
 }

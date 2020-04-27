@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.dream.core.coordination.operations.OperationsSet;
+import com.dream.core.operations.OperationsSet;
 
 public abstract class AbstractRule implements Rule {
 

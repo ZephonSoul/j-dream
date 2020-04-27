@@ -57,7 +57,7 @@ public abstract class AbstractEntity implements Entity {
 
 	@Override
 	public int hashCode() {
-		return BASE_CODE + toString().hashCode();
+		return BASE_CODE + id;
 	}
 
 	@Override

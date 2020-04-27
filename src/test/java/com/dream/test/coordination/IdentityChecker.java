@@ -9,13 +9,13 @@ import com.dream.core.coordination.Term;
 import com.dream.core.coordination.constraints.And;
 import com.dream.core.coordination.constraints.PortReference;
 import com.dream.core.coordination.constraints.predicates.SameInstance;
-import com.dream.core.coordination.operations.Assign;
 import com.dream.core.entities.AbstractLightComponent;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.Constant;
-import com.dream.core.expressions.ReferencedVariable;
+import com.dream.core.expressions.VariableRef;
 import com.dream.core.expressions.Sum;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.operations.Assign;
 import com.dream.core.output.ConsoleOutput;
 
 public class IdentityChecker extends AbstractLightComponent {
@@ -30,8 +30,8 @@ public class IdentityChecker extends AbstractLightComponent {
 								new SameInstance(new EntityInstanceActual(reference), d.getVariable()),
 								new PortReference(d.getVariable(),"p1")
 								),
-						new Assign(new ReferencedVariable(d.getVariable(),"x"),
-								new Sum(new ReferencedVariable(d.getVariable(),"x"),new Constant(new NumberValue(1))))
+						new Assign(new VariableRef(d.getVariable(),"x"),
+								new Sum(new VariableRef(d.getVariable(),"x"),new Constant(new NumberValue(1))))
 				)));
 	}
 	

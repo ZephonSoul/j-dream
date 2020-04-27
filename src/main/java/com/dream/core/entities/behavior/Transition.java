@@ -6,8 +6,8 @@ import com.dream.core.Caching;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.coordination.Rule;
 import com.dream.core.coordination.Term;
-import com.dream.core.coordination.operations.OperationsSet;
-import com.dream.core.coordination.operations.TriggerTransition;
+import com.dream.core.operations.OperationsSet;
+import com.dream.core.operations.TriggerTransition;
 
 /**
  * @author Alessandro Maggi

@@ -13,11 +13,11 @@ import com.dream.core.coordination.Term;
 import com.dream.core.coordination.TypeRestriction;
 import com.dream.core.coordination.constraints.And;
 import com.dream.core.coordination.constraints.PortReference;
-import com.dream.core.coordination.operations.*;
 import com.dream.core.entities.AbstractLightComponent;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.*;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.operations.Assign;
 import com.dream.core.output.ConsoleOutput;
 
 public class SimpleCompound extends AbstractLightComponent {
@@ -41,7 +41,7 @@ public class SimpleCompound extends AbstractLightComponent {
 		Rule target = new FOILRule(d,new AndRule(
 				new Term(
 						new PortReference(d.getVariable(),"p1"),
-						new Assign(new ReferencedVariable(d.getVariable(),"x"), new Sum(new ReferencedVariable(d.getVariable(),"x"),new Constant(new NumberValue(1))))
+						new Assign(new VariableRef(d.getVariable(),"x"), new Sum(new VariableRef(d.getVariable(),"x"),new Constant(new NumberValue(1))))
 						)
 				)
 				);

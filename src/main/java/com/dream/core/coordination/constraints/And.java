@@ -3,8 +3,7 @@ package com.dream.core.coordination.constraints;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.coordination.Interaction;
 
 public class And extends AbstractEnnaryFormula implements Formula {
@@ -29,15 +28,15 @@ public class And extends AbstractEnnaryFormula implements Formula {
 		return subformulas.stream().allMatch(f -> f.sat());
 	}
 
-	@Override
-	public Formula bindEntityReference(
-			EntityInstanceReference componentVariable, 
-			EntityInstanceActual actualComponent) {
-
-		return new And(subformulas.stream()
-				.map(f -> f.bindEntityReference(componentVariable, actualComponent))
-				.collect(Collectors.toSet()));
-	}
+//	@Override
+//	public Formula bindEntityReference(
+//			EntityInstanceRef componentVariable, 
+//			EntityInstanceActual actualComponent) {
+//
+//		return new And(subformulas.stream()
+//				.map(f -> f.bindInstance(componentVariable, actualComponent))
+//				.collect(Collectors.toSet()));
+//	}
 
 	public String getConnectiveSymbol() {
 		return "Ʌ";
@@ -52,6 +51,13 @@ public class And extends AbstractEnnaryFormula implements Formula {
 	@Override
 	public int hashCode() {
 		return BASE_CODE;
+	}
+
+	@Override
+	public <I> Formula bindInstance(Instance<I> reference, Instance<I> actual) {
+		return new And(subformulas.stream()
+				.map(f -> f.bindInstance(reference, actual))
+				.collect(Collectors.toSet()));
 	}
 
 }

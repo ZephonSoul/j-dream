@@ -1,9 +1,6 @@
-package com.dream.core.coordination.operations;
+package com.dream.core.operations;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
-
-public class Skip extends AbstractOperation implements Operation {
+public class Skip extends AbstractOperation {
 	
 	final static int BASE_CODE = 0;
 	private static Skip instance;
@@ -23,11 +20,6 @@ public class Skip extends AbstractOperation implements Operation {
 	@Override
 	public int hashCode() {
 		return BASE_CODE;
-	}
-	
-	@Override
-	public Operation bindEntityReference(EntityInstanceReference componentReference, EntityInstanceActual actualComponent) {
-		return this;
 	}
 	
 	@Override

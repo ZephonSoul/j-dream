@@ -3,10 +3,10 @@ package com.dream;
 import java.io.IOException;
 
 import com.dream.core.coordination.Interaction;
-import com.dream.core.coordination.operations.OperationsSet;
 import com.dream.core.entities.CoordinatingEntity;
 import com.dream.core.entities.NoAdmissibleInteractionsException;
 import com.dream.core.exec.ExecutionStrategy;
+import com.dream.core.operations.OperationsSet;
 import com.dream.core.output.MessageWritable;
 import com.dream.core.output.Output;
 

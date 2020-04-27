@@ -5,7 +5,7 @@ import com.dream.core.coordination.AndRule;
 import com.dream.core.coordination.ConjunctiveTerm;
 import com.dream.core.coordination.Declaration;
 import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.coordination.EntityInstanceRef;
 import com.dream.core.coordination.FOILRule;
 import com.dream.core.coordination.OrRule;
 import com.dream.core.coordination.Quantifier;
@@ -14,16 +14,16 @@ import com.dream.core.coordination.Term;
 import com.dream.core.coordination.TypeRestriction;
 import com.dream.core.coordination.constraints.*;
 import com.dream.core.coordination.constraints.predicates.*;
-import com.dream.core.coordination.operations.Assign;
-import com.dream.core.coordination.operations.OperationsSequence;
 import com.dream.core.entities.AbstractLightComponent;
 import com.dream.core.exec.GreedyStrategy;
-import com.dream.core.expressions.ReferencedVariable;
+import com.dream.core.expressions.VariableRef;
 import com.dream.core.expressions.SetAdd;
 import com.dream.core.expressions.Sum;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.expressions.values.SetValue;
 import com.dream.core.expressions.values.Value;
+import com.dream.core.operations.Assign;
+import com.dream.core.operations.OperationsSequence;
 import com.dream.core.output.ConsoleOutput;
 import com.dream.core.output.DummyOutput;
 import com.dream.test.benchmarks.masterslaves.Master;
@@ -58,7 +58,7 @@ public class MasterSlaves extends AbstractLightComponent {
 				new EntityInstanceActual(this),
 				new TypeRestriction(Slave.class));
 
-		EntityInstanceReference m = forall_masters.getVariable(),
+		EntityInstanceRef m = forall_masters.getVariable(),
 				s = exists_slave.getVariable();
 
 		Rule rc1 = new FOILRule(forall_masters, 
@@ -68,13 +68,13 @@ public class MasterSlaves extends AbstractLightComponent {
 								new And(
 										new PortReference(s, "bind"),
 										new LessThan(
-												new ReferencedVariable(m, "nSlaves"),
+												new VariableRef(m, "nSlaves"),
 												requiredSlaves
 												),
 										new Not(
 												new InSet(
-														new ReferencedVariable(s, "id"),
-														new ReferencedVariable(m, "boundSlaves")
+														new VariableRef(s, "id"),
+														new VariableRef(m, "boundSlaves")
 														)
 												)
 										)
@@ -102,15 +102,15 @@ public class MasterSlaves extends AbstractLightComponent {
 								new PortReference(m, "work"), 
 								new And(
 										new Equals(
-												new ReferencedVariable(m, "nSlaves"),
+												new VariableRef(m, "nSlaves"),
 												requiredSlaves
 												),
 										new Or(
 												new PortReference(s, "serve"),
 												new Not(
 														new InSet(
-																new ReferencedVariable(s, "id"),
-																new ReferencedVariable(m, "boundSlaves")
+																new VariableRef(s, "id"),
+																new VariableRef(m, "boundSlaves")
 																)
 														)
 												)
@@ -128,8 +128,8 @@ public class MasterSlaves extends AbstractLightComponent {
 								new And(
 										new PortReference(m, "work"),
 										new Equals(
-												new ReferencedVariable(s, "master"),
-												new ReferencedVariable(m, "id")
+												new VariableRef(s, "master"),
+												new VariableRef(m, "id")
 												)
 										)
 								)
@@ -147,21 +147,21 @@ public class MasterSlaves extends AbstractLightComponent {
 										), 
 								new OperationsSequence(
 										new Assign(
-												new ReferencedVariable(m, "boundSlaves"),
+												new VariableRef(m, "boundSlaves"),
 												new SetAdd(
-														new ReferencedVariable(s, "id"),
-														new ReferencedVariable(m, "boundSlaves")
+														new VariableRef(s, "id"),
+														new VariableRef(m, "boundSlaves")
 														)
 												),
 										new Assign(
-												new ReferencedVariable(m, "nSlaves"),
+												new VariableRef(m, "nSlaves"),
 												new Sum(
-														new ReferencedVariable(m, "nSlaves"), 
+														new VariableRef(m, "nSlaves"), 
 														new NumberValue(1))
 												),
 										new Assign(
-												new ReferencedVariable(s, "master"),
-												new ReferencedVariable(m, "id")
+												new VariableRef(s, "master"),
+												new VariableRef(m, "id")
 												)
 										)
 								)
@@ -174,21 +174,21 @@ public class MasterSlaves extends AbstractLightComponent {
 										new PortReference(m, "work"),
 										new PortReference(s, "serve"),
 										new InSet(
-												new ReferencedVariable(s, "id"),
-												new ReferencedVariable(m, "boundSlaves")
+												new VariableRef(s, "id"),
+												new VariableRef(m, "boundSlaves")
 												)
 										),
 								new OperationsSequence(
 										new Assign(
-												new ReferencedVariable(m, "boundSlaves"),
+												new VariableRef(m, "boundSlaves"),
 												new SetValue()
 												),
 										new Assign(
-												new ReferencedVariable(m, "nSlaves"),
+												new VariableRef(m, "nSlaves"),
 												new NumberValue(0)
 												),
 										new Assign(
-												new ReferencedVariable(s, "master"),
+												new VariableRef(s, "master"),
 												new NumberValue(-1)
 												)
 										)
@@ -201,7 +201,7 @@ public class MasterSlaves extends AbstractLightComponent {
 				Quantifier.FORALL,
 				new EntityInstanceActual(this),
 				new TypeRestriction(Master.class));
-		EntityInstanceReference m2 = dm2.getVariable();
+		EntityInstanceRef m2 = dm2.getVariable();
 		
 		Rule ru1 = new FOILRule(forall_masters,
 				new FOILRule(dm2,
@@ -220,7 +220,7 @@ public class MasterSlaves extends AbstractLightComponent {
 				Quantifier.FORALL,
 				new EntityInstanceActual(this),
 				new TypeRestriction(Slave.class));
-		EntityInstanceReference s2 = ds2.getVariable();
+		EntityInstanceRef s2 = ds2.getVariable();
 		
 		Rule ru2 = new FOILRule(forall_slaves,
 				new FOILRule(ds2,

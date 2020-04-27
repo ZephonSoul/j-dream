@@ -2,6 +2,7 @@ package com.dream.core.coordination;
 
 import com.dream.core.Bindable;
 import com.dream.core.Caching;
+import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.Formula;
 import com.dream.core.coordination.constraints.predicates.Tautology;
 import com.dream.core.entities.CoordinatingEntity;
@@ -11,7 +12,7 @@ public class Declaration implements Bindable<Declaration>, Caching {
 	private Quantifier quantifier;
 	private EntityInstance scope;
 	private TypeRestriction type;
-	private EntityInstanceReference variable;
+	private EntityInstanceRef variable;
 	private Formula instanceFilter;
 
 	/**
@@ -25,7 +26,7 @@ public class Declaration implements Bindable<Declaration>, Caching {
 			EntityInstance scope, 
 			TypeRestriction type,
 			Formula instanceFilter,
-			EntityInstanceReference variable) {
+			EntityInstanceRef variable) {
 
 		this.quantifier = quantifier;
 		this.scope = scope;
@@ -38,7 +39,7 @@ public class Declaration implements Bindable<Declaration>, Caching {
 			Quantifier quantifier, 
 			EntityInstance scope, 
 			TypeRestriction type, 
-			EntityInstanceReference variable) {
+			EntityInstanceRef variable) {
 
 		this(quantifier,scope,type,Tautology.getInstance(),variable);
 	}
@@ -49,7 +50,7 @@ public class Declaration implements Bindable<Declaration>, Caching {
 			TypeRestriction type, 
 			Formula instanceFilter) {
 
-		this(quantifier,scope,type,instanceFilter,new EntityInstanceReference());
+		this(quantifier,scope,type,instanceFilter,new EntityInstanceRef());
 	}
 
 	public Declaration(
@@ -61,7 +62,7 @@ public class Declaration implements Bindable<Declaration>, Caching {
 				scope,
 				new TypeRestriction(),
 				Tautology.getInstance(),
-				new EntityInstanceReference()
+				new EntityInstanceRef()
 				);
 	}
 
@@ -75,14 +76,14 @@ public class Declaration implements Bindable<Declaration>, Caching {
 				scope, 
 				type,
 				Tautology.getInstance(),
-				new EntityInstanceReference()
+				new EntityInstanceRef()
 				);
 	}
 
 	public Declaration(
 			Quantifier quantifier,
 			EntityInstance scope, 
-			EntityInstanceReference variable) {
+			EntityInstanceRef variable) {
 
 		this(
 				quantifier, 
@@ -124,7 +125,7 @@ public class Declaration implements Bindable<Declaration>, Caching {
 	/**
 	 * @return the variable
 	 */
-	public EntityInstanceReference getVariable() {
+	public EntityInstanceRef getVariable() {
 		return variable;
 	}
 
@@ -136,20 +137,20 @@ public class Declaration implements Bindable<Declaration>, Caching {
 	}
 
 	public EntityInstanceActual[] getActualEntities() {
-		if (scope.getActualEntity() instanceof CoordinatingEntity) {
+		if (scope.getActual() instanceof CoordinatingEntity) {
 			if (instanceFilter instanceof Tautology)
-				return ((CoordinatingEntity) scope.getActualEntity()).getPool().stream()
+				return ((CoordinatingEntity) scope.getActual()).getPool().stream()
 						.filter(e -> type.match(e))
 						.map(e -> new EntityInstanceActual(e))
 						.toArray(EntityInstanceActual[]::new);
 			else
-				return ((CoordinatingEntity) scope.getActualEntity()).getPool().stream()
+				return ((CoordinatingEntity) scope.getActual()).getPool().stream()
 						.filter(e -> type.match(e))
 						.map(e -> new EntityInstanceActual(e))
-						.filter(actual -> instanceFilter.bindEntityReference(variable, actual).sat())
+						.filter(actual -> instanceFilter.bindInstance(variable, actual).sat())
 						.toArray(EntityInstanceActual[]::new);
 		} else {
-			throw new IllegalScopeException(scope.getActualEntity());
+			throw new IllegalScopeException(scope.getActual());
 		}
 	}
 
@@ -179,29 +180,29 @@ public class Declaration implements Bindable<Declaration>, Caching {
 				filterString);
 	}
 
-	@Override
-	public Declaration bindEntityReference(
-			EntityInstanceReference entityReference, 
-			EntityInstanceActual entityActual) {
-
-		if (scope.equals(entityReference))
-			return new Declaration(
-					quantifier,
-					entityActual,
-					type,
-					instanceFilter.bindEntityReference(entityReference, entityActual),
-					variable
-					);
-		else
-			return new Declaration(
-					quantifier,
-					scope,
-					type,
-					instanceFilter.bindEntityReference(entityReference, entityActual),
-					variable
-					);
-
-	}
+//	@Override
+//	public Declaration bindEntityReference(
+//			EntityInstanceRef entityReference, 
+//			EntityInstanceActual entityActual) {
+//
+//		if (scope.equals(entityReference))
+//			return new Declaration(
+//					quantifier,
+//					entityActual,
+//					type,
+//					instanceFilter.bindInstance(entityReference, entityActual),
+//					variable
+//					);
+//		else
+//			return new Declaration(
+//					quantifier,
+//					scope,
+//					type,
+//					instanceFilter.bindInstance(entityReference, entityActual),
+//					variable
+//					);
+//
+//	}
 
 	@Override
 	public int hashCode() {
@@ -211,6 +212,26 @@ public class Declaration implements Bindable<Declaration>, Caching {
 	@Override
 	public void clearCache() {
 		instanceFilter.clearCache();
+	}
+
+	@Override
+	public <I> Declaration bindInstance(Instance<I> reference, Instance<I> actual) {
+		if (scope.equals(reference))
+			return new Declaration(
+					quantifier,
+					(EntityInstance)actual,
+					type,
+					instanceFilter.bindInstance(reference, actual),
+					variable
+					);
+		else
+			return new Declaration(
+					quantifier,
+					scope,
+					type,
+					instanceFilter.bindInstance(reference, actual),
+					variable
+					);
 	}
 
 }

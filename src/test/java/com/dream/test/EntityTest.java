@@ -2,7 +2,7 @@ package com.dream.test;
 
 import com.dream.core.AbstractEntity;
 import com.dream.core.coordination.Interaction;
-import com.dream.core.coordination.operations.OperationsSet;
+import com.dream.core.operations.OperationsSet;
 
 public class EntityTest extends AbstractEntity {
 

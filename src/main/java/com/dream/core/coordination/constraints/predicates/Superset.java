@@ -2,8 +2,7 @@ package com.dream.core.coordination.constraints.predicates;
 
 import java.util.Arrays;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.Formula;
 import com.dream.core.expressions.Expression;
 import com.dream.core.expressions.values.IncompatibleValueException;
@@ -25,10 +24,10 @@ public class Superset extends AbstractEnnaryPredicate implements Predicate {
 	}
 
 	@Override
-	public Formula bindEntityReference(EntityInstanceReference componentReference, EntityInstanceActual actualComponent) {
+	public <I> Predicate bindInstance(Instance<I> reference, Instance<I> actual) {
 		return new Superset(
 				Arrays.stream(terms)
-				.map(t -> t.bindEntityReference(componentReference, actualComponent))
+				.map(t -> t.bindInstance(reference, actual))
 				.toArray(Expression[]::new));
 	}
 

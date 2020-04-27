@@ -2,9 +2,10 @@ package com.dream.core.coordination;
 
 import com.dream.core.Bindable;
 import com.dream.core.Caching;
-import com.dream.core.coordination.operations.OperationsSet;
+import com.dream.core.operations.OperationsSet;
 
-public interface Rule extends Bindable<Rule>, Caching {
+public interface Rule 
+extends Bindable<Rule>, Caching {
 	
 	public boolean sat(Interaction i);
 	

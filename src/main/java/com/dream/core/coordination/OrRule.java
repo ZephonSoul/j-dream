@@ -3,6 +3,7 @@ package com.dream.core.coordination;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.predicates.Contradiction;
 
 public class OrRule extends AbstractRule implements Rule {
@@ -42,18 +43,18 @@ public class OrRule extends AbstractRule implements Rule {
 					.collect(Collectors.toSet()));
 	}
 
-	@Override
-	public Rule bindEntityReference(
-			EntityInstanceReference componentVariable, 
-			EntityInstanceActual actualComponent) {
-
-		if (rules.isEmpty())
-			return new Term(Contradiction.getInstance());
-		else
-			return new OrRule(rules.stream()
-					.map(r -> r.bindEntityReference(componentVariable, actualComponent))
-					.collect(Collectors.toSet()));
-	}
+//	@Override
+//	public Rule bindEntityReference(
+//			EntityInstanceRef componentVariable, 
+//			EntityInstanceActual actualComponent) {
+//
+//		if (rules.isEmpty())
+//			return new Term(Contradiction.getInstance());
+//		else
+//			return new OrRule(rules.stream()
+//					.map(r -> r.bindInstance(componentVariable, actualComponent))
+//					.collect(Collectors.toSet()));
+//	}
 
 	@Override
 	protected String getConnectiveSymbol() {
@@ -68,6 +69,16 @@ public class OrRule extends AbstractRule implements Rule {
 	@Override
 	public int hashCode() {
 		return BASE_CODE;
+	}
+
+	@Override
+	public <I> Rule bindInstance(Instance<I> reference, Instance<I> actual) {
+		if (rules.isEmpty())
+			return new Term(Contradiction.getInstance());
+		else
+			return new OrRule(rules.stream()
+					.map(r -> r.bindInstance(reference, actual))
+					.collect(Collectors.toSet()));
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.dream.core.coordination.constraints;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.coordination.TypeRestriction;
 import com.dream.core.entities.Port;
@@ -52,13 +51,13 @@ public class AtLeast extends AbstractFormula implements Formula {
 		return portName;
 	}
 
-	@Override
-	public Formula bindEntityReference(EntityInstanceReference componentReference, EntityInstanceActual actualComponent) {
-		return new AtLeast(
-				minInstances.bindEntityReference(componentReference, actualComponent),
-				types,
-				portName);
-	}
+//	@Override
+//	public Formula bindEntityReference(EntityInstanceRef componentReference, EntityInstanceActual actualComponent) {
+//		return new AtLeast(
+//				minInstances.bindInstance(componentReference, actualComponent),
+//				types,
+//				portName);
+//	}
 
 	@Override
 	public boolean sat(Interaction i) {
@@ -105,6 +104,14 @@ public class AtLeast extends AbstractFormula implements Formula {
 		if (portName != null)
 			portHash = portName.hashCode();
 		return BASE_CODE + minInstances.hashCode() + types.hashCode() + portHash;
+	}
+
+	@Override
+	public <I> Formula bindInstance(Instance<I> reference, Instance<I> actual) {
+		return new AtLeast(
+				minInstances.bindInstance(reference, actual),
+				types,
+				portName);
 	}
 
 }

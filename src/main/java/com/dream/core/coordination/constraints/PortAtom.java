@@ -1,11 +1,10 @@
 package com.dream.core.coordination.constraints;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.entities.Port;
 
-public class PortAtom extends AbstractFormula implements Formula {
+public class PortAtom extends AbstractFormula implements Formula, Instance<Port> {
 	
 	private static final int BASE_CODE = 313;
 
@@ -31,10 +30,10 @@ public class PortAtom extends AbstractFormula implements Formula {
 		return this.port.toString();
 	}
 
-	@Override
-	public Formula bindEntityReference(EntityInstanceReference componentVariable, EntityInstanceActual actualComponent) {
-		return this;
-	}
+//	@Override
+//	public Formula bindEntityReference(EntityInstanceRef componentVariable, EntityInstanceActual actualComponent) {
+//		return this;
+//	}
 
 	@Override
 	public boolean equals(Formula formula) {
@@ -45,6 +44,21 @@ public class PortAtom extends AbstractFormula implements Formula {
 	@Override
 	public int hashCode() {
 		return BASE_CODE + port.hashCode();
+	}
+
+	@Override
+	public <I> Formula bindInstance(Instance<I> reference, Instance<I> actual) {
+		return this;
+	}
+
+	@Override
+	public String getName() {
+		return toString();
+	}
+
+	@Override
+	public Port getActual() {
+		return port;
 	}
 
 }

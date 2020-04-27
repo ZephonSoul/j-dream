@@ -1,9 +1,12 @@
 package com.dream.core.coordination.constraints;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.coordination.Interaction;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Not extends AbstractUnaryFormula implements Formula {
 	
 	private static final int BASE_CODE = 0;
@@ -29,13 +32,13 @@ public class Not extends AbstractUnaryFormula implements Formula {
 		return !(subformula.sat());
 	}
 
-	@Override
-	public Formula bindEntityReference(
-			EntityInstanceReference componentVariable, 
-			EntityInstanceActual actualComponent) {
-
-		return new Not(subformula.bindEntityReference(componentVariable, actualComponent));
-	}
+//	@Override
+//	public Formula bindEntityReference(
+//			EntityInstanceRef componentVariable, 
+//			EntityInstanceActual actualComponent) {
+//
+//		return new Not(subformula.bindInstance(componentVariable, actualComponent));
+//	}
 
 	@Override
 	public String toString() {
@@ -51,6 +54,11 @@ public class Not extends AbstractUnaryFormula implements Formula {
 	public boolean equals(Formula formula) {
 		return (formula instanceof Not)
 				&& equalSubformula((Not) formula);
+	}
+
+	@Override
+	public <I> Formula bindInstance(Instance<I> reference, Instance<I> actual) {
+		return new Not(subformula.bindInstance(reference, actual));
 	}
 
 }

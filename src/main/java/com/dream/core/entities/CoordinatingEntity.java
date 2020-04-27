@@ -27,6 +27,8 @@ public interface CoordinatingEntity extends Entity,Caching {
 	
 	public void addToPool(Entity... entities);
 	
+	public boolean hosts(Entity entity);
+	
 	public void removeFromPool(Entity entity);
 	
 	public Rule getRule();

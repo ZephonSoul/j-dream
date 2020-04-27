@@ -1,12 +1,11 @@
 package com.dream.core.expressions;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.expressions.values.IncompatibleValueException;
 import com.dream.core.expressions.values.SetValue;
 import com.dream.core.expressions.values.Value;
 
-public class SetRemove extends AbstractBinaryExpression implements Expression {
+public class SetRemove extends AbstractBinaryExpression {
 	
 	public static final int BASE_CODE = 313;
 	
@@ -24,11 +23,13 @@ public class SetRemove extends AbstractBinaryExpression implements Expression {
 	}
 
 	@Override
-	public Expression bindEntityReference(EntityInstanceReference componentReference,
-			EntityInstanceActual actualComponent) {
+	public <I> Expression bindInstance(
+			Instance<I> reference,
+			Instance<I> actual) {
+		
 		return new SetRemove(
-				operand1.bindEntityReference(componentReference, actualComponent),
-				operand2.bindEntityReference(componentReference, actualComponent),
+				operand1.bindInstance(reference, actual),
+				operand2.bindInstance(reference, actual),
 				operandValue1,
 				operandValue2);
 	}

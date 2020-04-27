@@ -1,6 +1,6 @@
 package com.dream.core;
 
-public class OrphanEntityException extends Exception {
+public class OrphanEntityException extends RuntimeException {
 
 	/**
 	 * 

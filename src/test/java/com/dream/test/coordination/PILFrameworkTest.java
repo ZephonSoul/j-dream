@@ -19,16 +19,16 @@ import com.dream.core.coordination.constraints.PortAtom;
 import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.Predicate;
 import com.dream.core.coordination.constraints.predicates.Tautology;
-import com.dream.core.coordination.operations.Assign;
-import com.dream.core.coordination.operations.Operation;
-import com.dream.core.coordination.operations.OperationsSet;
-import com.dream.core.coordination.operations.Skip;
 import com.dream.core.entities.AbstractLightComponent;
 import com.dream.core.entities.InteractingEntity;
 import com.dream.core.entities.LocalVariable;
 import com.dream.core.entities.Port;
 import com.dream.core.expressions.*;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.operations.Assign;
+import com.dream.core.operations.Operation;
+import com.dream.core.operations.OperationsSet;
+import com.dream.core.operations.Skip;
 
 public class PILFrameworkTest {
 
@@ -135,7 +135,7 @@ public class PILFrameworkTest {
 	@Test
 	@DisplayName("lvar1 := lvar2 + 3")
 	void assignmentTest() {
-		Operation op = new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3));
+		Operation op = new Assign(new VariableActual(lvar1), new Sum(new VariableActual(lvar2),n3));
 		op.evaluateOperands();
 		assertEquals(lvar1.getValue(),new NumberValue(0));
 		assertEquals(lvar2.getValue(),new NumberValue(5));
@@ -147,8 +147,8 @@ public class PILFrameworkTest {
 	@Test
 	@DisplayName("Snapshot semantics: lvar1 := lvar2 + 3; lvar2 := lvar1 * 3")
 	void assignmentSequenceTest() {
-		Operation op1 = new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3));
-		Operation op2 = new Assign(new ActualVariable(lvar2), new Product(new ActualVariable(lvar1),n3));
+		Operation op1 = new Assign(new VariableActual(lvar1), new Sum(new VariableActual(lvar2),n3));
+		Operation op2 = new Assign(new VariableActual(lvar2), new Product(new VariableActual(lvar1),n3));
 		op1.evaluateOperands();
 		op2.evaluateOperands();
 		assertEquals(lvar1.getValue(),new NumberValue(0));
@@ -162,12 +162,12 @@ public class PILFrameworkTest {
 	@Test
 	@DisplayName("Test rule: {p1,p3} |= (p1 -> assign(...) & p3 -> skip)")
 	void RuleTest1() {
-		Operation op = new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3));
+		Operation op = new Assign(new VariableActual(lvar1), new Sum(new VariableActual(lvar2),n3));
 		ru1 = new AndRule(new Term(fp1, op),new Term(fp3));
 		assertTrue(ru1.sat(i1));
 		OperationsSet res = ru1.getOperationsForInteraction(i1);
 		System.out.println(res.toString() + "\t" + res.hashCode());
-		OperationsSet opSet = new OperationsSet(new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3)),Skip.getInstance());
+		OperationsSet opSet = new OperationsSet(new Assign(new VariableActual(lvar1), new Sum(new VariableActual(lvar2),n3)),Skip.getInstance());
 		System.out.println(opSet.toString() + "\t" + opSet.hashCode());
 		assertTrue(ru1.getOperationsForInteraction(i1).equals(opSet));
 	}
@@ -175,12 +175,12 @@ public class PILFrameworkTest {
 	@Test
 	@DisplayName("Test rule: {p1} |= (p1 -> assign(...) || p3 -> skip)")
 	void RuleTest2() {
-		Operation op = new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3));
+		Operation op = new Assign(new VariableActual(lvar1), new Sum(new VariableActual(lvar2),n3));
 		ru1 = new OrRule(new Term(fp1, op),new Term(fp3));
 		assertTrue(ru1.sat(i2));
 		OperationsSet res = ru1.getOperationsForInteraction(i2);
 		System.out.println(res.toString() + "\t" + res.hashCode());
-		OperationsSet opSet = new OperationsSet(new Assign(new ActualVariable(lvar1), new Sum(new ActualVariable(lvar2),n3)));
+		OperationsSet opSet = new OperationsSet(new Assign(new VariableActual(lvar1), new Sum(new VariableActual(lvar2),n3)));
 		System.out.println(opSet.toString() + "\t" + opSet.hashCode());
 		assertTrue(res.equals(opSet));
 	}

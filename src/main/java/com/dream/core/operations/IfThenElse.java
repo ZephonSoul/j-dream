@@ -1,10 +1,9 @@
-package com.dream.core.coordination.operations;
+package com.dream.core.operations;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.Formula;
 
-public class IfThenElse extends AbstractOperation implements Operation {
+public class IfThenElse extends AbstractOperation {
 
 	private Formula condition;
 	private Operation thenOperation;
@@ -50,12 +49,14 @@ public class IfThenElse extends AbstractOperation implements Operation {
 	}
 
 	@Override
-	public Operation bindEntityReference(EntityInstanceReference componentReference,
-			EntityInstanceActual actualComponent) {
+	public <I> Operation bindInstance(
+			Instance<I> reference,
+			Instance<I> actual) {
+		
 		return new IfThenElse(
-				condition.bindEntityReference(componentReference, actualComponent),
-				thenOperation.bindEntityReference(componentReference, actualComponent),
-				elseOperation.bindEntityReference(componentReference, actualComponent)
+				condition.bindInstance(reference, actual),
+				thenOperation.bindInstance(reference, actual),
+				elseOperation.bindInstance(reference, actual)
 				);
 	}
 

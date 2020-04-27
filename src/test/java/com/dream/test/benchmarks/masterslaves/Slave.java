@@ -4,12 +4,12 @@ import com.dream.core.coordination.AndRule;
 import com.dream.core.coordination.ConjunctiveTerm;
 import com.dream.core.coordination.constraints.PortAtom;
 import com.dream.core.coordination.constraints.predicates.Equals;
-import com.dream.core.coordination.operations.Assign;
 import com.dream.core.entities.AbstractLightComponent;
 import com.dream.core.entities.LocalVariable;
 import com.dream.core.entities.Port;
-import com.dream.core.expressions.ActualVariable;
+import com.dream.core.expressions.VariableActual;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.operations.Assign;
 
 public class Slave extends AbstractLightComponent {
 
@@ -30,13 +30,13 @@ public class Slave extends AbstractLightComponent {
 				new AndRule(
 						new ConjunctiveTerm(
 								new PortAtom(bind),
-								new Equals(new ActualVariable(cLoc),waiting),
-								new Assign(new ActualVariable(cLoc),busy)
+								new Equals(new VariableActual(cLoc),waiting),
+								new Assign(new VariableActual(cLoc),busy)
 								),
 						new ConjunctiveTerm(
 								new PortAtom(serve),
-								new Equals(new ActualVariable(cLoc),busy),
-								new Assign(new ActualVariable(cLoc),waiting)
+								new Equals(new VariableActual(cLoc),busy),
+								new Assign(new VariableActual(cLoc),waiting)
 								)
 						));
 

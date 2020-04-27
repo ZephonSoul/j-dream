@@ -1,13 +1,12 @@
-package com.dream.core.coordination.operations;
+package com.dream.core.operations;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 
-public class OperationsSequence extends AbstractOperation implements Operation {
+public class OperationsSequence extends AbstractOperation {
 	
 	List<Operation> operations;
 
@@ -29,10 +28,13 @@ public class OperationsSequence extends AbstractOperation implements Operation {
 	}
 
 	@Override
-	public Operation bindEntityReference(EntityInstanceReference componentReference, EntityInstanceActual actualComponent) {
+	public <I> Operation bindInstance(
+			Instance<I> reference, 
+			Instance<I> actual) {
+		
 		return new OperationsSequence(
 				operations.stream()
-				.map(o -> o.bindEntityReference(componentReference, actualComponent))
+				.map(o -> o.bindInstance(reference, actual))
 				.collect(Collectors.toList()));
 	}
 	

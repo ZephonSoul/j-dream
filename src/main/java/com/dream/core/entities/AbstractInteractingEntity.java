@@ -144,12 +144,12 @@ implements InteractingEntity, Caching {
 		cInterface.values().stream().forEach(p -> p.setOwner(this));
 	}
 	
-	@Override
-	public int hashCode() {
-		return super.hashCode() 
-				+ store.hashCode() 
-				+ cInterface.values().stream().mapToInt(Port::hashCode).sum();
-	}
+//	@Override
+//	public int hashCode() {
+//		return super.hashCode() 
+//				+ store.hashCode() 
+//				+ cInterface.values().stream().mapToInt(Port::hashCode).sum();
+//	}
 
 	@Override
 	public boolean equals(Object o) {

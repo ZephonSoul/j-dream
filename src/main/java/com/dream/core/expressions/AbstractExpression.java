@@ -1,5 +1,6 @@
 package com.dream.core.expressions;
 
+import com.dream.core.Instance;
 import com.dream.core.expressions.values.Value;
 
 public abstract class AbstractExpression implements Expression {
@@ -18,6 +19,11 @@ public abstract class AbstractExpression implements Expression {
 		}
 		else
 			throw new EvaluationRuntimeException(this);
+	}
+	
+	@Override
+	public <I> Expression bindInstance(Instance<I> reference, Instance<I> actual) {
+		return this;
 	}
 
 	protected abstract Value computeResult();

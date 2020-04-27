@@ -3,8 +3,7 @@ package com.dream.core.expressions;
 import java.util.Arrays;
 import java.util.List;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.expressions.values.AdditiveValue;
 import com.dream.core.expressions.values.IncompatibleValueException;
 import com.dream.core.expressions.values.Value;
@@ -41,12 +40,12 @@ public class Sum extends AbstractEnnaryExpression {
 	}
 
 	@Override
-	public Expression bindEntityReference(
-			EntityInstanceReference componentVariable, 
-			EntityInstanceActual actualComponent) {
+	public <I> Expression bindInstance(
+			Instance<I> reference, 
+			Instance<I> actual) {
 
 		return new Sum(Arrays.stream(operands)
-				.map(e -> e.bindEntityReference(componentVariable, actualComponent))
+				.map(e -> e.bindInstance(reference, actual))
 				.toArray(Expression[]::new),
 				operandsValue);
 	}

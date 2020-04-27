@@ -1,17 +1,15 @@
 /**
  * 
  */
-package com.dream.core.coordination.operations;
+package com.dream.core.operations;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
 import com.dream.core.entities.behavior.Transition;
 
 /**
  * @author Alessandro Maggi
  *
  */
-public class TriggerTransition extends AbstractOperation implements Operation {
+public class TriggerTransition extends AbstractOperation {
 	
 	private Transition transition;
 	/**
@@ -23,11 +21,6 @@ public class TriggerTransition extends AbstractOperation implements Operation {
 	
 	public Transition getTransition() {
 		return transition;
-	}
-
-	@Override
-	public Operation bindEntityReference(EntityInstanceReference entityReference, EntityInstanceActual entityActual) {
-		return this;
 	}
 
 	@Override

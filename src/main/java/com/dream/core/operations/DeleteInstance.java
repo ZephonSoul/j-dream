@@ -1,13 +1,13 @@
-package com.dream.core.coordination.operations;
+package com.dream.core.operations;
 
 import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
-import com.dream.core.coordination.constraints.IncompatibleEntityReference;
+import com.dream.core.coordination.IllegalScopeException;
 import com.dream.core.coordination.EntityInstance;
+import com.dream.core.Instance;
 import com.dream.core.OrphanEntityException;
 import com.dream.core.entities.CoordinatingEntity;
 
-public class DeleteInstance extends AbstractOperation implements Operation {
+public class DeleteInstance extends AbstractOperation {
 
 	final static int BASE_CODE = 10000;
 
@@ -27,11 +27,12 @@ public class DeleteInstance extends AbstractOperation implements Operation {
 	@Override
 	public void execute() {
 		try {
-			if (targetInstance.getActualEntity().getParent() instanceof CoordinatingEntity)
-				((CoordinatingEntity)targetInstance.getActualEntity().getParent()).removeFromPool(
-						targetInstance.getActualEntity());
+			CoordinatingEntity parent = 
+					(CoordinatingEntity) targetInstance.getActual().getParent();
+			if (parent instanceof CoordinatingEntity)
+				parent.removeFromPool(targetInstance.getActual());
 			else
-				throw new IncompatibleEntityReference(targetInstance.getActualEntity(), this.toString());
+				throw new IllegalScopeException(parent, this.toString());
 		} catch (OrphanEntityException e) {
 			//Best-effort delete (if component already orphan, do nothing)
 			//TODO: link logger to log event
@@ -50,14 +51,14 @@ public class DeleteInstance extends AbstractOperation implements Operation {
 	}
 
 	@Override
-	public Operation bindEntityReference(
-			EntityInstanceReference entityReference, 
-			EntityInstanceActual entityActual) {
+	public <I> Operation bindInstance(
+			Instance<I> reference, 
+			Instance<I> actual) {
 
-		if (targetInstance.equals(entityReference))
-			return new DeleteInstance(entityActual);
-		else
+		if (targetInstance instanceof EntityInstanceActual || !targetInstance.equals(reference))
 			return this;
+		else
+			return new DeleteInstance((EntityInstance) actual);
 	}
 
 	@Override

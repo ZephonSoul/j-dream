@@ -4,7 +4,7 @@ import com.dream.core.Bindable;
 import com.dream.core.Caching;
 import com.dream.core.coordination.Interaction;
 
-public interface Formula extends Bindable<Formula>,Caching {
+public interface Formula extends Bindable<Formula>, Caching {
 
 	public boolean sat(Interaction i);
 	

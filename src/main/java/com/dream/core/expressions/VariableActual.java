@@ -1,16 +1,16 @@
 package com.dream.core.expressions;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.entities.LocalVariable;
 import com.dream.core.expressions.values.Value;
 
-public class ActualVariable extends AbstractExpression implements VariableExpression {
+public class VariableActual 
+extends AbstractExpression implements Instance<LocalVariable> {
 	
 	private LocalVariable localVariable;
 	private Value variableValue;
 	
-	public ActualVariable(LocalVariable localVariable) {
+	public VariableActual(LocalVariable localVariable) {
 		this.localVariable = localVariable;
 	}
 	
@@ -25,21 +25,13 @@ public class ActualVariable extends AbstractExpression implements VariableExpres
 
 	@Override
 	public boolean equals(Expression ex) {
-		return (ex.getClass().equals(ActualVariable.class)) &&
-				(localVariable.equals(((ActualVariable)ex).getLocalVariable()));
+		return (ex.getClass().equals(VariableActual.class)) &&
+				(localVariable.equals(((VariableActual)ex).getLocalVariable()));
 	}
 	
 	@Override
 	public int hashCode() {
 		return localVariable.hashCode();
-	}
-
-	@Override
-	public Expression bindEntityReference(
-			EntityInstanceReference componentReference, 
-			EntityInstanceActual actualComponent) {
-		
-		return this;
 	}
 	
 	@Override
@@ -66,6 +58,16 @@ public class ActualVariable extends AbstractExpression implements VariableExpres
 	@Override
 	public void clearCache() {
 		variableValue = null;
+	}
+
+	@Override
+	public String getName() {
+		return toString();
+	}
+
+	@Override
+	public LocalVariable getActual() {
+		return localVariable;
 	}
 
 }

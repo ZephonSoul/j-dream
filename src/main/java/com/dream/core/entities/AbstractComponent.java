@@ -12,8 +12,8 @@ import org.json.simple.JSONObject;
 
 import com.dream.core.Entity;
 import com.dream.core.coordination.Interaction;
-import com.dream.core.coordination.operations.OperationsSet;
 import com.dream.core.entities.behavior.LTS;
+import com.dream.core.operations.OperationsSet;
 
 /**
  * @author Alessandro Maggi

@@ -7,9 +7,9 @@ import com.dream.core.coordination.FOILRule;
 import com.dream.core.coordination.Quantifier;
 import com.dream.core.coordination.Term;
 import com.dream.core.coordination.constraints.predicates.Tautology;
-import com.dream.core.coordination.operations.*;
 import com.dream.core.entities.*;
 import com.dream.core.exec.GreedyStrategy;
+import com.dream.core.operations.DeleteInstance;
 import com.dream.core.output.ConsoleOutput;
 
 public class Eraser extends AbstractLightComponent {

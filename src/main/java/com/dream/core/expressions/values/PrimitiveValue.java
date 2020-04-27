@@ -1,7 +1,5 @@
 package com.dream.core.expressions.values;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
 import com.dream.core.expressions.Expression;
 
 public class PrimitiveValue<T> extends AbstractValue implements Value {
@@ -50,12 +48,6 @@ public class PrimitiveValue<T> extends AbstractValue implements Value {
 	public boolean equals(Expression ex) {
 		return (ex instanceof PrimitiveValue)
 				&& equals((PrimitiveValue<?>) ex);
-	}
-
-	@Override
-	public Expression bindEntityReference(EntityInstanceReference componentReference,
-			EntityInstanceActual actualComponent) {
-		return this;
 	}
 
 }

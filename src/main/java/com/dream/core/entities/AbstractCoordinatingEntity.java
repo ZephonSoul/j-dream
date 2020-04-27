@@ -18,7 +18,7 @@ import com.dream.core.OrphanEntityException;
 import com.dream.core.coordination.DummyRule;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.coordination.Rule;
-import com.dream.core.coordination.operations.OperationsSet;
+import com.dream.core.operations.OperationsSet;
 
 /**
  * @author Alessandro Maggi
@@ -153,6 +153,10 @@ implements CoordinatingEntity {
 		}
 		clearCache();
 	}
+	
+	public boolean hosts(Entity entity) {
+		return pool.contains(entity);
+	}
 
 	/**
 	 * @return the rule
@@ -171,12 +175,12 @@ implements CoordinatingEntity {
 		clearCache();
 	}
 
-	@Override
-	public int hashCode() {
-		return super.hashCode()
-				+ pool.stream().mapToInt(Entity::hashCode).sum()
-				+ rule.hashCode();
-	}
+//	@Override
+//	public int hashCode() {
+//		return super.hashCode()
+//				+ pool.stream().mapToInt(Entity::hashCode).sum()
+//				+ rule.hashCode();
+//	}
 
 	@Override
 	public boolean equals(Object o) {

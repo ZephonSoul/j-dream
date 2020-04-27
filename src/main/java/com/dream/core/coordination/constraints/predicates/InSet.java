@@ -1,7 +1,6 @@
 package com.dream.core.coordination.constraints.predicates;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
+import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.Formula;
 import com.dream.core.expressions.Expression;
 import com.dream.core.expressions.values.IncompatibleValueException;
@@ -28,10 +27,10 @@ public class InSet extends AbstractBinaryPredicate implements Predicate {
 	}
 
 	@Override
-	public Formula bindEntityReference(EntityInstanceReference componentReference, EntityInstanceActual actualComponent) {
+	public <I> Predicate bindInstance(Instance<I> reference, Instance<I> actual) {
 		return new InSet(
-				term1.bindEntityReference(componentReference, actualComponent),
-				term2.bindEntityReference(componentReference, actualComponent));
+				term1.bindInstance(reference, actual),
+				term2.bindInstance(reference, actual));
 	}
 
 	@Override

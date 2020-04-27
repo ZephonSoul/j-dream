@@ -7,11 +7,13 @@ import com.dream.core.coordination.Declaration;
 import com.dream.core.coordination.Quantifier;
 import com.dream.core.coordination.constraints.*;
 import com.dream.core.coordination.constraints.predicates.LessThan;
-import com.dream.core.coordination.operations.*;
 import com.dream.core.entities.*;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.*;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.operations.Assign;
+import com.dream.core.operations.CreateInstance;
+import com.dream.core.operations.OperationsSequence;
 import com.dream.core.output.ConsoleOutput;
 
 public class Spawner extends AbstractLightComponent {
@@ -41,11 +43,11 @@ public class Spawner extends AbstractLightComponent {
 		//				)
 		//				);
 		setRule(new ConjunctiveTerm(
-				new LessThan(new ActualVariable(y),new Constant(new NumberValue(5))),
+				new LessThan(new VariableActual(y),new Constant(new NumberValue(5))),
 				new OperationsSequence(
 						new CreateInstance(DummyComponent.class,new EntityInstanceActual(this)),
-						new Assign(new ActualVariable(x),new Difference(new ActualVariable(x),new NumberValue(1))),
-						new Assign(new ActualVariable(y),new Sum(new ActualVariable(y),new NumberValue(1)))				
+						new Assign(new VariableActual(x),new Difference(new VariableActual(x),new NumberValue(1))),
+						new Assign(new VariableActual(y),new Sum(new VariableActual(y),new NumberValue(1)))				
 						)
 				));
 	}

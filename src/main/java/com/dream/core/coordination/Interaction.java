@@ -93,7 +93,7 @@ public class Interaction {
 	
 	public boolean involvesEntity(EntityInstanceActual entity) {
 		for (Port p : ports)
-			if (p.getEntity().equals(entity.getActualEntity()))
+			if (p.getEntity().equals(entity.getActual()))
 				return true;
 		return false;
 	}

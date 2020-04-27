@@ -4,41 +4,38 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.EntityInstanceReference;
-import com.dream.core.coordination.EntityInstance;
-import com.dream.core.coordination.UnboundReferenceException;
+import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.Formula;
 
 public class SameInstance extends AbstractPredicate implements Predicate {
 	
 	public final static int BASE_CODE = 3;
 	
-	List<EntityInstance> components;
+	List<Instance<?>> instances;
 	
-	public SameInstance(List<EntityInstance> components) {
-		this.components = components;
+	public SameInstance(List<Instance<?>> instances) {
+		this.instances = instances;
 	}
 	
-	public SameInstance(EntityInstance... components) {
-		this.components = Arrays.asList(components);
+	public SameInstance(Instance<?>... instances) {
+		this.instances = Arrays.asList(instances);
 	}
 	
-	public List<EntityInstance> getComponents() {
-		return components;
+	public List<Instance<?>> getEntities() {
+		return instances;
 	}
 
 	@Override
 	public boolean sat() {
-		int id = -1;
-		for (EntityInstance c : components) {
-			if (!(c instanceof EntityInstanceActual))
-				throw new UnboundReferenceException(c);
-			if (id == -1)
-				id = ((EntityInstanceActual) c).getActualEntity().getId();
+		boolean equal = true;
+		Instance<?> refInstance = null;
+		for (Instance<?> instance : instances) {
+			if (refInstance == null)
+				refInstance = instance;
 			else
-				if (id != ((EntityInstanceActual) c).getActualEntity().getId())
-					return false;
+				equal = equal && refInstance.equals(instance);
+			if (!equal)
+				return false;
 		}
 		return true;
 	}
@@ -46,23 +43,23 @@ public class SameInstance extends AbstractPredicate implements Predicate {
 	@Override
 	public boolean equals(Formula formula) {
 		return (formula instanceof SameInstance)
-				&& components.equals(((SameInstance) formula).getComponents());
+				&& instances.equals(((SameInstance) formula).getEntities());
 	}
 
 	@Override
 	public void clearCache() {}
 
 	@Override
-	public Formula bindEntityReference(
-			EntityInstanceReference componentReference, 
-			EntityInstanceActual actualComponent) {
+	public <I> Predicate bindInstance(
+			Instance<I> reference, 
+			Instance<I> actual) {
 		
-		if (components.contains(componentReference)) {
-			List<EntityInstance> actualComponents = 
-					components.stream().filter(c -> !c.equals(componentReference))
+		if (instances.contains(reference)) {
+			List<Instance<?>> instances = 
+					this.instances.stream().filter(c -> !c.equals(reference))
 					.collect(Collectors.toList());
-			actualComponents.add(actualComponent);
-			return new SameInstance(actualComponents);
+			instances.add(actual);
+			return new SameInstance(instances);
 		}
 		else
 			return this;
@@ -70,7 +67,7 @@ public class SameInstance extends AbstractPredicate implements Predicate {
 	
 	public String toString() {
 		return "(" + 
-				components.stream().map(EntityInstance::toString).collect(Collectors.joining("="))
+				instances.stream().map(Instance::toString).collect(Collectors.joining("="))
 				+ ")";
 	}
 	
