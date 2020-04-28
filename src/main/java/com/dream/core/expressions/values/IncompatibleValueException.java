@@ -1,5 +1,9 @@
 package com.dream.core.expressions.values;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class IncompatibleValueException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

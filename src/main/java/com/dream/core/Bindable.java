@@ -1,5 +1,9 @@
 package com.dream.core;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public interface Bindable<T> {
 
 	public <I> T bindInstance(

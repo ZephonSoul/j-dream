@@ -1,5 +1,9 @@
 package com.dream.core.coordination.constraints;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractFormula implements Formula {
 		
 	@Override

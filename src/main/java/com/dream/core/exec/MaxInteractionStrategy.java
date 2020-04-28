@@ -3,6 +3,10 @@ package com.dream.core.exec;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.entities.CoordinatingEntity;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class MaxInteractionStrategy implements ExecutionStrategy {
 
 	private static ExecutionStrategy instance;

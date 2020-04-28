@@ -10,6 +10,10 @@ import com.dream.core.coordination.EntityInstanceRef;
 import com.dream.core.coordination.IllegalScopeException;
 import com.dream.core.entities.CoordinatingEntity;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class CreateInstance extends AbstractOperation {
 
 	final static int BASE_CODE = 1000;

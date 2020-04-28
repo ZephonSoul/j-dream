@@ -1,5 +1,9 @@
 package com.dream.core;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class IDFactory {
 
 	private static IDFactory factoryInstance;

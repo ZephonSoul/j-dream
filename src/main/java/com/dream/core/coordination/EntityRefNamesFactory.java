@@ -1,5 +1,9 @@
 package com.dream.core.coordination;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class EntityRefNamesFactory {
 
 	private static EntityRefNamesFactory factoryInstance;

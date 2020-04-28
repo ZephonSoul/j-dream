@@ -7,6 +7,10 @@ import com.dream.core.OrphanEntityException;
 import com.dream.core.coordination.EntityInstance;
 import com.dream.core.entities.CoordinatingEntity;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Migrate extends AbstractOperation {
 
 	final static int BASE_CODE = 5000;

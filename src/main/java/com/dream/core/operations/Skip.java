@@ -1,5 +1,9 @@
 package com.dream.core.operations;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Skip extends AbstractOperation {
 	
 	final static int BASE_CODE = 0;

@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 
 import com.dream.core.Entity;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class TypeRestriction {
 	
 	private static final int BASE_CODE = 13;

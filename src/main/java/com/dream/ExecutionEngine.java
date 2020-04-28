@@ -10,6 +10,10 @@ import com.dream.core.operations.OperationsSet;
 import com.dream.core.output.MessageWritable;
 import com.dream.core.output.Output;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class ExecutionEngine implements Runnable {
 
 	private CoordinatingEntity rootEntity;

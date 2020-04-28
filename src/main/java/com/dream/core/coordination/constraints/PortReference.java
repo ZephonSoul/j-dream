@@ -7,6 +7,10 @@ import com.dream.core.coordination.UnboundReferenceException;
 import com.dream.core.entities.InteractingEntity;
 import com.dream.core.entities.Port;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class PortReference extends AbstractFormula implements Instance<Port> {
 	
 	private static final int BASE_CODE = 25;

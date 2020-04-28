@@ -4,6 +4,10 @@ import com.dream.core.Instance;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.entities.Port;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class PortAtom extends AbstractFormula implements Formula, Instance<Port> {
 	
 	private static final int BASE_CODE = 313;

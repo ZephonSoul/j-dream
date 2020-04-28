@@ -2,6 +2,10 @@ package com.dream.core.entities;
 
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class LocalVariable {
 
 	final static int BASE_CODE = 777;

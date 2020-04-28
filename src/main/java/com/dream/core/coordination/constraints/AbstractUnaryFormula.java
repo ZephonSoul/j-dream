@@ -2,6 +2,10 @@ package com.dream.core.coordination.constraints;
 
 import com.dream.core.coordination.Interaction;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractUnaryFormula extends AbstractFormula implements Formula {
 	
 	Formula subformula;

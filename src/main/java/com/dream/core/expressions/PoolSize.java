@@ -10,6 +10,10 @@ import com.dream.core.entities.CoordinatingEntity;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class PoolSize extends AbstractExpression {
 
 	public static final int BASE_CODE = 31;

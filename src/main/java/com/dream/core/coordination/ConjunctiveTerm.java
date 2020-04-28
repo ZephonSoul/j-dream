@@ -7,6 +7,10 @@ import com.dream.core.operations.Operation;
 import com.dream.core.operations.OperationsSet;
 import com.dream.core.operations.Skip;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class ConjunctiveTerm implements Rule  {
 
 	Formula constraint;

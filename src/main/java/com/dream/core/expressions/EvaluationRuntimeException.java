@@ -1,5 +1,9 @@
 package com.dream.core.expressions;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class EvaluationRuntimeException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

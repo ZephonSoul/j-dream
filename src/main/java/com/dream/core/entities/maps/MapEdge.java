@@ -1,5 +1,9 @@
 package com.dream.core.entities.maps;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public interface MapEdge {
 
 	public boolean equals(MapNode node1, MapNode node2);

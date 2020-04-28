@@ -7,6 +7,10 @@ import com.dream.core.Instance;
 import com.dream.core.OrphanEntityException;
 import com.dream.core.entities.CoordinatingEntity;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class DeleteInstance extends AbstractOperation {
 
 	final static int BASE_CODE = 10000;

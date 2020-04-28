@@ -2,6 +2,10 @@ package com.dream.core.coordination.maps;
 
 import com.dream.core.Instance;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class IllegalAddressingException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

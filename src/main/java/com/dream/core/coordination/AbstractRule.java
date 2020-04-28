@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 
 import com.dream.core.operations.OperationsSet;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractRule implements Rule {
 
 	Set<Rule> rules;

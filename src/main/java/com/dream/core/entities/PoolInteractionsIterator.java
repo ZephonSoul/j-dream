@@ -8,6 +8,10 @@ import java.util.Set;
 import com.dream.core.Entity;
 import com.dream.core.coordination.Interaction;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class PoolInteractionsIterator implements InteractionsIterator {
 
 	private Entity[] entities;

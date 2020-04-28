@@ -1,5 +1,9 @@
 package com.dream.core.expressions.values;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class NumberValue extends PrimitiveValue<Number> implements AdditiveValue, FactorizableValue, OrderedValue {
 
 	public NumberValue(Number rawValue) {

@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 
 import com.dream.core.Instance;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class OperationsSequence extends AbstractOperation {
 	
 	List<Operation> operations;

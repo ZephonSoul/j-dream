@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.predicates.Contradiction;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class OrRule extends AbstractRule implements Rule {
 	
 	private static final int BASE_CODE = 11;

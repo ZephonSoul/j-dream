@@ -30,6 +30,10 @@ import com.dream.test.benchmarks.masterslaves.Master;
 import com.dream.test.benchmarks.masterslaves.Slave;
 import com.dream.test.coordination.*;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class MasterSlaves extends AbstractLightComponent {
 
 	final static Value requiredSlaves = new NumberValue(2);

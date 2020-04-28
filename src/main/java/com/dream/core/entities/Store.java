@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Store {
 
 	private Map<String,LocalVariable> localVariables;

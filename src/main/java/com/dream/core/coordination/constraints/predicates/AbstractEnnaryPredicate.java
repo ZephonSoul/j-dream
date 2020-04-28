@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 import com.dream.core.expressions.Expression;
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractEnnaryPredicate extends AbstractPredicate implements Predicate {
 
 	Expression[] terms;

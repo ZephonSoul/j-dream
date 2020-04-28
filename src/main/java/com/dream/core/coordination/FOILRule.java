@@ -1,5 +1,9 @@
 package com.dream.core.coordination;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 import java.util.Arrays;
 import java.util.stream.Collectors;
 

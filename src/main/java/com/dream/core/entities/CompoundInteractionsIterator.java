@@ -4,6 +4,10 @@ import java.util.Collection;
 
 import com.dream.core.coordination.Interaction;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class CompoundInteractionsIterator implements InteractionsIterator {
 	
 	private Port[] cInterface;

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import com.dream.core.expressions.values.Value;
 
 /**
- * @author alessandro
+ * @author Alessandro Maggi
  *
  */
 public abstract class AbstractEnnaryExpression extends AbstractExpression implements Expression {

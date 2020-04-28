@@ -3,6 +3,10 @@ package com.dream.core.coordination.constraints.predicates;
 import com.dream.core.expressions.Expression;
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractBinaryPredicate extends AbstractPredicate implements Predicate {
 
 	Expression term1;

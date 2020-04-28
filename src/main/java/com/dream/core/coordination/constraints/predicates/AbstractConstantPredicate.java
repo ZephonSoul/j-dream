@@ -2,6 +2,10 @@ package com.dream.core.coordination.constraints.predicates;
 
 import com.dream.core.Instance;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractConstantPredicate extends AbstractPredicate implements Predicate {
 
 	@Override

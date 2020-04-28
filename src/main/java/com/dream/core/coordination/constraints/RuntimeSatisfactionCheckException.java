@@ -1,5 +1,9 @@
 package com.dream.core.coordination.constraints;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class RuntimeSatisfactionCheckException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

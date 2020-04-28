@@ -1,5 +1,9 @@
 package com.dream.core.entities.maps;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class NodeNotFoundException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;

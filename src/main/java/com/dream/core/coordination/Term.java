@@ -1,5 +1,4 @@
 package com.dream.core.coordination;
-
 import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.Formula;
 import com.dream.core.coordination.constraints.predicates.Tautology;
@@ -7,6 +6,10 @@ import com.dream.core.operations.Operation;
 import com.dream.core.operations.OperationsSet;
 import com.dream.core.operations.Skip;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Term implements Rule  {
 
 	Formula constraint;

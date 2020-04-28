@@ -9,6 +9,10 @@ import com.dream.core.expressions.values.IncompatibleValueException;
 import com.dream.core.expressions.values.OrderedValue;
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class LessThan extends AbstractEnnaryPredicate implements Predicate {
 		
 	public final static int BASE_CODE = 100;

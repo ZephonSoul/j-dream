@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.predicates.Tautology;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class AndRule extends AbstractRule implements Rule {
 	
 	private static final int BASE_CODE = 30;

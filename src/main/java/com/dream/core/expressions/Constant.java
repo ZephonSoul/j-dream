@@ -3,6 +3,7 @@ package com.dream.core.expressions;
 import com.dream.core.expressions.values.Value;
 
 /**
+ * @author Alessandro Maggi
  * @deprecated
  * Constant expressions are no longer necessary as Value instances
  * directly extend Expressions and can be used as constants

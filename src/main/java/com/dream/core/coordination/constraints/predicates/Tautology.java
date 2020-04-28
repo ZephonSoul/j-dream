@@ -2,6 +2,10 @@ package com.dream.core.coordination.constraints.predicates;
 
 import com.dream.core.coordination.constraints.Formula;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Tautology extends AbstractConstantPredicate implements Formula {
 	
 	private static final int BASE_CODE = 1;

@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 
 import com.dream.core.expressions.Expression;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class SetValue extends AbstractValue implements Value, AdditiveValue {
 	
 	protected Set<Value> rawSet;

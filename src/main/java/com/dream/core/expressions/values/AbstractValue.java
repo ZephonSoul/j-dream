@@ -2,6 +2,10 @@ package com.dream.core.expressions.values;
 
 import com.dream.core.Instance;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractValue implements Value {
 
 	@Override

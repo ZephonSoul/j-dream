@@ -4,6 +4,10 @@ import com.dream.core.Instance;
 import com.dream.core.entities.LocalVariable;
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class VariableActual 
 extends AbstractExpression implements Instance<LocalVariable> {
 	

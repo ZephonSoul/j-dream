@@ -8,6 +8,10 @@ import com.dream.core.expressions.Expression;
 import com.dream.core.expressions.values.IncompatibleValueException;
 import com.dream.core.expressions.values.NumberValue;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Exactly extends AbstractFormula implements Formula {
 	
 	private static final int BASE_CODE = 63;

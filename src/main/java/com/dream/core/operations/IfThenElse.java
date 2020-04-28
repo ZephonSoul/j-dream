@@ -3,6 +3,10 @@ package com.dream.core.operations;
 import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.Formula;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class IfThenElse extends AbstractOperation {
 
 	private Formula condition;

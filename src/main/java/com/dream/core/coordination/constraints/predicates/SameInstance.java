@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 import com.dream.core.Instance;
 import com.dream.core.coordination.constraints.Formula;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class SameInstance extends AbstractPredicate implements Predicate {
 	
 	public final static int BASE_CODE = 3;

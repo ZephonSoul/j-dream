@@ -2,6 +2,10 @@ package com.dream.core.expressions;
 
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractBinaryExpression extends AbstractExpression implements Expression {
 
 	protected Expression operand1,operand2;

@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 import com.dream.core.Instance;
 import com.dream.core.coordination.Interaction;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Or extends AbstractEnnaryFormula implements Formula {
 	
 	private static final int BASE_CODE = 7;

@@ -2,6 +2,10 @@ package com.dream.core.expressions.values;
 
 import com.dream.core.expressions.Expression;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class PrimitiveValue<T> extends AbstractValue implements Value {
 
 	protected T rawValue;

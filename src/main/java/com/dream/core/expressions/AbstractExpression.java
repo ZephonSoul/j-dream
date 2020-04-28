@@ -3,6 +3,10 @@ package com.dream.core.expressions;
 import com.dream.core.Instance;
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractExpression implements Expression {
 
 	@Override

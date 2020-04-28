@@ -4,6 +4,10 @@ import com.dream.core.coordination.Interaction;
 import com.dream.core.entities.CoordinatingEntity;
 import com.dream.core.entities.NoAdmissibleInteractionsException;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class ExhaustiveStrategy implements ExecutionStrategy {
 	
 	private static ExecutionStrategy instance;

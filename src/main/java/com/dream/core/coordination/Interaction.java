@@ -7,6 +7,10 @@ import java.util.stream.Stream;
 
 import com.dream.core.entities.Port;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Interaction {
 
 	private Set<Port> ports;

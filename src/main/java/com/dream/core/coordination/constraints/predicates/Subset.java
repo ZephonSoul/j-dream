@@ -9,6 +9,10 @@ import com.dream.core.expressions.values.IncompatibleValueException;
 import com.dream.core.expressions.values.SetValue;
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Subset extends AbstractEnnaryPredicate implements Predicate {
 	
 	public final static int BASE_CODE = 51;

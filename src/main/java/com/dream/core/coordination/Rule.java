@@ -1,5 +1,9 @@
 package com.dream.core.coordination;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 import com.dream.core.Bindable;
 import com.dream.core.Caching;
 import com.dream.core.operations.OperationsSet;

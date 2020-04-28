@@ -8,6 +8,10 @@ import com.dream.core.entities.LocalVariable;
 import com.dream.core.entities.maps.MapNode;
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class VariableRef 
 extends AbstractExpression implements Instance<LocalVariable> {
 

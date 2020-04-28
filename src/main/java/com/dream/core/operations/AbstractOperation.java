@@ -2,6 +2,10 @@ package com.dream.core.operations;
 
 import com.dream.core.Instance;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractOperation implements Operation {
 
 	@Override

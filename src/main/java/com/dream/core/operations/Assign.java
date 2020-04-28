@@ -6,6 +6,10 @@ import com.dream.core.expressions.VariableActual;
 import com.dream.core.expressions.Expression;
 import com.dream.core.expressions.VariableRef;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Assign extends AbstractOperation {
 
 	final static int BASE_CODE = 100;

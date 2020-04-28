@@ -1,5 +1,9 @@
 package com.dream.core.output;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class ConsoleOutput implements Output {
 
 	public ConsoleOutput() {}

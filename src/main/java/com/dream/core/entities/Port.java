@@ -1,5 +1,9 @@
 package com.dream.core.entities;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Port {
 
 	final static int BASE_CODE = 9;

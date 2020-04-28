@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 
 import com.dream.core.coordination.Interaction;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public abstract class AbstractEnnaryFormula extends AbstractFormula implements Formula {
 
 	Set<Formula> subformulas;

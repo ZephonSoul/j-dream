@@ -3,6 +3,10 @@ package com.dream.core.expressions;
 import com.dream.core.Bindable;
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public interface Expression extends Bindable<Expression> {
 
 	public Value eval();

@@ -7,6 +7,10 @@ import com.dream.core.coordination.constraints.Formula;
 import com.dream.core.expressions.Expression;
 import com.dream.core.expressions.values.Value;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Equals extends AbstractEnnaryPredicate implements Predicate {
 	
 	public final static int BASE_CODE = 0;

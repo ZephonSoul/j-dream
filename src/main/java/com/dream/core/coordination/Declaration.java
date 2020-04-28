@@ -7,6 +7,10 @@ import com.dream.core.coordination.constraints.Formula;
 import com.dream.core.coordination.constraints.predicates.Tautology;
 import com.dream.core.entities.CoordinatingEntity;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class Declaration implements Bindable<Declaration>, Caching {
 
 	private Quantifier quantifier;

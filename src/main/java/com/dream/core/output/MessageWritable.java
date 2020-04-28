@@ -1,5 +1,9 @@
 package com.dream.core.output;
 
+/**
+ * @author Alessandro Maggi
+ *
+ */
 public class MessageWritable implements Writable {
 	
 	private static MessageWritable instance;	
