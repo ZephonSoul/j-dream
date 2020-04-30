@@ -5,11 +5,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.dream.core.Instance;
+
 /**
  * @author Alessandro Maggi
  *
  */
-public class OperationsSet {
+public class OperationsSet implements Operation {
 
 	private Set<Operation> operations;
 
@@ -38,8 +40,12 @@ public class OperationsSet {
 		return operations.add(operation);
 	}
 
-	public boolean addOperationsSet(OperationsSet opSet) {
+	public boolean addAllOperationsSet(OperationsSet opSet) {
 		return operations.addAll(opSet.getOperations());
+	}
+	
+	public boolean isEmpty() {
+		return operations.isEmpty();
 	}
 
 	public void executeOperations(boolean snapshotSemantics) {
@@ -69,11 +75,43 @@ public class OperationsSet {
 	}
 
 	public String toString() {
-		return "{" + String.join(",", operations.stream().map(Operation::toString).toArray(String[]::new)) + "}";
+		return "{" + String.join(
+				",", operations.stream().filter(
+						o -> !(o.equals(Skip.getInstance())))
+				.map(Operation::toString).toArray(String[]::new)) + "}";
 	}
 
 	public int size() {
 		return operations.size();
+	}
+
+	@Override
+	public <I> Operation bindInstance(Instance<I> reference, Instance<I> actual) {
+		return new OperationsSet(
+				operations.stream().map(
+						o -> o.bindInstance(reference,actual)
+						).collect(Collectors.toSet()));
+	}
+
+	@Override
+	public void clearCache() {
+		operations.stream().forEach(Operation::clearCache);
+	}
+
+	@Override
+	public void evaluateOperands() {
+		operations.stream().forEach(Operation::evaluateOperands);
+	}
+
+	@Override
+	public void execute() {
+		operations.stream().forEach(Operation::execute);
+	}
+
+	@Override
+	public boolean equals(Operation op) {
+		return (op instanceof OperationsSet) &&
+				((OperationsSet)op).getOperations().equals(operations);
 	}
 
 }

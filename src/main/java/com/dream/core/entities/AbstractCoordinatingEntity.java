@@ -259,7 +259,7 @@ implements CoordinatingEntity {
 			updateCache();
 		OperationsSet operations = cached_rule.getOperationsForInteraction(interaction);
 		pool.stream().forEach(
-				e -> operations.addOperationsSet(e.getOperationsForInteraction(interaction)));
+				e -> operations.addOperation(e.getOperationsForInteraction(interaction)));
 		return operations;
 	}
 

@@ -45,7 +45,7 @@ public abstract class AbstractRule implements Rule {
 		}
 		if (cachedSat) {
 			for (Rule rule : rules) {
-				executableOps.addOperationsSet(rule.getOperationsForInteraction(i));
+				executableOps.addAllOperationsSet(rule.getOperationsForInteraction(i));
 			}
 		}
 		return executableOps;

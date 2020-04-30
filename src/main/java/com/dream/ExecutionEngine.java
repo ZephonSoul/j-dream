@@ -1,11 +1,14 @@
 package com.dream;
 
 import java.io.IOException;
+import java.util.Stack;
+import java.util.stream.Collectors;
 
 import com.dream.core.coordination.Interaction;
 import com.dream.core.entities.CoordinatingEntity;
 import com.dream.core.entities.NoAdmissibleInteractionsException;
 import com.dream.core.exec.ExecutionStrategy;
+import com.dream.core.operations.Operation;
 import com.dream.core.operations.OperationsSet;
 import com.dream.core.output.MessageWritable;
 import com.dream.core.output.Output;
@@ -27,7 +30,7 @@ public class ExecutionEngine implements Runnable {
 			CoordinatingEntity rootEntity,
 			ExecutionStrategy executionStrategy,
 			Output output) {
-		
+
 		this.rootEntity = rootEntity;
 		this.executionStrategy = executionStrategy;
 		this.output = output;
@@ -40,7 +43,7 @@ public class ExecutionEngine implements Runnable {
 			ExecutionStrategy executionStrategy,
 			Output output,
 			boolean interactive) {
-		
+
 		this(rootComponent,executionStrategy,output);
 		this.interactive = interactive;
 	}
@@ -50,7 +53,7 @@ public class ExecutionEngine implements Runnable {
 			ExecutionStrategy executionStrategy,
 			Output output,
 			int maxCycles) {
-		
+
 		this(rootComponent,executionStrategy,output,false);
 		this.maxCycles = maxCycles;
 	}
@@ -61,7 +64,7 @@ public class ExecutionEngine implements Runnable {
 			Output output,
 			boolean interactive,
 			int maxCycles) {
-		
+
 		this(rootComponent,executionStrategy,output);
 		this.maxCycles = maxCycles;
 		this.interactive = interactive;
@@ -69,6 +72,40 @@ public class ExecutionEngine implements Runnable {
 
 	public void setSnapshotSemantics(boolean snapshotSemantics) {
 		this.snapshotSemantics = snapshotSemantics;
+	}
+
+	private OperationsSet executeOperations(OperationsSet ops, boolean snapshotSemantics) {
+		if (snapshotSemantics)
+			ops.evaluateOperands();
+		
+		Stack<Operation> scanOps = new Stack<Operation>();
+		OperationsSet tempSet = new OperationsSet();
+		OperationsSet newOpsSet = ops;
+		while (!newOpsSet.isEmpty()) {
+			tempSet = newOpsSet;
+			newOpsSet = new OperationsSet();
+			for (Operation o : tempSet.getOperations()) {
+				if (o instanceof OperationsSet)
+					newOpsSet.addAllOperationsSet((OperationsSet) o);
+				else
+					scanOps.push(o);
+			}
+		}
+		
+		// collect flat operations set for output purposes
+		tempSet = new OperationsSet(scanOps.stream().collect(Collectors.toSet()));
+		if (!snapshotSemantics) {
+			Operation o;
+			while (!scanOps.empty()) {
+				o = scanOps.pop();
+				o.evaluateOperands();
+				o.execute();
+			}
+		} else
+			while (!scanOps.empty())
+				scanOps.pop().execute();
+		
+		return tempSet;
 	}
 
 	@Override
@@ -81,7 +118,7 @@ public class ExecutionEngine implements Runnable {
 				maxCycles,
 				snapshotSemantics,
 				executionStrategy.getClass().getSimpleName()));
-		
+
 		long startTime = System.nanoTime();
 		long initPause = 0;
 
@@ -94,13 +131,14 @@ public class ExecutionEngine implements Runnable {
 			try {
 				Interaction interaction = executionStrategy.selectInteraction(rootEntity);
 				OperationsSet opsSet = rootEntity.getOperationsForInteraction(interaction);
-				
+
 				output.write(MessageWritable.write("Expanded rule:\n",rootEntity.getExpandedRule()));
-				output.write(MessageWritable.write("Performed interaction = ",interaction));
+
+//				opsSet.executeOperations(snapshotSemantics);
+				opsSet = executeOperations(opsSet,snapshotSemantics);
 				output.write(MessageWritable.write("Performed operations = ",opsSet));
-	
-				opsSet.executeOperations(snapshotSemantics);
 				interaction.trigger();
+				output.write(MessageWritable.write("Performed interaction = ",interaction));
 
 				output.write(MessageWritable.write(rootEntity.getJSONDescriptor()));
 				cycles++;
