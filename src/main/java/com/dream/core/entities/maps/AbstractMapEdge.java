@@ -1,5 +1,7 @@
 package com.dream.core.entities.maps;
 
+import org.json.simple.JSONObject;
+
 /**
  * @author Alessandro Maggi
  *
@@ -78,6 +80,16 @@ public abstract class AbstractMapEdge implements MapEdge {
 	public void setNodes(MapNode node1, MapNode node2) {
 		this.node1 = node1;
 		this.node2 = node2;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject getJSONDescriptor() {
+		JSONObject descriptor = new JSONObject();
+		descriptor.put("type", this.getClass().getSimpleName());
+		descriptor.put("node_1", node1.toString());
+		descriptor.put("node_2", node2.toString());
+		
+		return descriptor;
 	}
 	
 }

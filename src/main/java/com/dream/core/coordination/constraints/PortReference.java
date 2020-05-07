@@ -41,22 +41,6 @@ public class PortReference extends AbstractFormula implements Instance<Port> {
 	public boolean sat(Interaction i) {
 		throw new UnboundReferenceException(entityInstance);
 	}
-
-//	@Override
-//	public Formula bindEntityReference(
-//			EntityInstanceRef entityReference, 
-//			EntityInstanceActual entityActual) {
-//		
-//		if (entityReference.equals(this.entityInstance)) {
-//			if (entityActual.getActualEntity() instanceof InteractingEntity)
-//				return new PortAtom(
-//						((InteractingEntity)entityActual.getActualEntity())
-//						.getPortByName(portName));
-//			else
-//				throw new IncompatibleEntityReference(entityActual.getActualEntity(),this.toString());
-//		} else
-//			return this;
-//	}
 	
 	@Override
 	public String toString() {
@@ -76,6 +60,7 @@ public class PortReference extends AbstractFormula implements Instance<Port> {
 	public int hashCode() {
 		return BASE_CODE + entityInstance.hashCode() + portName.hashCode();
 	}
+	
 	@Override
 	public <I> Formula bindInstance(Instance<I> reference, Instance<I> actual) {
 		if (reference.equals(this.entityInstance)) {
@@ -88,10 +73,7 @@ public class PortReference extends AbstractFormula implements Instance<Port> {
 		} else
 			return this;
 	}
-	@Override
-	public String getName() {
-		return toString();
-	}
+	
 	@Override
 	public Port getActual() {
 		throw new UnboundReferenceException(entityInstance);

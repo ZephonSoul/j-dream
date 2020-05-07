@@ -58,7 +58,7 @@ implements MapNodeInstance {
 
 	@Override
 	public String toString() {
-		return String.format("@(%s)", entity.getName());
+		return String.format("@(%s)", entity.toString());
 	}
 
 	@Override
@@ -70,11 +70,6 @@ implements MapNodeInstance {
 	public boolean equals(Object o) {
 		return (o instanceof MapNodeForEntity) &&
 				entity.equals(((MapNodeForEntity)o).getEntityInstance());
-	}
-
-	@Override
-	public String getName() {
-		return toString();
 	}
 
 }

@@ -8,8 +8,6 @@ package com.dream.core;
  *
  */
 public interface Instance<T> {
-
-	public String getName();
 	
 	public T getActual();
 	

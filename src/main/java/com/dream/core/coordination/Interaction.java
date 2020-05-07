@@ -101,5 +101,12 @@ public class Interaction {
 				return true;
 		return false;
 	}
+	
+	public boolean subsetOf(Interaction interaction) {
+		for (Port p : ports)
+			if (!interaction.contains(p))
+				return false;
+		return true;
+	}
 
 }

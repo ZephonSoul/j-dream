@@ -1,8 +1,8 @@
 package com.dream.core.expressions;
 
 import com.dream.core.Instance;
-import com.dream.core.entities.LocalVariable;
 import com.dream.core.expressions.values.Value;
+import com.dream.core.localstore.LocalVariable;
 
 /**
  * @author Alessandro Maggi
@@ -10,21 +10,22 @@ import com.dream.core.expressions.values.Value;
  */
 public class VariableActual 
 extends AbstractExpression implements Instance<LocalVariable> {
-	
+
 	private LocalVariable localVariable;
 	private Value variableValue;
-	
+
 	public VariableActual(LocalVariable localVariable) {
 		this.localVariable = localVariable;
 	}
-	
+
 	public LocalVariable getLocalVariable() {
 		return localVariable;
 	}
 
 	@Override
 	public Value eval() {
-		return localVariable.getValue();
+		evaluateOperands();
+		return variableValue;
 	}
 
 	@Override
@@ -32,15 +33,15 @@ extends AbstractExpression implements Instance<LocalVariable> {
 		return (ex.getClass().equals(VariableActual.class)) &&
 				(localVariable.equals(((VariableActual)ex).getLocalVariable()));
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return localVariable.hashCode();
 	}
-	
+
 	@Override
 	public String toString() {
-		return localVariable.getInstanceName();
+		return eval().toString();
 	}
 
 	@Override
@@ -64,9 +65,8 @@ extends AbstractExpression implements Instance<LocalVariable> {
 		variableValue = null;
 	}
 
-	@Override
-	public String getName() {
-		return toString();
+	public String getVarName() {
+		return localVariable.getInstanceName();
 	}
 
 	@Override

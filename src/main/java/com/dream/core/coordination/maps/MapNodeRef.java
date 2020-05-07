@@ -45,5 +45,9 @@ public class MapNodeRef implements MapNodeInstance {
 		else
 			return this;
 	}
+	
+	public String toString() {
+		return name;
+	}
 
 }

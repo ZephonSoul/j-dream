@@ -12,14 +12,14 @@ import com.dream.core.coordination.Term;
 import com.dream.core.coordination.constraints.PortAtom;
 import com.dream.core.entities.AbstractComponent;
 import com.dream.core.entities.InteractingEntity;
-import com.dream.core.entities.LocalVariable;
 import com.dream.core.entities.Port;
-import com.dream.core.entities.Store;
 import com.dream.core.entities.behavior.ControlLocation;
 import com.dream.core.entities.behavior.LTS;
 import com.dream.core.entities.behavior.Transition;
 import com.dream.core.expressions.VariableActual;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.localstore.LocalVariable;
+import com.dream.core.localstore.VarStore;
 import com.dream.core.operations.Assign;
 
 public class DComp extends AbstractComponent implements InteractingEntity {
@@ -27,7 +27,7 @@ public class DComp extends AbstractComponent implements InteractingEntity {
 	public DComp(Entity parent) {
 		super(parent);
 
-		setStore(new Store(this,new LocalVariable("x",new NumberValue(2))));
+		setStore(new VarStore(this,new LocalVariable("x",new NumberValue(2))));
 
 		Port[] ports = {new Port("p"),new Port("q")};
 		HashMap<String,Port> iface = new HashMap<>();
@@ -70,10 +70,10 @@ public class DComp extends AbstractComponent implements InteractingEntity {
 		System.out.println(comp.getAllowedInteraction().toString());
 		Interaction[] is = comp.getAllowedInteractions();
 		System.out.println(Arrays.stream(is).map(Interaction::toString).collect(Collectors.joining(",")));
-		System.out.println(comp.getOperationsForInteraction(is[0]));
-		comp.getOperationsForInteraction(is[0]).executeOperations(false);
-		System.out.println(comp.getJSONDescriptor().toString());
-		System.out.println(comp.getAllowedInteraction().toString());
+//		System.out.println(comp.getOperationsForInteraction(is[0]));
+//		comp.getOperationsForInteraction(is[0]).executeOperations(false);
+//		System.out.println(comp.getJSONDescriptor().toString());
+//		System.out.println(comp.getAllowedInteraction().toString());
 	}
 	
 }

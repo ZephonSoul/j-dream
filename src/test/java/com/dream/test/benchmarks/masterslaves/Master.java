@@ -1,10 +1,10 @@
 package com.dream.test.benchmarks.masterslaves;
 
 import com.dream.core.entities.AbstractLightComponent;
-import com.dream.core.entities.LocalVariable;
 import com.dream.core.entities.Port;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.expressions.values.SetValue;
+import com.dream.core.localstore.LocalVariable;
 
 public class Master extends AbstractLightComponent {
 

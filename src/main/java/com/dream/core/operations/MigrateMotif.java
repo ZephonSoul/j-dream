@@ -68,8 +68,8 @@ public class MigrateMotif extends Migrate {
 	
 	public String toString() {
 		return String.format("migrate(%s,%s,%s)",
-				entity.getName(),
-				targetParent.getName(),
+				entity.toString(),
+				targetParent.toString(),
 				targetNode.toString());
 	}
 	

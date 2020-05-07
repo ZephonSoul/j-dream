@@ -1,4 +1,4 @@
-package com.dream.core.entities;
+package com.dream.core.localstore;
 
 /**
  * @author Alessandro Maggi

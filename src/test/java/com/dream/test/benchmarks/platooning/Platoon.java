@@ -1,0 +1,122 @@
+package com.dream.test.benchmarks.platooning;
+
+import java.util.Arrays;
+
+import java.util.stream.Collectors;
+
+import com.dream.ExecutionEngine;
+import com.dream.core.Entity;
+import com.dream.core.coordination.AndRule;
+import com.dream.core.coordination.ConjunctiveTerm;
+import com.dream.core.coordination.Declaration;
+import com.dream.core.coordination.EntityInstanceActual;
+import com.dream.core.coordination.EntityInstanceRef;
+import com.dream.core.coordination.FOILRule;
+import com.dream.core.coordination.Quantifier;
+import com.dream.core.coordination.Rule;
+import com.dream.core.coordination.Term;
+import com.dream.core.coordination.TypeRestriction;
+import com.dream.core.coordination.constraints.Not;
+import com.dream.core.coordination.constraints.PortReference;
+import com.dream.core.coordination.constraints.predicates.Equals;
+import com.dream.core.coordination.constraints.predicates.GreaterThan;
+import com.dream.core.entities.AbstractMotif;
+import com.dream.core.entities.maps.predefined.ArrayMap;
+import com.dream.core.exec.GreedyStrategy;
+import com.dream.core.expressions.PoolSize;
+import com.dream.core.expressions.Sum;
+import com.dream.core.expressions.VariableMapProperty;
+import com.dream.core.expressions.VariableRef;
+import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.operations.Assign;
+import com.dream.core.output.ConsoleOutput;
+
+/**
+ * @author Alessandro Maggi
+ *
+ */
+public class Platoon extends AbstractMotif {
+
+	/**
+	 * @param parent
+	 * @param pool
+	 */
+	public Platoon(Entity parent, Entity[] initialPool) {
+		super(	parent, 
+				Arrays.stream(initialPool).collect(Collectors.toSet()), 
+				new ArrayMap(initialPool.length)
+				);
+		map.setOwner(this);
+		for (int i=0; i<initialPool.length; i++)
+			setEntityPosition(initialPool[i], ((ArrayMap)map).getNodeAtIndex(i));
+
+		setRule(newRule(this));
+	}
+
+	private static Rule newRule(AbstractMotif current) {
+		EntityInstanceActual scope = new EntityInstanceActual(current);
+		// \forall c:Car {true -> c.pos := c.pos + c.speed \times \varDelta_t}
+		Declaration allCars = new Declaration(
+				Quantifier.FORALL,
+				scope,
+				new TypeRestriction(Car.class));
+		EntityInstanceRef c = allCars.getVariable();
+		Rule r1 = new FOILRule(allCars,
+				new Term(
+						new Assign(
+								new VariableRef(c, "pos"),
+								new Sum(
+										new VariableRef(c, "pos"),
+										new VariableRef(c, "speed")
+										)
+								)
+						)
+				);
+		// \forall c:Car {c.initSplit |> poolSize(this)>1 -> 0}
+		allCars = new Declaration(
+				Quantifier.FORALL,
+				scope,
+				new TypeRestriction(Car.class));
+		c = allCars.getVariable();
+		Rule r2 = new FOILRule(allCars,
+				new ConjunctiveTerm(
+						new PortReference(c, "initSplit"),
+						new GreaterThan(new PoolSize(scope),new NumberValue(1))
+						)
+				);
+		// \forall c:Car {c.speed != head(this).speed |> true -> c.speed := leader(this).speed}
+		allCars = new Declaration(
+				Quantifier.FORALL,
+				scope,
+				new TypeRestriction(Car.class));
+		c = allCars.getVariable();
+		Rule r3 = new FOILRule(allCars,
+				new ConjunctiveTerm(
+						new Not(new Equals(
+								new VariableRef(c, "speed"),
+								new VariableMapProperty(
+										scope,"head","speed"))),
+						new Assign(
+								new VariableRef(c, "speed"),
+								new VariableMapProperty(
+										scope,"head","speed"))
+						)
+				);
+		return new AndRule(r1,r2,r3);
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Car[] cars = {new Car(0.0, 1.5), new Car(2.0,2.0)};//, new Car(5,1)};
+		AbstractMotif platoon = new Platoon(null,cars);
+		System.out.println(platoon.getJSONDescriptor());
+		System.out.println(platoon.getExpandedRule().toString());
+
+		ExecutionEngine ex = new ExecutionEngine(platoon,GreedyStrategy.getInstance(),new ConsoleOutput(),false,3);
+		ex.setSnapshotSemantics(true);
+		ex.run();
+	}
+
+}

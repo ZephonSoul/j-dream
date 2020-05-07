@@ -1,4 +1,4 @@
-package com.dream.core.entities;
+package com.dream.core.localstore;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -6,38 +6,42 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import com.dream.core.entities.InteractingEntity;
 import com.dream.core.expressions.values.Value;
 
 /**
  * @author Alessandro Maggi
  *
  */
-public class Store {
+public class VarStore {
 
 	private Map<String,LocalVariable> localVariables;
 	private InteractingEntity owner;
 
-	public Store() {
+	public VarStore() {
 		this.localVariables = new HashMap<>();
 	}
 
-	public Store(InteractingEntity owner, Map<String,LocalVariable> localVariables) {
+	public VarStore(InteractingEntity owner, Map<String,LocalVariable> localVariables) {
 		this.owner = owner;
 		this.localVariables = localVariables;
 		bindOwner();
 	}
 
-	public Store(InteractingEntity owner) {
+	public VarStore(InteractingEntity owner) {
 		this(owner, new HashMap<>());
 	}
 
-	public Store(InteractingEntity owner, LocalVariable... localVariables) {
+	public VarStore(InteractingEntity owner, LocalVariable... localVariables) {
 		this(owner,
 				Arrays.stream(localVariables)
 				.collect(Collectors.toMap(LocalVariable::getName, Function.identity())));
 	}
 
-	public Store(LocalVariable... localVariables) {
+	public VarStore(LocalVariable... localVariables) {
 		this.localVariables = Arrays.stream(localVariables)
 				.collect(Collectors.toMap(LocalVariable::getName, Function.identity()));
 	}
@@ -57,12 +61,11 @@ public class Store {
 	}
 
 	public void setVarValue(String varName, Value varValue) {
-		if (localVariables.containsKey(varName)) {
+		if (localVariables.containsKey(varName))
 			localVariables.get(varName).setValue(varValue);
-		}
-		else {
-			throw new InvalidLocalVariableException(varName);
-		}
+		else 
+			// create new variable if not present
+			localVariables.put(varName,new LocalVariable(varName,varValue));
 	}
 
 	public LocalVariable getLocalVariable(String varName) {
@@ -97,13 +100,28 @@ public class Store {
 		return localVariables.values().stream().map(LocalVariable::toString).collect(Collectors.joining(","));
 	}
 
-	public boolean equals(Store store) {
+	public boolean equals(VarStore store) {
 		return localVariables.equals(store.getLocalVariables());
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		return (o instanceof Store) && equals((Store) o);
+		return (o instanceof VarStore) && equals((VarStore) o);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONArray getJSONDescriptor() {		
+		JSONArray descriptor = new JSONArray();
+		
+		localVariables.values().stream().forEach(
+				v -> {
+					JSONObject varDescriptor = new JSONObject();
+					varDescriptor.put(v.getInstanceName(),v.getValue().toString());
+					descriptor.add(varDescriptor);
+				}
+				);
+
+		return descriptor;
 	}
 
 }

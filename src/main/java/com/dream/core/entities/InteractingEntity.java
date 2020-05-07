@@ -7,16 +7,16 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dream.core.Entity;
+import com.dream.core.localstore.StoringInstance;
+import com.dream.core.localstore.VarStore;
 
 /**
  * @author Alessandro Maggi
  *
  */
-public interface InteractingEntity extends Entity {
-
-	public Store getStore();
+public interface InteractingEntity extends Entity, StoringInstance {
 	
-	public void setStore(Store store);
+	public void setStore(VarStore store);
 	
 	public Map<String,Port> getInterface();
 	

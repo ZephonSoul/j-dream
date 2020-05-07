@@ -6,10 +6,13 @@ package com.dream.core.entities;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.json.simple.JSONObject;
+
 import com.dream.core.Entity;
 import com.dream.core.coordination.DummyRule;
 import com.dream.core.coordination.Rule;
 import com.dream.core.entities.maps.MapNode;
+import com.dream.core.entities.maps.MapProperty;
 import com.dream.core.entities.maps.MotifMap;
 
 /**
@@ -18,7 +21,7 @@ import com.dream.core.entities.maps.MotifMap;
  */
 public class AbstractMotif extends AbstractCoordinatingEntity implements CoordinatingEntity {
 	
-	private MotifMap map;
+	protected MotifMap map;
 
 	/**
 	 * @param parent
@@ -91,4 +94,16 @@ public class AbstractMotif extends AbstractCoordinatingEntity implements Coordin
 			return false;
 	}
 
+	public MapProperty<?> getMapProperty(String property) {
+		return map.getProperty(property);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getJSONDescriptor() {		
+		JSONObject descriptor = super.getJSONDescriptor();
+		descriptor.put("map", map.getJSONDescriptor());
+
+		return descriptor;
+	}
 }

@@ -11,7 +11,7 @@ public class NumberValue extends PrimitiveValue<Number> implements AdditiveValue
 	}
 
 	private Value roundValue(Number n) {
-		if (n.intValue() == (int)n.doubleValue())
+		if (n.doubleValue() % 1 == 0)
 			return new NumberValue(n.intValue());
 		else
 			return new NumberValue(n.doubleValue());

@@ -3,6 +3,7 @@
  */
 package com.dream.core.entities.maps.predefined;
 
+
 import com.dream.core.entities.maps.AbstractMapEdge;
 import com.dream.core.entities.maps.MapEdge;
 import com.dream.core.entities.maps.MapNode;

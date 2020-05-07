@@ -1,5 +1,6 @@
-package com.dream.core.entities;
+package com.dream.core.localstore;
 
+import com.dream.core.entities.InteractingEntity;
 import com.dream.core.expressions.values.Value;
 
 /**

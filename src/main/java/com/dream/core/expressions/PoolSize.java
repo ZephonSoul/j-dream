@@ -104,7 +104,7 @@ public class PoolSize extends AbstractExpression {
 
 	public String toString() {
 		return String.format("size(%s.C:%s)",
-				entityInstance.getName(),
+				entityInstance.toString(),
 				type.toString()
 				);
 	}

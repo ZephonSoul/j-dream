@@ -1,10 +1,11 @@
 package com.dream.core.operations;
 
 import com.dream.core.Instance;
-import com.dream.core.entities.LocalVariable;
+import com.dream.core.coordination.UnboundReferenceException;
 import com.dream.core.expressions.VariableActual;
 import com.dream.core.expressions.Expression;
 import com.dream.core.expressions.VariableRef;
+import com.dream.core.localstore.LocalVariable;
 
 /**
  * @author Alessandro Maggi
@@ -45,7 +46,8 @@ public class Assign extends AbstractOperation {
 	public void execute() {
 		if (localVariable instanceof VariableActual)
 			((VariableActual)localVariable).getLocalVariable().setValue(valueExpression.eval());
-		//TODO: raise exception otherwise
+		else
+			throw new UnboundReferenceException(localVariable);
 	}
 
 	@Override
@@ -58,6 +60,7 @@ public class Assign extends AbstractOperation {
 			Instance<I> reference, 
 			Instance<I> actual) {
 
+		//TODO: can be simplified
 		if (localVariable instanceof VariableActual)
 			return new Assign(
 					localVariable,
@@ -91,8 +94,14 @@ public class Assign extends AbstractOperation {
 	}
 
 	public String toString() {
+		String varName;
+		if (localVariable instanceof VariableActual)
+			varName = ((VariableActual)localVariable).getVarName();
+		else
+			varName = localVariable.toString();
+		
 		return String.format("assign(%s,%s)",
-				localVariable.toString(),
+				varName,
 				valueExpression.toString());
 	}
 

@@ -178,7 +178,7 @@ public class Declaration implements Bindable<Declaration>, Caching {
 			filterString = "(" + instanceFilter.toString() + ")";
 		return String.format("%s(%s.%s):[%s%s]",
 				quantifier.toString(),
-				scope.getName(),
+				scope.toString(),
 				variable.getName(),
 				type.toString(),
 				filterString);

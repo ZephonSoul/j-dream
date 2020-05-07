@@ -34,11 +34,6 @@ public class PortAtom extends AbstractFormula implements Formula, Instance<Port>
 		return this.port.toString();
 	}
 
-//	@Override
-//	public Formula bindEntityReference(EntityInstanceRef componentVariable, EntityInstanceActual actualComponent) {
-//		return this;
-//	}
-
 	@Override
 	public boolean equals(Formula formula) {
 		return (formula instanceof PortAtom)
@@ -53,11 +48,6 @@ public class PortAtom extends AbstractFormula implements Formula, Instance<Port>
 	@Override
 	public <I> Formula bindInstance(Instance<I> reference, Instance<I> actual) {
 		return this;
-	}
-
-	@Override
-	public String getName() {
-		return toString();
 	}
 
 	@Override

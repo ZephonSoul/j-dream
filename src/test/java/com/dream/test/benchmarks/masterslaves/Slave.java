@@ -5,10 +5,10 @@ import com.dream.core.coordination.ConjunctiveTerm;
 import com.dream.core.coordination.constraints.PortAtom;
 import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.entities.AbstractLightComponent;
-import com.dream.core.entities.LocalVariable;
 import com.dream.core.entities.Port;
 import com.dream.core.expressions.VariableActual;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.localstore.LocalVariable;
 import com.dream.core.operations.Assign;
 
 public class Slave extends AbstractLightComponent {

@@ -142,7 +142,7 @@ public class CreateInstance extends AbstractOperation {
 			chainedOpsString = String.format(";%s", chainedOperation.toString());
 		return String.format("%screate(%s.%s)%s",
 				preamble,
-				parentInstance.getName(),
+				parentInstance.toString(),
 				entityType.getSimpleName(),
 				chainedOpsString);
 

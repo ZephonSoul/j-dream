@@ -98,8 +98,8 @@ public class Migrate extends AbstractOperation {
 
 	public String toString() {
 		return String.format("migrate(%s,%s)",
-				entity.getName(),
-				targetParent.getName());
+				entity.toString(),
+				targetParent.toString());
 	}
 
 }

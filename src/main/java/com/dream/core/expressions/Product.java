@@ -53,8 +53,7 @@ public class Product extends AbstractEnnaryExpression {
 
 		return new Product(Arrays.stream(operands)
 				.map(e -> e.bindInstance(reference, actual))
-				.toArray(Expression[]::new),
-				operandsValue);
+				.toArray(Expression[]::new));
 	}
 	
 	@Override

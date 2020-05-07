@@ -70,7 +70,7 @@ public class DeleteInstance extends AbstractOperation {
 
 	public String toString() {
 		return String.format("delete(%s)",
-				targetInstance.getName());
+				targetInstance.toString());
 	}
 
 }

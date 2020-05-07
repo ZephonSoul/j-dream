@@ -26,11 +26,6 @@ implements EntityInstance {
 	}
 
 	@Override
-	public String getName() {
-		return entity.toString();
-	}
-
-	@Override
 	public int hashCode() {
 		return BASE_CODE + entity.hashCode();
 	}
@@ -54,7 +49,7 @@ implements EntityInstance {
 	}
 	
 	public String toString() {
-		return getName();
+		return entity.toString();
 	}
 
 	@Override

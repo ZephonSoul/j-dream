@@ -16,6 +16,8 @@ import com.dream.core.Caching;
 import com.dream.core.Entity;
 import com.dream.core.AbstractEntity;
 import com.dream.core.coordination.Interaction;
+import com.dream.core.localstore.LocalVariable;
+import com.dream.core.localstore.VarStore;
 
 /**
  * @author Alessandro Maggi
@@ -27,7 +29,7 @@ implements InteractingEntity, Caching {
 	
 	final static boolean greedy_cache_update = false;
 	
-	protected Store store;
+	protected VarStore store;
 	protected Map<String,Port> cInterface;
 	protected InteractionsIterator interactionsIterator;
 	private boolean dirtyCache;
@@ -37,7 +39,7 @@ implements InteractingEntity, Caching {
 	 * @param store
 	 * @param cInterface
 	 */
-	public AbstractInteractingEntity(Entity parent,Store store,Map<String,Port> cInterface) {
+	public AbstractInteractingEntity(Entity parent,VarStore store,Map<String,Port> cInterface) {
 		super(parent);
 		this.store = store;
 		this.cInterface = cInterface;
@@ -50,7 +52,7 @@ implements InteractingEntity, Caching {
 	 * @param parent
 	 * @param store
 	 */
-	public AbstractInteractingEntity(Entity parent,Store store) {
+	public AbstractInteractingEntity(Entity parent,VarStore store) {
 		this(parent,store,new HashMap<>());
 	}
 	
@@ -58,7 +60,7 @@ implements InteractingEntity, Caching {
 	 * @param store
 	 * @param cInterface
 	 */
-	public AbstractInteractingEntity(Store store,Map<String,Port> cInterface) {
+	public AbstractInteractingEntity(VarStore store,Map<String,Port> cInterface) {
 		this(null,store,cInterface);
 	}
 	
@@ -67,37 +69,47 @@ implements InteractingEntity, Caching {
 	 * @param cInterface
 	 */
 	public AbstractInteractingEntity(Entity parent,Map<String,Port> cInterface) {
-		this(parent,new Store(),cInterface);
+		this(parent,new VarStore(),cInterface);
 	}
 	
 	/**
 	 * @param parent
 	 */
 	public AbstractInteractingEntity(Entity parent) {
-		this(parent,new Store(),new HashMap<>());
+		this(parent,new VarStore(),new HashMap<>());
 	}
 
 	/**
 	 * 
 	 */
 	public AbstractInteractingEntity() {
-		this(null,new Store(),new HashMap<>());
+		this(null,new VarStore(),new HashMap<>());
 	}
 
 	/**
 	 * @return the store
 	 */
 	@Override
-	public Store getStore() {
+	public VarStore getStore() {
 		return store;
+	}
+	
+	/**
+	 * @param variableName
+	 * @return the matching LocalVariable
+	 */
+	@Override
+	public LocalVariable getVariable(String variableName) {
+		return store.getLocalVariable(variableName);
 	}
 
 	/**
 	 * @param store the store to set
 	 */
 	@Override
-	public void setStore(Store store) {
+	public void setStore(VarStore store) {
 		this.store = store;
+		store.setOwner(this);
 	}
 
 	/**
@@ -170,6 +182,13 @@ implements InteractingEntity, Caching {
 		return interactionsIterator.next();
 	}
 	
+	public boolean isInvolvedInInteraction(Interaction interaction) {
+		for (Port p : cInterface.values())
+			if (interaction.contains(p))
+				return true;
+		return false;
+	}
+	
 	protected void updateCache() {
 		interactionsIterator = new EntityInteractionsIterator(cInterface.values());
 		dirtyCache = false;
@@ -190,7 +209,7 @@ implements InteractingEntity, Caching {
 		JSONObject descriptor = super.getJSONDescriptor();
 		JSONArray interfaceDescriptor = new JSONArray();
 		
-		descriptor.put("store", this.store.toString());
+		descriptor.put("store", store.getJSONDescriptor());
 		
 		cInterface.values().stream().forEach(p -> interfaceDescriptor.add(p.toString()));
 		descriptor.put("interface", interfaceDescriptor);

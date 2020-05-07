@@ -39,9 +39,7 @@ public class Difference extends AbstractBinaryExpression {
 
 		return new Difference(
 				operand1.bindInstance(reference, actual),
-				operand2.bindInstance(reference, actual),
-				operandValue1,
-				operandValue2);
+				operand2.bindInstance(reference, actual));
 	}
 
 	@Override

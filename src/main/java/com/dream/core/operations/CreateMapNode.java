@@ -70,5 +70,19 @@ public class CreateMapNode extends AbstractOperation {
 	public boolean equals(Operation op) {
 		return super.lowLevelEquals(op);
 	}
+	
+	@Override
+	public String toString() {
+		String output = "";
+		if (newMapNode == null)
+			output = String.format("CreateMapNode(%s)", entity.toString());
+		else
+			output = String.format("CreateMapNode(%s,%s)", 
+					entity.toString(),
+					newMapNode.toString());
+		if (!chainedOperation.equals(Skip.getInstance()))
+			output += String.format("[%s]", chainedOperation.toString());
+		return output;
+	}
 
 }

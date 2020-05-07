@@ -17,7 +17,7 @@ public class IllegalAddressingException extends RuntimeException {
 	private static String getMessage(Instance<?> entity,String comment) {
 		return String.format(
 				"Illegal addressing request for %s: %s", 
-				entity.getName(),
+				entity.toString(),
 				comment);
 	}
 	

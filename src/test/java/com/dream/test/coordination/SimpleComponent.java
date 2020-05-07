@@ -13,6 +13,7 @@ import com.dream.core.entities.*;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.*;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.localstore.LocalVariable;
 import com.dream.core.operations.Assign;
 import com.dream.core.operations.OperationsSet;
 import com.dream.core.output.ConsoleOutput;

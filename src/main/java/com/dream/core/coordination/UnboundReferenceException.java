@@ -17,7 +17,7 @@ public class UnboundReferenceException extends RuntimeException {
 	private static String getMessage(Instance<?> reference) {
 		return String.format(
 				"Cannot resolve unbound reference %s", 
-				reference.getName());
+				reference.toString());
 	}
 	
 }

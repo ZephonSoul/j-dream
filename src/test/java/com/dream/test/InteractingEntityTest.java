@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.entities.AbstractInteractingEntity;
 import com.dream.core.entities.Port;
-import com.dream.core.entities.Store;
+import com.dream.core.localstore.VarStore;
 import com.dream.core.operations.OperationsSet;
 
 public class InteractingEntityTest extends AbstractInteractingEntity {

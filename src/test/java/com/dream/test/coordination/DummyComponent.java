@@ -1,9 +1,9 @@
 package com.dream.test.coordination;
 
 import com.dream.core.entities.AbstractLightComponent;
-import com.dream.core.entities.LocalVariable;
 import com.dream.core.entities.Port;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.localstore.LocalVariable;
 
 public class DummyComponent extends AbstractLightComponent {
 

@@ -44,5 +44,12 @@ public class GraphMap extends AbstractMap implements MotifMap {
 		
 		super(owner,edgeConstructor);
 	}
+	
+	/**
+	 * @param edgeConstructor
+	 */
+	public GraphMap(Supplier<? extends MapEdge> edgeConstructor) {
+		super(null,edgeConstructor);
+	}
 
 }

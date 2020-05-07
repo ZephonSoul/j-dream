@@ -24,15 +24,15 @@ public class MapNodeActual implements MapNodeInstance {
 	}
 
 	@Override
-	public String getName() {
-		return mapNode.toString();
-	}
-
-	@Override
 	public <I> MapNodeInstance bindInstance(
 			Instance<I> reference, Instance<I> actual) {
 		
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return mapNode.toString();
 	}
 
 }

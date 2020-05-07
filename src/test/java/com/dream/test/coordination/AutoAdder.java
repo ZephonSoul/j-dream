@@ -4,11 +4,11 @@ import com.dream.ExecutionEngine;
 import com.dream.core.coordination.Term;
 import com.dream.core.entities.AbstractLightComponent;
 import com.dream.core.entities.CoordinatingEntity;
-import com.dream.core.entities.LocalVariable;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.VariableActual;
 import com.dream.core.expressions.Sum;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.localstore.LocalVariable;
 import com.dream.core.operations.Assign;
 import com.dream.core.output.ConsoleOutput;
 

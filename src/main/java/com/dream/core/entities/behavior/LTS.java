@@ -73,7 +73,10 @@ public class LTS implements Caching {
 	}
 
 	public OperationsSet getTransitionOperation(Interaction interaction) {
-		return cached_transitions.get(interaction).getTriggerOperationsSet();
+		for (Interaction i : cached_transitions.keySet())
+			if (i.subsetOf(interaction))
+				return cached_transitions.get(i).getTriggerOperationsSet();
+		return new OperationsSet();
 	}
 
 	@SuppressWarnings("unchecked")

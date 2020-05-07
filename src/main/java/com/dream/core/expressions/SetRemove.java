@@ -33,9 +33,7 @@ public class SetRemove extends AbstractBinaryExpression {
 		
 		return new SetRemove(
 				operand1.bindInstance(reference, actual),
-				operand2.bindInstance(reference, actual),
-				operandValue1,
-				operandValue2);
+				operand2.bindInstance(reference, actual));
 	}
 
 	@Override

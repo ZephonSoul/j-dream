@@ -2,6 +2,8 @@ package com.dream.core.entities.maps;
 
 import java.util.Set;
 
+import org.json.simple.JSONObject;
+
 import com.dream.core.Entity;
 import com.dream.core.entities.AbstractMotif;
 
@@ -12,6 +14,10 @@ import com.dream.core.entities.AbstractMotif;
 public interface MotifMap {
 	
 	public AbstractMotif getOwner();
+	
+	public void setOwner(AbstractMotif owner);
+	
+	public Set<MapNode> getNodes();
 
 	public MapNode getNodeForEntity(Entity entity);
 	
@@ -38,5 +44,9 @@ public interface MotifMap {
 	public int getNodesSize();
 	
 	public int getEdgesSize();
+	
+	public MapProperty<?> getProperty(String property);
+	
+	public JSONObject getJSONDescriptor();
 	
 }

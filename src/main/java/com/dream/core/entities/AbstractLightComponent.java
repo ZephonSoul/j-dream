@@ -17,6 +17,8 @@ import com.dream.core.Entity;
 import com.dream.core.coordination.DummyRule;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.coordination.Rule;
+import com.dream.core.localstore.LocalVariable;
+import com.dream.core.localstore.VarStore;
 
 /**
  * @author Alessandro Maggi
@@ -26,7 +28,7 @@ public class AbstractLightComponent
 extends AbstractCoordinatingEntity
 implements CoordinatingEntity, InteractingEntity {
 
-	protected Store store;
+	protected VarStore store;
 	protected Map<String,Port> cInterface;
 	protected InteractionsIterator interactionsIterator;
 	protected Interaction localInteraction;
@@ -40,7 +42,7 @@ implements CoordinatingEntity, InteractingEntity {
 			Entity parent, 
 			Set<Entity> pool, 
 			Rule rule,
-			Store store,
+			VarStore store,
 			Map<String,Port> cInterface) {
 
 		super(parent, pool, rule);
@@ -59,7 +61,7 @@ implements CoordinatingEntity, InteractingEntity {
 				parent, 
 				pool, 
 				DummyRule.getInstance(), 
-				new Store(), 
+				new VarStore(), 
 				new HashMap<>()
 				);
 	}
@@ -73,7 +75,7 @@ implements CoordinatingEntity, InteractingEntity {
 				null, 
 				pool, 
 				rule, 
-				new Store(), 
+				new VarStore(), 
 				new HashMap<>()
 				);
 	}
@@ -86,7 +88,7 @@ implements CoordinatingEntity, InteractingEntity {
 				null, 
 				pool, 
 				DummyRule.getInstance(), 
-				new Store(), 
+				new VarStore(), 
 				new HashMap<>()
 				);
 	}
@@ -99,7 +101,7 @@ implements CoordinatingEntity, InteractingEntity {
 				null, 
 				new HashSet<Entity>(), 
 				DummyRule.getInstance(), 
-				new Store(), 
+				new VarStore(), 
 				new HashMap<>()
 				);
 	}
@@ -112,23 +114,32 @@ implements CoordinatingEntity, InteractingEntity {
 				null, 
 				new HashSet<Entity>(), 
 				DummyRule.getInstance(), 
-				new Store(), 
+				new VarStore(), 
 				new HashMap<>()
 				);
 	}
 
 	@Override
-	public Store getStore() {
+	public VarStore getStore() {
 		return store;
 	}
 
 	@Override
-	public void setStore(Store store) {
+	public void setStore(VarStore store) {
 		this.store = store;
 	}
 	
 	public void setStore(LocalVariable... variables) {
-		this.store = new Store(this,variables);
+		this.store = new VarStore(this,variables);
+	}
+	
+	/**
+	 * @param variableName
+	 * @return the matching LocalVariable
+	 */
+	@Override
+	public LocalVariable getVariable(String variableName) {
+		return store.getLocalVariable(variableName);
 	}
 
 	@Override
