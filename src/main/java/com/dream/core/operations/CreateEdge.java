@@ -36,8 +36,8 @@ public class CreateEdge extends AbstractOperation {
 		//			return this;
 		//		else
 		return new DeleteEdge(
-				node1.bindInstance(reference, actual),
-				node2.bindInstance(reference, actual));
+				bindInstance(node1,reference, actual),
+				bindInstance(node2,reference, actual));
 	}
 
 	@Override

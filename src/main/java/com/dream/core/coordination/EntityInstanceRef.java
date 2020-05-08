@@ -1,5 +1,6 @@
 package com.dream.core.coordination;
 
+import com.dream.core.Bindable;
 import com.dream.core.Entity;
 import com.dream.core.Instance;
 
@@ -8,7 +9,7 @@ import com.dream.core.Instance;
  *
  */
 public class EntityInstanceRef 
-implements EntityInstance {
+implements EntityInstance, Bindable<EntityInstance> {
 
 	final static int BASE_CODE = 111;
 

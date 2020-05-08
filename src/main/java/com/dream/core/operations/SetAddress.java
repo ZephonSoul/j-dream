@@ -5,10 +5,9 @@ package com.dream.core.operations;
 
 import com.dream.core.Entity;
 import com.dream.core.Instance;
-import com.dream.core.coordination.EntityInstance;
 import com.dream.core.coordination.constraints.IncompatibleEntityReference;
-import com.dream.core.coordination.maps.MapNodeInstance;
 import com.dream.core.entities.AbstractMotif;
+import com.dream.core.entities.maps.MapNode;
 
 /**
  * @author Alessandro Maggi
@@ -16,22 +15,22 @@ import com.dream.core.entities.AbstractMotif;
  */
 public class SetAddress extends AbstractOperation {
 
-	private EntityInstance entity;
-	private MapNodeInstance mapNode;
+	private Instance<Entity> entity;
+	private Instance<MapNode> mapNode;
 
 	public SetAddress(
-			EntityInstance entity,
-			MapNodeInstance mapNode) {
+			Instance<Entity> entity,
+			Instance<MapNode> mapNode) {
 
 		this.entity = entity;
 		this.mapNode = mapNode;
 	}
 	
-	public EntityInstance getEntity() {
+	public Instance<Entity> getEntity() {
 		return entity;
 	}
 	
-	public MapNodeInstance getMapNode() {
+	public Instance<MapNode> getMapNode() {
 		return mapNode;
 	}
 
@@ -41,8 +40,8 @@ public class SetAddress extends AbstractOperation {
 			Instance<I> actual) {
 		
 		return new SetAddress(
-				entity.bindInstance(reference, actual),
-				mapNode.bindInstance(reference, actual));
+				bindInstance(entity,reference, actual),
+				bindInstance(mapNode,reference, actual));
 	}
 
 	@Override

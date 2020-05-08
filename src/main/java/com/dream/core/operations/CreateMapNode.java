@@ -3,8 +3,8 @@
  */
 package com.dream.core.operations;
 
+import com.dream.core.Entity;
 import com.dream.core.Instance;
-import com.dream.core.coordination.EntityInstance;
 import com.dream.core.coordination.IllegalScopeException;
 import com.dream.core.coordination.maps.MapNodeActual;
 import com.dream.core.coordination.maps.MapNodeRef;
@@ -16,21 +16,21 @@ import com.dream.core.entities.AbstractMotif;
  */
 public class CreateMapNode extends AbstractOperation {
 
-	protected EntityInstance entity;
+	protected Instance<Entity> scope;
 	protected MapNodeRef newMapNode;
 	protected Operation chainedOperation;
 	
 	public CreateMapNode(
-			EntityInstance entity,
+			Instance<Entity> entity,
 			MapNodeRef newMapNode,
 			Operation chainedOperation) {
 		
-		this.entity = entity;
+		this.scope = entity;
 		this.newMapNode = newMapNode;
 		this.chainedOperation = chainedOperation;
 	}
 	
-	public CreateMapNode(EntityInstance entity) {
+	public CreateMapNode(Instance<Entity> entity) {
 		this(entity,null,Skip.getInstance());
 	}
 
@@ -40,7 +40,7 @@ public class CreateMapNode extends AbstractOperation {
 			Instance<I> actual) {
 		
 		return new CreateMapNode(
-				entity.bindInstance(reference, actual),
+				bindInstance(scope,reference,actual),
 				newMapNode,
 				chainedOperation.bindInstance(reference, actual));
 	}
@@ -57,13 +57,13 @@ public class CreateMapNode extends AbstractOperation {
 
 	@Override
 	public void execute() {
-		AbstractMotif motif = (AbstractMotif) entity.getActual();
+		AbstractMotif motif = (AbstractMotif) scope.getActual();
 		if (motif instanceof AbstractMotif) {
-			chainedOperation.bindInstance(newMapNode,new MapNodeActual(motif.getMap().createNode()));
+			chainedOperation.bindInstance(newMapNode,new MapNodeActual(motif.createMapNode()));
 			chainedOperation.evaluateOperands();
 			chainedOperation.execute();
 		} else
-			throw new IllegalScopeException(entity.getActual(),this.toString());
+			throw new IllegalScopeException(scope.getActual(),this.toString());
 	}
 
 	@Override
@@ -75,10 +75,10 @@ public class CreateMapNode extends AbstractOperation {
 	public String toString() {
 		String output = "";
 		if (newMapNode == null)
-			output = String.format("CreateMapNode(%s)", entity.toString());
+			output = String.format("CreateMapNode(%s)", scope.toString());
 		else
 			output = String.format("CreateMapNode(%s,%s)", 
-					entity.toString(),
+					scope.toString(),
 					newMapNode.toString());
 		if (!chainedOperation.equals(Skip.getInstance()))
 			output += String.format("[%s]", chainedOperation.toString());

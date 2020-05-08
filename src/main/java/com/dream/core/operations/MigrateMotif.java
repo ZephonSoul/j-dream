@@ -1,10 +1,10 @@
 package com.dream.core.operations;
 
+import com.dream.core.Entity;
 import com.dream.core.Instance;
-import com.dream.core.coordination.EntityInstance;
 import com.dream.core.coordination.constraints.IncompatibleEntityReference;
-import com.dream.core.coordination.maps.MapNodeInstance;
 import com.dream.core.entities.AbstractMotif;
+import com.dream.core.entities.maps.MapNode;
 
 /**
  * @author Alessandro Maggi
@@ -12,7 +12,7 @@ import com.dream.core.entities.AbstractMotif;
  */
 public class MigrateMotif extends Migrate {
 
-	protected MapNodeInstance targetNode;
+	protected Instance<MapNode> targetNode;
 	
 	/**
 	 * @param entity
@@ -20,15 +20,15 @@ public class MigrateMotif extends Migrate {
 	 * @param targetNode
 	 */
 	public MigrateMotif(
-			EntityInstance entity, 
-			EntityInstance targetMotif,
-			MapNodeInstance targetNode) {
+			Instance<Entity> entity, 
+			Instance<Entity> targetMotif,
+			Instance<MapNode> targetNode) {
 		
 		super(entity, targetMotif);
 		this.targetNode = targetNode;
 	}
 	
-	public MapNodeInstance getTargetNode() {
+	public Instance<MapNode> getTargetNode() {
 		return targetNode;
 	}
 	
@@ -54,6 +54,7 @@ public class MigrateMotif extends Migrate {
 				&& (op instanceof MigrateMotif)
 				&& targetNode.equals(((MigrateMotif) op).getTargetNode());
 	}
+	
 
 	@Override
 	public <I> Operation bindInstance(
@@ -61,9 +62,9 @@ public class MigrateMotif extends Migrate {
 			Instance<I> actual) {
 		
 		return new MigrateMotif(
-				entity.bindInstance(reference, actual),
-				targetParent.bindInstance(reference, actual),
-				targetNode.bindInstance(reference, actual));
+				bindInstance(entity, reference, actual),
+				bindInstance(targetParent, reference, actual),
+				bindInstance(targetNode, reference, actual));
 	}
 	
 	public String toString() {

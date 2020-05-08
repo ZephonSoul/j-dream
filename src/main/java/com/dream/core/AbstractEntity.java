@@ -74,12 +74,12 @@ public abstract class AbstractEntity implements Entity {
 		descriptor.put("name", this.toString());
 		descriptor.put("id", this.id);
 		descriptor.put("type", this.getClass().getSimpleName());
-		String parentName;
-		if (!isOrphan())
-			parentName = this.parent.toString();
-		else
-			parentName = "";
-		descriptor.put("parent", parentName);
+//		String parentName;
+//		if (!isOrphan())
+//			parentName = this.parent.toString();
+//		else
+//			parentName = "";
+//		descriptor.put("parent", parentName);
 		
 		return descriptor;
 	}

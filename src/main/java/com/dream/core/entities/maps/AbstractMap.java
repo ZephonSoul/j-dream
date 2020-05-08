@@ -13,7 +13,6 @@ import org.json.simple.JSONObject;
 
 import com.dream.core.Entity;
 import com.dream.core.entities.AbstractMotif;
-import com.dream.core.expressions.values.NumberValue;
 
 /**
  * @author Alessandro Maggi
@@ -202,7 +201,7 @@ public abstract class AbstractMap implements MotifMap {
 	}
 	
 	public MapNode createNode() {
-		MapNode newNode = new MapNode(this,String.format("s_%d", nodeCounter));
+		MapNode newNode = new MapNode(this,String.format("n_%d", nodeCounter));
 		nodeCounter++;
 		nodes.add(newNode);
 		return newNode;

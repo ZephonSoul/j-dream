@@ -4,7 +4,6 @@ import com.dream.core.Instance;
 import com.dream.core.coordination.UnboundReferenceException;
 import com.dream.core.expressions.VariableActual;
 import com.dream.core.expressions.Expression;
-import com.dream.core.expressions.VariableRef;
 import com.dream.core.localstore.LocalVariable;
 
 /**
@@ -60,26 +59,30 @@ public class Assign extends AbstractOperation {
 			Instance<I> reference, 
 			Instance<I> actual) {
 
+		return new Assign(
+				bindInstance(localVariable,reference,actual),
+				valueExpression.bindInstance(reference, actual));
+		
 		//TODO: can be simplified
-		if (localVariable instanceof VariableActual)
-			return new Assign(
-					localVariable,
-					valueExpression.bindInstance(
-							reference, actual));
-		else {
-			Instance<LocalVariable> boundLocalVariable;
-			Expression lVarBound = ((VariableRef) localVariable).bindInstance(
-					reference, actual);
-			if (lVarBound instanceof VariableActual)
-				boundLocalVariable = (VariableActual) lVarBound;
-			else
-				boundLocalVariable = localVariable;
-
-			return new Assign(
-					boundLocalVariable,
-					valueExpression.bindInstance(
-							reference, actual));
-		}
+//		if (localVariable instanceof VariableActual)
+//			return new Assign(
+//					localVariable,
+//					valueExpression.bindInstance(
+//							reference, actual));
+//		else {
+//			Instance<LocalVariable> boundLocalVariable;
+//			Expression lVarBound = ((VariableRef) localVariable).bindInstance(
+//					reference, actual);
+//			if (lVarBound instanceof VariableActual)
+//				boundLocalVariable = (VariableActual) lVarBound;
+//			else
+//				boundLocalVariable = localVariable;
+//
+//			return new Assign(
+//					boundLocalVariable,
+//					valueExpression.bindInstance(
+//							reference, actual));
+//		}
 	}
 
 	@Override

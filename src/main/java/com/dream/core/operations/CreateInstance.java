@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import com.dream.core.coordination.EntityInstanceActual;
 import com.dream.core.Entity;
 import com.dream.core.Instance;
-import com.dream.core.coordination.EntityInstance;
 import com.dream.core.coordination.EntityInstanceRef;
 import com.dream.core.coordination.IllegalScopeException;
 import com.dream.core.entities.CoordinatingEntity;
@@ -19,12 +18,12 @@ public class CreateInstance extends AbstractOperation {
 	final static int BASE_CODE = 1000;
 
 	private Class<? extends Entity> entityType;
-	private EntityInstance parentInstance;
+	private Instance<Entity> parentInstance;
 	private EntityInstanceRef newInstance;
 	private Operation chainedOperation;
 
 	public CreateInstance(Class<? extends Entity> entityType, 
-			EntityInstance parentInstance, 
+			Instance<Entity> parentInstance, 
 			EntityInstanceRef newInstance,
 			Operation chainedOperation) {
 
@@ -35,7 +34,7 @@ public class CreateInstance extends AbstractOperation {
 	}
 
 	public CreateInstance(Class<? extends Entity> entityType, 
-			EntityInstance parentInstance) {
+			Instance<Entity> parentInstance) {
 		this(entityType,parentInstance,null,Skip.getInstance());
 	}
 	
@@ -53,7 +52,7 @@ public class CreateInstance extends AbstractOperation {
 	/**
 	 * @return the parentInstance
 	 */
-	public EntityInstance getParentInstance() {
+	public Instance<Entity> getParentInstance() {
 		return parentInstance;
 	}
 
@@ -122,7 +121,7 @@ public class CreateInstance extends AbstractOperation {
 
 		return new CreateInstance(
 				entityType,
-				parentInstance.bindInstance(reference, actual),
+				bindInstance(parentInstance,reference,actual),
 				newInstance,
 				chainedOperation.bindInstance(reference, actual)
 				);

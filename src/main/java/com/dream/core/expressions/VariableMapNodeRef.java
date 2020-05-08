@@ -3,6 +3,7 @@
  */
 package com.dream.core.expressions;
 
+import com.dream.core.Bindable;
 import com.dream.core.Instance;
 import com.dream.core.coordination.UnboundReferenceException;
 import com.dream.core.coordination.maps.MapNodeActual;
@@ -85,7 +86,9 @@ extends AbstractExpression implements Instance<LocalVariable> {
 		if (allOperandsValued())
 			return this;
 		else
-			return new VariableMapNodeRef(node.bindInstance(reference, actual), variableName);
+			return new VariableMapNodeRef(
+					Bindable.bindInstance(node,reference, actual), 
+					variableName);
 	}
 
 }

@@ -1,8 +1,7 @@
 package com.dream.core.operations;
 
-import com.dream.core.coordination.EntityInstanceActual;
 import com.dream.core.coordination.IllegalScopeException;
-import com.dream.core.coordination.EntityInstance;
+import com.dream.core.Entity;
 import com.dream.core.Instance;
 import com.dream.core.OrphanEntityException;
 import com.dream.core.entities.CoordinatingEntity;
@@ -15,13 +14,13 @@ public class DeleteInstance extends AbstractOperation {
 
 	final static int BASE_CODE = 10000;
 
-	private EntityInstance targetInstance;
+	private Instance<Entity> targetInstance;
 
-	public DeleteInstance(EntityInstance targetInstance) {
+	public DeleteInstance(Instance<Entity> targetInstance) {
 		this.targetInstance = targetInstance;
 	}
 
-	private EntityInstance getTargetInstance() {
+	private Instance<Entity> getTargetInstance() {
 		return targetInstance;
 	}
 
@@ -59,10 +58,11 @@ public class DeleteInstance extends AbstractOperation {
 			Instance<I> reference, 
 			Instance<I> actual) {
 
-		if (targetInstance instanceof EntityInstanceActual || !targetInstance.equals(reference))
-			return this;
-		else
-			return new DeleteInstance((EntityInstance) actual);
+//		if (targetInstance instanceof EntityInstanceActual || !targetInstance.equals(reference))
+//			return this;
+//		else
+//			return new DeleteInstance((EntityInstance) actual);
+		return new DeleteInstance(bindInstance(targetInstance,reference,actual));
 	}
 
 	@Override

@@ -5,7 +5,6 @@ package com.dream.core.operations;
 
 import com.dream.core.Instance;
 import com.dream.core.coordination.maps.MapNodeActual;
-import com.dream.core.coordination.maps.MapNodeInstance;
 import com.dream.core.entities.maps.MapNode;
 
 /**
@@ -14,13 +13,13 @@ import com.dream.core.entities.maps.MapNode;
  */
 public class DeleteMapNode extends AbstractOperation {
 
-	protected MapNodeInstance mapNode;
+	protected Instance<MapNode> mapNode;
 	
-	public DeleteMapNode(MapNodeInstance mapNode) {
+	public DeleteMapNode(Instance<MapNode> mapNode) {
 		this.mapNode = mapNode;
 	}
 	
-	public MapNodeInstance getMapNode() {
+	public Instance<MapNode> getMapNode() {
 		return mapNode;
 	}
 
@@ -33,7 +32,7 @@ public class DeleteMapNode extends AbstractOperation {
 			return this;
 		else
 			return new DeleteMapNode(
-					mapNode.bindInstance(reference, actual));
+					bindInstance(mapNode,reference, actual));
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.dream.core.coordination;
 
 import com.dream.core.Entity;
-import com.dream.core.Instance;
 
 /**
  * @author Alessandro Maggi
@@ -39,14 +38,6 @@ implements EntityInstance {
 		return (o instanceof EntityInstanceActual)
 				&& equals((EntityInstanceActual) o);
 	}
-
-	@Override
-	public <I> EntityInstance bindInstance(
-			Instance<I> reference, 
-			Instance<I> actual) {
-
-		return this;
-	}
 	
 	public String toString() {
 		return entity.toString();
@@ -56,13 +47,5 @@ implements EntityInstance {
 	public Entity getActual() {
 		return entity;
 	}
-
-//	@Override
-//	public <I> EntityInstance bindInstance(
-//			Instance<I> reference, 
-//			Instance<I> actual) {
-//		
-//		return this;
-//	}
 
 }

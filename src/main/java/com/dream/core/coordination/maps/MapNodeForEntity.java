@@ -3,6 +3,7 @@
  */
 package com.dream.core.coordination.maps;
 
+import com.dream.core.Bindable;
 import com.dream.core.Entity;
 import com.dream.core.Instance;
 import com.dream.core.OrphanEntityException;
@@ -15,7 +16,7 @@ import com.dream.core.entities.maps.MapNode;
  *
  */
 public class MapNodeForEntity 
-implements MapNodeInstance {
+implements MapNodeInstance, Bindable<MapNodeInstance> {
 
 	final static int BASE_CODE = 471;
 

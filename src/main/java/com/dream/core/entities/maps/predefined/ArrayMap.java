@@ -5,7 +5,6 @@ package com.dream.core.entities.maps.predefined;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -29,7 +28,7 @@ import com.dream.core.expressions.values.Value;
 public class ArrayMap extends AbstractMap {
 
 	ArrayList<MapNode> nodes;
-	
+
 	/**
 	 * @param owner
 	 * @param edgeConstructor
@@ -38,32 +37,37 @@ public class ArrayMap extends AbstractMap {
 	 */
 	public ArrayMap(
 			AbstractMotif owner,
-			List<MapNode> nodes,
+			ArrayList<MapNode> nodes,
 			Map<Entity, MapNode> mapping) {
-		
+
 		super(owner, null, nodes.stream().collect(Collectors.toSet()), mapping, null);
-		this.nodes = new ArrayList<MapNode>();
-		this.nodes.addAll(nodes);
+		this.nodes = nodes;
 		properties.put(
 				"head", 
 				() -> {
 					return nodes.get(0).getMappedEntities().stream().findFirst().get();
-					});
+				});
 		properties.put(
 				"tail", 
 				() -> {
-					return nodes.get(nodes.size()-1).getMappedEntities().stream().findFirst().get();
-					});
+					for (int i=nodes.size()-1; i>=0; i--) {
+						MapNode n = nodes.get(i);
+						if (!n.getMappedEntities().isEmpty())
+							return n.getMappedEntities().stream().findFirst().get();
+					}
+					return null;
+				});
 	}
-	
+
 	public ArrayMap(int size) {
-		this(null, createNodes(size), new HashMap<>());
+		this(null, new ArrayList<>(), new HashMap<>());
+		createNodes(size);
 	}
 
 	public MapNode getNodeAtIndex(int index) {
 		return nodes.get(index);
 	}
-	
+
 	public MapNode getNodeAtIndex(Value index) {
 		NumberValue iValue = (NumberValue) index;
 		if (iValue instanceof NumberValue)
@@ -71,7 +75,7 @@ public class ArrayMap extends AbstractMap {
 		else
 			throw new IncompatibleValueException(index, NumberValue.class);
 	}
-	
+
 	public int getIndexForNode(MapNode node) {
 		int index = nodes.indexOf(node);
 		if (index == -1)
@@ -79,29 +83,29 @@ public class ArrayMap extends AbstractMap {
 		else
 			return index;
 	}
-	
+
 	@Override
 	public boolean isEdge(MapNode node1,MapNode node2) {
 		return Math.abs(getIndexForNode(node1)-getIndexForNode(node2))==1;
 	}
-	
+
 	@Override
 	public boolean deleteNode(MapNode node) {
 		boolean removed = super.deleteNode(node);
 		removed = nodes.remove(node) & removed;
 		return removed;
 	}
-	
+
 	@Override
 	public boolean deleteEdge(MapNode node1,MapNode node2) {
 		return false;
 	}
-	
+
 	@Override
 	public int getEdgesSize() {
 		return nodes.size()-1;
 	}
-	
+
 	@Override
 	public MapNode createNode() {
 		MapNode newNode = super.createNode();
@@ -110,36 +114,34 @@ public class ArrayMap extends AbstractMap {
 		nodes.add(newNode);
 		return newNode;
 	}
-	
+
 	@Override
 	public MapEdge createEdge(MapNode node1,MapNode node2) {
 		return null;
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public JSONObject getJSONDescriptor() {
 		JSONObject descriptor = new JSONObject();
 		descriptor.put("type", this.getClass().getSimpleName());
 		descriptor.put("owner", owner.toString());
-		
+
 		JSONArray nodesDescriptor = new JSONArray();
 		for (int i=0; i<nodes.size(); i++) {
 			JSONObject nDesc = new JSONObject();
 			nDesc.put(i, nodes.get(i).getJSONDescriptor());
 			nodesDescriptor.add(nDesc);
 		}
-//		nodes.stream().forEach(n -> nodesDescriptor.add(n.getJSONDescriptor()));
+		//		nodes.stream().forEach(n -> nodesDescriptor.add(n.getJSONDescriptor()));
 		descriptor.put("nodes", nodesDescriptor);
-		
+
 		return descriptor;
 	}
-	
-	private static List<MapNode> createNodes(int size) {
-		List<MapNode> nodes = new ArrayList<>();
+
+	private void createNodes(int size) {
 		for (int i=0;i<size; i++)
-			nodes.add(new MapNode("n_"+Integer.toString(i)));
-		return nodes;
+			createNode();
 	}
 
 }

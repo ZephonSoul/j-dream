@@ -2,7 +2,7 @@ package com.dream.core.operations;
 
 import com.dream.core.Instance;
 import com.dream.core.coordination.maps.MapNodeActual;
-import com.dream.core.coordination.maps.MapNodeInstance;
+import com.dream.core.entities.maps.MapNode;
 
 /**
  * @author Alessandro Maggi
@@ -10,18 +10,18 @@ import com.dream.core.coordination.maps.MapNodeInstance;
  */
 public class DeleteEdge extends AbstractOperation {
 
-	private MapNodeInstance node1,node2;
+	private Instance<MapNode> node1,node2;
 	
-	public DeleteEdge(MapNodeInstance node1, MapNodeInstance node2) {
+	public DeleteEdge(Instance<MapNode> node1, Instance<MapNode> node2) {
 		this.node1 = node1;
 		this.node2 = node2;
 	}
 	
-	public MapNodeInstance getNode1() {
+	public Instance<MapNode> getNode1() {
 		return node1;
 	}
 	
-	public MapNodeInstance getNode2() {
+	public Instance<MapNode> getNode2() {
 		return node2;
 	}
 
@@ -34,8 +34,8 @@ public class DeleteEdge extends AbstractOperation {
 			return this;
 		else
 			return new DeleteEdge(
-					node1.bindInstance(reference, instance),
-					node2.bindInstance(reference, instance));
+					bindInstance(node1,reference, instance),
+					bindInstance(node2,reference, instance));
 	}
 
 	@Override

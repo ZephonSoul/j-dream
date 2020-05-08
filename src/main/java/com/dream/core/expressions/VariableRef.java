@@ -33,18 +33,13 @@ extends AbstractExpression implements Instance<LocalVariable> {
 				&& (localVariableName.equals(((VariableRef) ex).getVariableName()));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <I> Expression bindInstance(
 			Instance<I> reference, 
 			Instance<I> actual) {
 
 		//TODO: FIX THIS!!!!
-		Instance<?> newScope;
-		if (this.scope instanceof Bindable<?>)
-			newScope = ((Bindable<Instance<?>>)this.scope).bindInstance(reference, actual);
-		else
-			newScope = this.scope;
+		Instance<?> newScope = Bindable.bindInstance(scope,reference,actual);
 		
 		if (newScope instanceof Bindable<?>)
 			return new VariableRef(newScope,localVariableName);

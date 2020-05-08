@@ -2,9 +2,9 @@ package com.dream.core.operations;
 
 import com.dream.core.coordination.IllegalScopeException;
 import com.dream.core.coordination.constraints.IncompatibleEntityReference;
+import com.dream.core.Entity;
 import com.dream.core.Instance;
 import com.dream.core.OrphanEntityException;
-import com.dream.core.coordination.EntityInstance;
 import com.dream.core.entities.CoordinatingEntity;
 
 /**
@@ -15,12 +15,12 @@ public class Migrate extends AbstractOperation {
 
 	final static int BASE_CODE = 5000;
 
-	protected EntityInstance entity;
-	protected EntityInstance targetParent;
+	protected Instance<Entity> entity;
+	protected Instance<Entity> targetParent;
 
 	public Migrate(
-			EntityInstance entity,
-			EntityInstance targetParent) {
+			Instance<Entity> entity,
+			Instance<Entity> targetParent) {
 
 		this.entity = entity;
 		this.targetParent = targetParent;
@@ -29,14 +29,14 @@ public class Migrate extends AbstractOperation {
 	/**
 	 * @return the cInstance
 	 */
-	public EntityInstance getEntity() {
+	public Instance<Entity> getEntity() {
 		return entity;
 	}
 
 	/**
 	 * @return the newParent
 	 */
-	public EntityInstance getTargetParent() {
+	public Instance<Entity> getTargetParent() {
 		return targetParent;
 	}
 
@@ -46,7 +46,7 @@ public class Migrate extends AbstractOperation {
 	@Override
 	public void execute() {
 		try {
-			CoordinatingEntity parentEntity = (CoordinatingEntity) entity.getActual().getParent();
+			CoordinatingEntity parentEntity =  (CoordinatingEntity) entity.getActual().getParent();
 			if (parentEntity instanceof CoordinatingEntity)
 				parentEntity.removeFromPool(entity.getActual());
 			else
@@ -80,17 +80,10 @@ public class Migrate extends AbstractOperation {
 	public <I> Operation bindInstance(
 			Instance<I> reference, 
 			Instance<I> actual) {
-
-		if (entity.equals(reference))
-			return new Migrate(
-					(EntityInstance) actual,
-					targetParent);
-		else if (targetParent.equals(reference))
-			return new Migrate(
-					entity,
-					(EntityInstance) actual);
-		else
-			return this;
+		
+		return new Migrate(
+				bindInstance(entity, reference, actual),
+				bindInstance(targetParent, reference, actual));
 	}
 	
 	@Override

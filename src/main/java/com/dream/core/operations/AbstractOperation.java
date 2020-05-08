@@ -1,5 +1,6 @@
 package com.dream.core.operations;
 
+import com.dream.core.Bindable;
 import com.dream.core.Instance;
 
 /**
@@ -23,6 +24,23 @@ public abstract class AbstractOperation implements Operation {
 			Instance<I> componentReference, 
 			Instance<I> actualComponent) {
 		return this;
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	protected <I,T> T bindInstance(
+			T scope,
+			Instance<I> reference,
+			Instance<I> actual) {
+		
+		T newScope;
+		if (scope instanceof Bindable<?>)
+			newScope = ((Bindable<T>) scope).bindInstance(reference,actual);
+		else
+			newScope = scope;
+		
+		return newScope;
+		
 	}
 	
 }

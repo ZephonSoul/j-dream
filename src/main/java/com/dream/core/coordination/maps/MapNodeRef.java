@@ -3,6 +3,7 @@
  */
 package com.dream.core.coordination.maps;
 
+import com.dream.core.Bindable;
 import com.dream.core.Instance;
 import com.dream.core.entities.maps.MapNode;
 
@@ -10,7 +11,7 @@ import com.dream.core.entities.maps.MapNode;
  * @author Alessandro Maggi
  *
  */
-public class MapNodeRef implements MapNodeInstance {
+public class MapNodeRef implements MapNodeInstance, Bindable<MapNodeInstance> {
 
 	final static int BASE_CODE = 211;
 

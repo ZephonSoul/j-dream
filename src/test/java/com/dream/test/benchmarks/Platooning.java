@@ -35,6 +35,7 @@ import com.dream.core.entities.AbstractMotif;
 import com.dream.core.entities.maps.MapNode;
 import com.dream.core.entities.maps.predefined.DummyMap;
 import com.dream.core.exec.GreedyStrategy;
+import com.dream.core.expressions.AbsValue;
 import com.dream.core.expressions.Difference;
 import com.dream.core.expressions.PoolSize;
 import com.dream.core.expressions.Sum;
@@ -96,9 +97,11 @@ public class Platooning extends AbstractMotif {
 												new And(
 														new Not(new SameInstance(p1,p2)),
 														new LessThan(
-																new Difference(
-																		new VariableMapProperty(p2,"tail","pos"),
-																		new VariableMapProperty(p1,"head","pos")
+																new AbsValue(
+																		new Difference(
+																				new VariableMapProperty(p2,"tail","pos"),
+																				new VariableMapProperty(p1,"head","pos")
+																				)
 																		),
 																new NumberValue(joinDistance)
 																)
@@ -116,7 +119,7 @@ public class Platooning extends AbstractMotif {
 																				)))
 														)
 												))));
-		
+
 		allPlatoons1 = new Declaration(
 				Quantifier.FORALL,
 				scope,
@@ -136,6 +139,7 @@ public class Platooning extends AbstractMotif {
 												new PortReference(c,"ackSplit"))
 										))));
 		setRule(new AndRule(r1,r2));
+		
 	}
 
 

@@ -10,13 +10,15 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.dream.core.Entity;
+import com.dream.core.localstore.LocalVariable;
+import com.dream.core.localstore.StoringInstance;
 import com.dream.core.localstore.VarStore;
 
 /**
  * @author Alessandro Maggi
  *
  */
-public class MapNode {
+public class MapNode implements StoringInstance {
 
 	private MotifMap map;
 	private Set<Entity> entities;
@@ -92,6 +94,11 @@ public class MapNode {
 		}
 		
 		return descriptor;
+	}
+
+	@Override
+	public LocalVariable getVariable(String variableName) {
+		return store.getLocalVariable(variableName);
 	}
 
 }

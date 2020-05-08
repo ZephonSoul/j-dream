@@ -21,6 +21,7 @@ import com.dream.core.coordination.constraints.PortReference;
 import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.GreaterThan;
 import com.dream.core.entities.AbstractMotif;
+import com.dream.core.entities.maps.MapNode;
 import com.dream.core.entities.maps.predefined.ArrayMap;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.PoolSize;
@@ -47,10 +48,24 @@ public class Platoon extends AbstractMotif {
 				new ArrayMap(initialPool.length)
 				);
 		map.setOwner(this);
+		for (MapNode n : map.getNodes()) {
+			n.getStore().setVarValue("newLeader", new NumberValue(-1));
+			n.getStore().setVarValue("newLoc", new NumberValue(-1));
+		}
+		
 		for (int i=0; i<initialPool.length; i++)
 			setEntityPosition(initialPool[i], ((ArrayMap)map).getNodeAtIndex(i));
+		
 
 		setRule(newRule(this));
+	}
+	
+	@Override
+	public MapNode createMapNode() {
+		MapNode newNode = super.createMapNode();
+		newNode.getStore().setVarValue("newLeader", new NumberValue(-1));
+		newNode.getStore().setVarValue("newLoc", new NumberValue(-1));
+		return newNode;
 	}
 
 	private static Rule newRule(AbstractMotif current) {

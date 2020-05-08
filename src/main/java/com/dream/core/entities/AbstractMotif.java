@@ -86,6 +86,10 @@ public class AbstractMotif extends AbstractCoordinatingEntity implements Coordin
 		return map.getNodeForEntity(entity);
 	}
 	
+	public MapNode createMapNode() {
+		return map.createNode();
+	}
+	
 	public boolean setEntityPosition(Entity entity,MapNode node) {
 		if (pool.contains(entity) && map.hasNode(node)) {
 			map.setEntityMapping(entity, node);

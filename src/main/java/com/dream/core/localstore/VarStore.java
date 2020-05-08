@@ -73,6 +73,7 @@ public class VarStore {
 			return localVariables.get(varName);
 		}
 		else {
+			// create new variable if not present
 			throw new InvalidLocalVariableException(varName);
 		}
 	}
