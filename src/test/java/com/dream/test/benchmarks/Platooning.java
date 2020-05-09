@@ -3,10 +3,8 @@
  */
 package com.dream.test.benchmarks;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.dream.ExecutionEngine;
 import com.dream.core.Entity;
@@ -16,7 +14,6 @@ import com.dream.core.coordination.Declaration;
 import com.dream.core.coordination.EntityInstanceActual;
 import com.dream.core.coordination.EntityInstanceRef;
 import com.dream.core.coordination.FOILRule;
-import com.dream.core.coordination.Interaction;
 import com.dream.core.coordination.Quantifier;
 import com.dream.core.coordination.Rule;
 import com.dream.core.coordination.Term;
@@ -29,8 +26,8 @@ import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.LessThan;
 import com.dream.core.coordination.constraints.predicates.SameInstance;
 import com.dream.core.coordination.maps.MapNodeForEntity;
-import com.dream.core.coordination.maps.MapNodeInstance;
 import com.dream.core.coordination.maps.MapNodeRef;
+import com.dream.core.coordination.maps.MapNodeVarEquals;
 import com.dream.core.entities.AbstractMotif;
 import com.dream.core.entities.maps.MapNode;
 import com.dream.core.entities.maps.predefined.DummyMap;
@@ -44,6 +41,8 @@ import com.dream.core.expressions.VariableRef;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.operations.Assign;
 import com.dream.core.operations.CreateMapNode;
+import com.dream.core.operations.DeleteInstance;
+import com.dream.core.operations.MigrateMotif;
 import com.dream.core.operations.OperationsSequence;
 import com.dream.core.output.ConsoleOutput;
 import com.dream.test.benchmarks.platooning.Car;
@@ -120,6 +119,11 @@ public class Platooning extends AbstractMotif {
 														)
 												))));
 
+		// \forall p1 : Platoon {
+		//		\forall c : Car {
+		//			\exists p2 : Platoon {
+		//				c.finishJoin |> head(p2).id = @(c).newLeader
+		//				-> migrate(c,p2,@(c).newLoc); delete(p1)
 		allPlatoons1 = new Declaration(
 				Quantifier.FORALL,
 				scope,
@@ -130,7 +134,51 @@ public class Platooning extends AbstractMotif {
 				p1,
 				new TypeRestriction(Car.class));
 		c = allCars.getVariable();
+		allPlatoons2 = new Declaration(
+				Quantifier.EXISTS,
+				scope,
+				new TypeRestriction(Platoon.class));
+		p2 = allPlatoons2.getVariable();
 		Rule r2 = 
+				new FOILRule(allPlatoons1,
+						new FOILRule(allCars,
+								new FOILRule(allPlatoons2,
+										new ConjunctiveTerm(
+												new PortReference(c, "finishJoin"),
+												new Equals(
+														new VariableMapProperty(p2,"head","id"),
+														new VariableRef(new MapNodeForEntity(c),"newLeader")
+														),
+												new OperationsSequence(
+														new MigrateMotif(
+																c, 
+																p2, 
+																new MapNodeVarEquals(
+																		p2,
+																		"index",
+																		new VariableRef(
+																				new MapNodeForEntity(c), 
+																				"newLoc")
+																		)
+																),
+														new DeleteInstance(p1)
+														)
+												)
+										)
+								)
+						);
+
+		allPlatoons1 = new Declaration(
+				Quantifier.FORALL,
+				scope,
+				new TypeRestriction(Platoon.class));
+		p1 = allPlatoons1.getVariable();
+		allCars = new Declaration(
+				Quantifier.FORALL,
+				p1,
+				new TypeRestriction(Car.class));
+		c = allCars.getVariable();
+		Rule r0 = 
 				new FOILRule(allPlatoons1,
 						new FOILRule(allCars,
 								new Term(new Not(
@@ -138,15 +186,14 @@ public class Platooning extends AbstractMotif {
 												new PortReference(c,"initSplit"),
 												new PortReference(c,"ackSplit"))
 										))));
-		setRule(new AndRule(r1,r2));
-		
+		setRule(new AndRule(r1,r2,r0));
+
 	}
 
 
 	public static void main(String[] args) {
 		Car[] cars1 = {new Car(2.0,2.0),new Car(0.0, 1.5)};
 		AbstractMotif platoon1 = new Platoon(null,cars1);
-		System.out.println(platoon1.getMapProperty("tail").get().toString());
 		Car[] cars2 = {new Car(4.0,1.0),new Car(2.5, 1.0)};
 		AbstractMotif platoon2 = new Platoon(null,cars2);
 		Set<Entity> pool = new HashSet<>();

@@ -38,7 +38,6 @@ extends AbstractExpression implements Instance<LocalVariable> {
 			Instance<I> reference, 
 			Instance<I> actual) {
 
-		//TODO: FIX THIS!!!!
 		Instance<?> newScope = Bindable.bindInstance(scope,reference,actual);
 		
 		if (newScope instanceof Bindable<?>)

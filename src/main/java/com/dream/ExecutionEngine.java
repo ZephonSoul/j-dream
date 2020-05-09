@@ -1,8 +1,12 @@
 package com.dream;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Stack;
 import java.util.stream.Collectors;
+
+import org.json.simple.JSONObject;
 
 import com.dream.core.coordination.Interaction;
 import com.dream.core.entities.CoordinatingEntity;
@@ -10,6 +14,7 @@ import com.dream.core.entities.NoAdmissibleInteractionsException;
 import com.dream.core.exec.ExecutionStrategy;
 import com.dream.core.operations.Operation;
 import com.dream.core.operations.OperationsSet;
+import com.dream.core.output.JSONOutput;
 import com.dream.core.output.MessageWritable;
 import com.dream.core.output.Output;
 
@@ -18,13 +23,17 @@ import com.dream.core.output.Output;
  *
  */
 public class ExecutionEngine implements Runnable {
+	
+	public final static String version = "0.1.2";
 
 	private CoordinatingEntity rootEntity;
 	private ExecutionStrategy executionStrategy;
 	private Output output;
+	private JSONOutput jsonOut;
 	private boolean interactive;
 	private int maxCycles;
 	private boolean snapshotSemantics;
+	private LocalDateTime launchTimestamp;
 
 	public ExecutionEngine(
 			CoordinatingEntity rootEntity,
@@ -36,6 +45,7 @@ public class ExecutionEngine implements Runnable {
 		this.output = output;
 		this.maxCycles = 0;
 		this.snapshotSemantics = true;
+		this.jsonOut = new JSONOutput("ee_log.json");
 	}
 
 	public ExecutionEngine(
@@ -107,9 +117,32 @@ public class ExecutionEngine implements Runnable {
 		
 		return tempSet;
 	}
+	
+	private LocalDateTime getCurrentDateTime() {
+		return LocalDateTime.now();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject getJSONDescriptor() {
+		JSONObject descriptor = new JSONObject();
+		descriptor.put("version", version);
+		descriptor.put("root", rootEntity.toString());
+		descriptor.put("interactive", interactive);
+		descriptor.put("max_cycles", maxCycles);
+		descriptor.put("snapshot_semantics", snapshotSemantics);
+		descriptor.put("execution_strategy", executionStrategy.getClass().getSimpleName());
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+		descriptor.put("start_time", dtf.format(launchTimestamp));
+		
+		return descriptor;
+	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
+		launchTimestamp = getCurrentDateTime();
+		jsonOut.write("engine", getJSONDescriptor());
+		
 		System.out.println("============================");
 		System.out.println("DReAM execution engine 0.1.1");
 		System.out.println("============================");
@@ -126,9 +159,15 @@ public class ExecutionEngine implements Runnable {
 		boolean unboundedExecution = false;
 		if (maxCycles <= 0)
 			unboundedExecution = true;
-		output.write(MessageWritable.write(rootEntity.getJSONDescriptor()));
+		
+		JSONObject state = rootEntity.getJSONDescriptor();
+		output.write(MessageWritable.write(state));
+		jsonOut.write("state", state);
+		
 		while (cycles < maxCycles || unboundedExecution) {
 			try {
+				state = new JSONObject();
+				
 				Interaction interaction = executionStrategy.selectInteraction(rootEntity);
 				OperationsSet opsSet = rootEntity.getOperationsForInteraction(interaction);
 
@@ -139,6 +178,10 @@ public class ExecutionEngine implements Runnable {
 				output.write(MessageWritable.write("Performed operations = ",opsSet));
 				interaction.trigger();
 				output.write(MessageWritable.write("Performed interaction = ",interaction));
+				state.put("interaction",interaction.toString());
+				state.put("operations",opsSet.toString());
+				state.put("new_state", rootEntity.getJSONDescriptor());
+				jsonOut.write("state", state);
 
 				output.write(MessageWritable.write(rootEntity.getJSONDescriptor()));
 				cycles++;
@@ -167,6 +210,8 @@ public class ExecutionEngine implements Runnable {
 		System.out.println(String.format("Completed cycles: %s\nExecution time: %s s",
 				cycles,
 				elapsedTime));
+		
+		jsonOut.close();
 	}
 
 }

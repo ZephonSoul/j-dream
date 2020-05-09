@@ -36,6 +36,7 @@ public class MigrateMotif extends Migrate {
 	public void execute() {
 		AbstractMotif motif = (AbstractMotif)targetParent.getActual();
 		if (motif instanceof AbstractMotif) {
+			super.execute();
 			motif.setEntityPosition(
 					entity.getActual(), targetNode.getActual());
 		} else

@@ -67,13 +67,16 @@ public class VarStore {
 			// create new variable if not present
 			localVariables.put(varName,new LocalVariable(varName,varValue));
 	}
+	
+	public boolean hasLocalVariable(String varName) {
+		return localVariables.containsKey(varName);
+	}
 
 	public LocalVariable getLocalVariable(String varName) {
 		if (localVariables.containsKey(varName)) {
 			return localVariables.get(varName);
 		}
 		else {
-			// create new variable if not present
 			throw new InvalidLocalVariableException(varName);
 		}
 	}

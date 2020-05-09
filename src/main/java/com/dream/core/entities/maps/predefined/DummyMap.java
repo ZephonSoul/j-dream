@@ -16,6 +16,7 @@ import com.dream.core.entities.maps.MapProperty;
 import com.dream.core.entities.maps.MappingNotFoundException;
 import com.dream.core.entities.maps.MotifMap;
 import com.dream.core.entities.maps.NodeNotFoundException;
+import com.dream.core.expressions.values.Value;
 
 /**
  * @author Alessandro Maggi
@@ -149,6 +150,15 @@ public class DummyMap implements MotifMap {
 		descriptor.put("node", node.getJSONDescriptor());
 		
 		return descriptor;
+	}
+
+	@Override
+	public MapNode getNodeVarEquals(String varName, Value value) {
+		if (node.getStore().hasLocalVariable(varName) &&
+				node.getVariable(varName).getValue().equals(value))
+			return node;
+		else
+			throw new NodeNotFoundException(this, varName + "=" + value.toString());
 	}
 
 

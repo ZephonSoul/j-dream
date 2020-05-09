@@ -10,7 +10,6 @@ import com.dream.core.entities.maps.MapNode;
  * @author Alessandro Maggi
  *
  */
-public interface MapNodeInstance 
-extends Instance<MapNode> {
+public interface MapNodeInstance extends Instance<MapNode> {
 
 }

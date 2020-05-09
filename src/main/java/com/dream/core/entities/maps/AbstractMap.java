@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 
 import com.dream.core.Entity;
 import com.dream.core.entities.AbstractMotif;
+import com.dream.core.expressions.values.Value;
 
 /**
  * @author Alessandro Maggi
@@ -106,6 +107,7 @@ public abstract class AbstractMap implements MotifMap {
 		return properties;
 	}
 	
+	@Override
 	public MapProperty<?> getProperty(String property) {
 		return properties.get(property);
 	}
@@ -128,10 +130,12 @@ public abstract class AbstractMap implements MotifMap {
 		setNodesMap();
 	}
 	
+	@Override
 	public MapNode getNodeForEntity(Entity entity) {
 		return mapping.get(entity);
 	}
 	
+	@Override
 	public void setEntityMapping(Entity entity,MapNode node) {
 		if (nodes.contains(node)) {
 			node.addEntity(entity);
@@ -140,6 +144,7 @@ public abstract class AbstractMap implements MotifMap {
 			throw new NodeNotFoundException(this, node);
 	}
 	
+	@Override
 	public void moveEntity(Entity entity,MapNode node) {
 		if (mapping.containsKey(entity)) {
 			if (nodes.contains(node)) {
@@ -152,11 +157,13 @@ public abstract class AbstractMap implements MotifMap {
 			throw new MappingNotFoundException(this, entity);
 	}
 	
+	@Override
 	public boolean existsPath(MapNode node1,MapNode node2) {
 		//TODO: implement path search algorithm
 		return isEdge(node1,node2);
 	}
 	
+	@Override
 	public boolean isEdge(MapNode node1,MapNode node2) {
 		for (MapEdge edge : edges)
 			if (edge.equals(node1,node2))
@@ -164,6 +171,7 @@ public abstract class AbstractMap implements MotifMap {
 		return false;
 	}
 	
+	@Override
 	public Set<Entity> getEntitiesForNode(MapNode node) {
 		if (nodes.contains(node))
 			return node.getMappedEntities();
@@ -171,6 +179,7 @@ public abstract class AbstractMap implements MotifMap {
 			throw new NodeNotFoundException(this,node);
 	}
 	
+	@Override
 	public boolean deleteNode(MapNode node) {
 		boolean removed = nodes.remove(node);
 		if (removed) {
@@ -185,6 +194,7 @@ public abstract class AbstractMap implements MotifMap {
 		return removed;
 	}
 	
+	@Override
 	public boolean deleteEdge(MapNode node1,MapNode node2) {
 		//edges.stream().filter(e -> e.equals(node1,node2)).forEach(e -> edges.remove(e));
 		MapEdge edge = edgeConstructor.get();
@@ -192,14 +202,17 @@ public abstract class AbstractMap implements MotifMap {
 		return edges.remove(edge);
 	}
 	
+	@Override
 	public int getNodesSize() {
 		return nodes.size();
 	}
 	
+	@Override
 	public int getEdgesSize() {
 		return edges.size();
 	}
 	
+	@Override
 	public MapNode createNode() {
 		MapNode newNode = new MapNode(this,String.format("n_%d", nodeCounter));
 		nodeCounter++;
@@ -207,6 +220,7 @@ public abstract class AbstractMap implements MotifMap {
 		return newNode;
 	}
 	
+	@Override
 	public MapEdge createEdge(MapNode node1,MapNode node2) {
 		MapEdge newEdge = edgeConstructor.get();
 		newEdge.setNodes(node1, node2);
@@ -216,8 +230,19 @@ public abstract class AbstractMap implements MotifMap {
 			throw new DuplicateEdgeException(this,newEdge);
 	}
 	
+	@Override
 	public boolean hasNode(MapNode node) {
 		return nodes.contains(node);
+	}
+	
+	@Override
+	public MapNode getNodeVarEquals(String varName, Value value) {
+		for (MapNode n : nodes) {
+			if (n.getStore().hasLocalVariable(varName) &&
+					n.getStore().getLocalVariable(varName).getValue().equals(value))
+				return n;
+		}
+		throw new NodeNotFoundException(this, varName + "=" + value.toString());
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -38,7 +38,7 @@ public class MessageWritable implements Writable {
 	}
 
 	@Override
-	public String getString() {
+	public String getContent() {
 		return message;
 	}
 

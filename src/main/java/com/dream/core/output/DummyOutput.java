@@ -10,4 +10,7 @@ public class DummyOutput implements Output {
 
 	public void write(Writable out) {}
 
+	@Override
+	public void write(String topic, Writable out) {}
+
 }

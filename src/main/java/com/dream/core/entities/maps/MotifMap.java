@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 
 import com.dream.core.Entity;
 import com.dream.core.entities.AbstractMotif;
+import com.dream.core.expressions.values.Value;
 
 /**
  * @author Alessandro Maggi
@@ -48,5 +49,7 @@ public interface MotifMap {
 	public MapProperty<?> getProperty(String property);
 	
 	public JSONObject getJSONDescriptor();
+
+	public MapNode getNodeVarEquals(String varName, Value value);
 	
 }
