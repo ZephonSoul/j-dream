@@ -52,5 +52,9 @@ public class DeleteMapNode extends AbstractOperation {
 		return (op instanceof DeleteMapNode) &&
 				((DeleteMapNode)op).getMapNode().equals(mapNode);
 	}
+	
+	public String toString() {
+		return String.format("rmNode(%s)",mapNode.toString());
+	}
 
 }

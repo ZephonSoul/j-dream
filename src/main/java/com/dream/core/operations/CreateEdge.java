@@ -48,6 +48,7 @@ public class CreateEdge extends AbstractOperation {
 
 	@Override
 	public void execute() {
+		//TODO: add chained operations
 		node1.getActual().getMap().deleteEdge(
 				node1.getActual(), node2.getActual());
 	}

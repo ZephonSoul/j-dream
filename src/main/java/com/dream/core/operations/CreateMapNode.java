@@ -16,16 +16,16 @@ import com.dream.core.entities.AbstractMotif;
  */
 public class CreateMapNode extends AbstractOperation {
 
-	protected Instance<Entity> scope;
+	protected Instance<Entity> mapScope;
 	protected MapNodeRef newMapNode;
 	protected Operation chainedOperation;
 	
 	public CreateMapNode(
-			Instance<Entity> entity,
+			Instance<Entity> mapScope,
 			MapNodeRef newMapNode,
 			Operation chainedOperation) {
 		
-		this.scope = entity;
+		this.mapScope = mapScope;
 		this.newMapNode = newMapNode;
 		this.chainedOperation = chainedOperation;
 	}
@@ -40,7 +40,7 @@ public class CreateMapNode extends AbstractOperation {
 			Instance<I> actual) {
 		
 		return new CreateMapNode(
-				bindInstance(scope,reference,actual),
+				bindInstance(mapScope,reference,actual),
 				newMapNode,
 				chainedOperation.bindInstance(reference, actual));
 	}
@@ -57,13 +57,13 @@ public class CreateMapNode extends AbstractOperation {
 
 	@Override
 	public void execute() {
-		AbstractMotif motif = (AbstractMotif) scope.getActual();
+		AbstractMotif motif = (AbstractMotif) mapScope.getActual();
 		if (motif instanceof AbstractMotif) {
-			chainedOperation.bindInstance(newMapNode,new MapNodeActual(motif.createMapNode()));
-			chainedOperation.evaluateOperands();
-			chainedOperation.execute();
+			Operation boundOps = chainedOperation.bindInstance(newMapNode,new MapNodeActual(motif.createMapNode()));
+			boundOps.evaluateOperands();
+			boundOps.execute();
 		} else
-			throw new IllegalScopeException(scope.getActual(),this.toString());
+			throw new IllegalScopeException(mapScope.getActual(),this.toString());
 	}
 
 	@Override
@@ -75,10 +75,10 @@ public class CreateMapNode extends AbstractOperation {
 	public String toString() {
 		String output = "";
 		if (newMapNode == null)
-			output = String.format("CreateMapNode(%s)", scope.toString());
+			output = String.format("addNode(%s)", mapScope.toString());
 		else
-			output = String.format("CreateMapNode(%s,%s)", 
-					scope.toString(),
+			output = String.format("addNode(%s,%s)", 
+					mapScope.toString(),
 					newMapNode.toString());
 		if (!chainedOperation.equals(Skip.getInstance()))
 			output += String.format("[%s]", chainedOperation.toString());

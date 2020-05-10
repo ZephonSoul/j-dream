@@ -56,7 +56,7 @@ public class IfThenElse extends AbstractOperation {
 	public <I> Operation bindInstance(
 			Instance<I> reference,
 			Instance<I> actual) {
-		
+
 		return new IfThenElse(
 				condition.bindInstance(reference, actual),
 				thenOperation.bindInstance(reference, actual),
@@ -91,6 +91,16 @@ public class IfThenElse extends AbstractOperation {
 		condition.clearCache();
 		thenOperation.clearCache();
 		elseOperation.clearCache();
+	}
+
+	public String toString() {
+		String elseBranch = "";
+		if (!(elseOperation instanceof Skip))
+			elseBranch = String.format(" ELSE [%s]", elseOperation.toString());
+		return String.format("IF (%s) [%s]%s",
+				condition.toString(),
+				thenOperation.toString(),
+				elseBranch);
 	}
 
 }

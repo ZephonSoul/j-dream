@@ -5,6 +5,7 @@ package com.dream.core.entities.maps.predefined;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,7 @@ public class ArrayMap extends AbstractMap {
 			ArrayList<MapNode> nodes,
 			Map<Entity, MapNode> mapping) {
 
-		super(owner, null, nodes.stream().collect(Collectors.toSet()), mapping, null);
+		super(owner, null, nodes.stream().collect(Collectors.toSet()), mapping, new HashSet<>());
 		this.nodes = nodes;
 		properties.put(
 				"head", 
@@ -125,7 +126,6 @@ public class ArrayMap extends AbstractMap {
 	public JSONObject getJSONDescriptor() {
 		JSONObject descriptor = new JSONObject();
 		descriptor.put("type", this.getClass().getSimpleName());
-		descriptor.put("owner", owner.toString());
 
 		JSONArray nodesDescriptor = new JSONArray();
 		for (int i=0; i<nodes.size(); i++) {

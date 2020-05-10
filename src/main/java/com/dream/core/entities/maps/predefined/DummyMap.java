@@ -146,7 +146,6 @@ public class DummyMap implements MotifMap {
 	public JSONObject getJSONDescriptor() {
 		JSONObject descriptor = new JSONObject();
 		descriptor.put("type", this.getClass().getSimpleName());
-		descriptor.put("owner", owner.toString());
 		descriptor.put("node", node.getJSONDescriptor());
 		
 		return descriptor;

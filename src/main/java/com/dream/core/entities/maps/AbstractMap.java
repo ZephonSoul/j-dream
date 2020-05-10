@@ -249,7 +249,6 @@ public abstract class AbstractMap implements MotifMap {
 	public JSONObject getJSONDescriptor() {
 		JSONObject descriptor = new JSONObject();
 		descriptor.put("type", this.getClass().getSimpleName());
-		descriptor.put("owner", owner.toString());
 		
 		JSONArray nodesDescriptor = new JSONArray();
 		nodes.stream().forEach(n -> nodesDescriptor.add(n.getJSONDescriptor()));

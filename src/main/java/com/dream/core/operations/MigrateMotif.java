@@ -34,10 +34,10 @@ public class MigrateMotif extends Migrate {
 	
 	@Override
 	public void execute() {
-		AbstractMotif motif = (AbstractMotif)targetParent.getActual();
-		if (motif instanceof AbstractMotif) {
+		AbstractMotif targetMotif = (AbstractMotif)targetParent.getActual();
+		if (targetMotif instanceof AbstractMotif) {
 			super.execute();
-			motif.setEntityPosition(
+			targetMotif.setEntityPosition(
 					entity.getActual(), targetNode.getActual());
 		} else
 			throw new IncompatibleEntityReference(targetParent, this.toString());

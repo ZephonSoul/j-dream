@@ -122,7 +122,7 @@ implements CoordinatingEntity {
 	public void addToPool(Entity entity) {
 		entity.setParent(this);
 		this.pool.add(entity);
-		clearCache();
+		//clearCache();
 	}
 
 	/**
@@ -136,7 +136,7 @@ implements CoordinatingEntity {
 					this.pool.add(e);
 				}
 				);
-		clearCache();
+		//clearCache();
 	}
 
 	/**
@@ -151,7 +151,7 @@ implements CoordinatingEntity {
 		} catch (OrphanEntityException e) {
 			// entity already orphan
 		}
-		clearCache();
+		//clearCache();
 	}
 	
 	public boolean hosts(Entity entity) {

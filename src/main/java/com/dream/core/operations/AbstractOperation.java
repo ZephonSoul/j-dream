@@ -21,8 +21,8 @@ public abstract class AbstractOperation implements Operation {
 
 	@Override
 	public <I> Operation bindInstance(
-			Instance<I> componentReference, 
-			Instance<I> actualComponent) {
+			Instance<I> reference, 
+			Instance<I> actual) {
 		return this;
 	}
 	

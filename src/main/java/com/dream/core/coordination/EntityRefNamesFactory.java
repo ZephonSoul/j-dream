@@ -25,4 +25,8 @@ public class EntityRefNamesFactory {
 		return String.format("c%d",variableIdCounter);
 	}
 	
+	public synchronized void reset() {
+		variableIdCounter = 0;
+	}
+	
 }

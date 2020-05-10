@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
 
+import com.dream.core.coordination.EntityRefNamesFactory;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.entities.CoordinatingEntity;
 import com.dream.core.entities.NoAdmissibleInteractionsException;
@@ -173,11 +174,13 @@ public class ExecutionEngine implements Runnable {
 
 				output.write(MessageWritable.write("Expanded rule:\n",rootEntity.getExpandedRule()));
 
+				output.write(MessageWritable.write("Performed interaction = ",interaction));
+
 //				opsSet.executeOperations(snapshotSemantics);
 				opsSet = executeOperations(opsSet,snapshotSemantics);
 				output.write(MessageWritable.write("Performed operations = ",opsSet));
 				interaction.trigger();
-				output.write(MessageWritable.write("Performed interaction = ",interaction));
+//				output.write(MessageWritable.write("Performed interaction = ",interaction));
 				state.put("interaction",interaction.toString());
 				state.put("operations",opsSet.toString());
 				state.put("new_state", rootEntity.getJSONDescriptor());
@@ -197,6 +200,7 @@ public class ExecutionEngine implements Runnable {
 					}
 				}
 				rootEntity.clearCache();
+				EntityRefNamesFactory.getInstance().reset();
 			} catch (NoAdmissibleInteractionsException e) {
 				output.write(MessageWritable.write(e.getMessage()));
 				break;

@@ -62,5 +62,12 @@ public class AbsValue extends AbstractExpression {
 	public <I> Expression bindInstance(Instance<I> reference, Instance<I> actual) {
 		return new AbsValue(operand.bindInstance(reference, actual));
 	}
+	
+	public String toString() {
+		if (value != null)
+			return value.toString();
+		else
+			return String.format("|%s|", operand.toString());
+	}
 
 }

@@ -3,8 +3,10 @@
  */
 package com.dream.test.benchmarks;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.dream.ExecutionEngine;
 import com.dream.core.Entity;
@@ -14,6 +16,7 @@ import com.dream.core.coordination.Declaration;
 import com.dream.core.coordination.EntityInstanceActual;
 import com.dream.core.coordination.EntityInstanceRef;
 import com.dream.core.coordination.FOILRule;
+import com.dream.core.coordination.Interaction;
 import com.dream.core.coordination.Quantifier;
 import com.dream.core.coordination.Rule;
 import com.dream.core.coordination.Term;
@@ -23,9 +26,11 @@ import com.dream.core.coordination.constraints.Not;
 import com.dream.core.coordination.constraints.Or;
 import com.dream.core.coordination.constraints.PortReference;
 import com.dream.core.coordination.constraints.predicates.Equals;
+import com.dream.core.coordination.constraints.predicates.GreaterThan;
 import com.dream.core.coordination.constraints.predicates.LessThan;
 import com.dream.core.coordination.constraints.predicates.SameInstance;
 import com.dream.core.coordination.maps.MapNodeForEntity;
+import com.dream.core.coordination.maps.MapNodeInstance;
 import com.dream.core.coordination.maps.MapNodeRef;
 import com.dream.core.coordination.maps.MapNodeVarEquals;
 import com.dream.core.entities.AbstractMotif;
@@ -34,14 +39,19 @@ import com.dream.core.entities.maps.predefined.DummyMap;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.AbsValue;
 import com.dream.core.expressions.Difference;
+import com.dream.core.expressions.MapSize;
 import com.dream.core.expressions.PoolSize;
 import com.dream.core.expressions.Sum;
 import com.dream.core.expressions.VariableMapProperty;
 import com.dream.core.expressions.VariableRef;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.operations.Assign;
+import com.dream.core.operations.CreateInstance;
 import com.dream.core.operations.CreateMapNode;
 import com.dream.core.operations.DeleteInstance;
+import com.dream.core.operations.DeleteMapNode;
+import com.dream.core.operations.ForLoop;
+import com.dream.core.operations.IfThenElse;
 import com.dream.core.operations.MigrateMotif;
 import com.dream.core.operations.OperationsSequence;
 import com.dream.core.output.ConsoleOutput;
@@ -87,7 +97,7 @@ public class Platooning extends AbstractMotif {
 				new TypeRestriction(Platoon.class));
 		EntityInstanceRef p2 = allPlatoons2.getVariable();
 		MapNodeRef n = new MapNodeRef();
-		Rule r1 = 
+		Rule join1 = 
 				new FOILRule(allPlatoons1, 
 						new FOILRule(allCars,
 								new FOILRule(allPlatoons2,
@@ -139,7 +149,7 @@ public class Platooning extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		p2 = allPlatoons2.getVariable();
-		Rule r2 = 
+		Rule join2 = 
 				new FOILRule(allPlatoons1,
 						new FOILRule(allCars,
 								new FOILRule(allPlatoons2,
@@ -167,7 +177,13 @@ public class Platooning extends AbstractMotif {
 										)
 								)
 						);
-
+		
+		// \forall p1 : Platoon {
+		//		\forall c: Car {
+		//			c.initSplit |> TRUE ->	create(p2 : Platoon, this, @(p1)) [
+		//										createNode(n,p2)[ migrate(c,p2,n) ];
+		//										FOR (i \in [@(c).index+1,mapSize(p)-1]) DO [createNode(p2)]];
+		//									deleteNode(@(c))}}
 		allPlatoons1 = new Declaration(
 				Quantifier.FORALL,
 				scope,
@@ -178,34 +194,159 @@ public class Platooning extends AbstractMotif {
 				p1,
 				new TypeRestriction(Car.class));
 		c = allCars.getVariable();
-		Rule r0 = 
+		p2 = new EntityInstanceRef();
+		n = new MapNodeRef();
+		VariableRef i = new VariableRef("i");
+		Rule split1 = 
 				new FOILRule(allPlatoons1,
 						new FOILRule(allCars,
-								new Term(new Not(
+								new ConjunctiveTerm(
+										new PortReference(c,"initSplit"),
+										new OperationsSequence(
+												new CreateInstance(
+														Platoon.class, 
+														new EntityInstanceActual(this), 
+														p2, 
+														new OperationsSequence(
+																new CreateMapNode(
+																		p2, 
+																		n, 
+																		new MigrateMotif(
+																				c, 
+																				p2, 
+																				n)),
+																new ForLoop(
+																		i,
+																		new Sum(
+																				new NumberValue(1),
+																				new VariableRef(new MapNodeForEntity(c),"index")),
+																		new MapSize(p1),
+																		new CreateMapNode(p2))
+																)
+														)
+												,new DeleteMapNode(new MapNodeForEntity(c))
+												)
+										)));
+		
+		// \forall p : Platoon {
+		//		\forall c1 : p.Car {
+		//			\forall c2 : p.Car {
+		//				c1.initSplit |> c2.ackSplit \/ @(c1).index >= @(c2).index
+		//				-> IF (@(c1).index < @(c2).index) THEN [@(c2).newLeader := c1.id]
+		allPlatoons1 = new Declaration(
+				Quantifier.FORALL,
+				scope,
+				new TypeRestriction(Platoon.class));
+		p1 = allPlatoons1.getVariable();
+		Declaration allCars1 = new Declaration(
+				Quantifier.FORALL,
+				p1,
+				new TypeRestriction(Car.class));
+		EntityInstanceRef c1 = allCars1.getVariable();
+		Declaration allCars2 = new Declaration(
+				Quantifier.FORALL,
+				p1,
+				new TypeRestriction(Car.class));
+		EntityInstanceRef c2 = allCars2.getVariable();
+		Rule split2 = new FOILRule(allPlatoons1,
+				new FOILRule(allCars1,
+						new FOILRule(allCars2,
+								new ConjunctiveTerm(
+										new PortReference(c1,"initSplit"),
 										new Or(
-												new PortReference(c,"initSplit"),
-												new PortReference(c,"ackSplit"))
+												new PortReference(c2,"ackSplit"),
+												new Not(
+												new LessThan(
+														new VariableRef(new MapNodeForEntity(c1),"index"),
+														new VariableRef(new MapNodeForEntity(c2),"index")
+														))
+												),
+										new IfThenElse(
+												new LessThan(
+														new VariableRef(new MapNodeForEntity(c1),"index"),
+														new VariableRef(new MapNodeForEntity(c2),"index")
+														), 
+												new Assign(
+														new VariableRef(new MapNodeForEntity(c2),"newLeader"),
+														new VariableRef(c1,"id")
+														))
 										))));
-		setRule(new AndRule(r1,r2,r0));
+		
+		// \forall p : Platoon {
+		//		\forall c1 : p.Car {
+		//			\exists c2 : p.Car {
+		//				c1.ackSplit |> c2.initSplit /\ @(c2).index <= @(c1).index
+		allPlatoons1 = new Declaration(
+				Quantifier.FORALL,
+				scope,
+				new TypeRestriction(Platoon.class));
+		p1 = allPlatoons1.getVariable();
+		allCars1 = new Declaration(
+				Quantifier.FORALL,
+				p1,
+				new TypeRestriction(Car.class));
+		c1 = allCars1.getVariable();
+		allCars2 = new Declaration(
+				Quantifier.EXISTS,
+				p1,
+				new TypeRestriction(Car.class));
+		c2 = allCars2.getVariable();
+		Rule split2b = new FOILRule(allPlatoons1,
+				new FOILRule(allCars1,
+						new FOILRule(allCars2,
+								new ConjunctiveTerm(
+										new PortReference(c1,"ackSplit"),
+										new And(
+												new PortReference(c2,"initSplit"),
+												new Not(
+												new GreaterThan(
+														new VariableRef(new MapNodeForEntity(c2),"index"),
+														new VariableRef(new MapNodeForEntity(c1),"index")
+														))
+												)
+										))));
+
+//		allPlatoons1 = new Declaration(
+//				Quantifier.FORALL,
+//				scope,
+//				new TypeRestriction(Platoon.class));
+//		p1 = allPlatoons1.getVariable();
+//		allCars = new Declaration(
+//				Quantifier.FORALL,
+//				p1,
+//				new TypeRestriction(Car.class));
+//		c = allCars.getVariable();
+//		Rule r0 = 
+//				new FOILRule(allPlatoons1,
+//						new FOILRule(allCars,
+//								new Term(new Not(new PortReference(c,"ackSplit")))));
+//										new Or(
+//												new PortReference(c,"initSplit"),
+//												new PortReference(c,"ackSplit"))
+//										))));
+		setRule(new AndRule(join1,join2,split1,split2,split2b));
 
 	}
 
 
 	public static void main(String[] args) {
-		Car[] cars1 = {new Car(2.0,2.0),new Car(0.0, 1.5)};
-		AbstractMotif platoon1 = new Platoon(null,cars1);
-		Car[] cars2 = {new Car(4.0,1.0),new Car(2.5, 1.0)};
-		AbstractMotif platoon2 = new Platoon(null,cars2);
+		
+//		Car[] cars1 = {new Car(2.0,2.0),new Car(0.0, 1.5)};
+//		AbstractMotif platoon1 = new Platoon(null,cars1);
+//		Car[] cars2 = {new Car(4.0,1.0),new Car(2.5, 1.0)};
+//		AbstractMotif platoon2 = new Platoon(null,cars2);
+		Car[] cars3 = {new Car(0.0,2.0),new Car(3.0, 1.0),new Car(5.0, 1.5)};
+		AbstractMotif platoon3 = new Platoon(null,cars3);
 		Set<Entity> pool = new HashSet<>();
-		pool.add(platoon1);
-		pool.add(platoon2);
+//		pool.add(platoon1);
+//		pool.add(platoon2);
+		pool.add(platoon3);
 		Platooning road = new Platooning(pool,1);
 
 		System.out.println(road.getJSONDescriptor());
 		System.out.println(road.getExpandedRule().toString());
-		//		System.out.println(road.getExpandedRule().sat(new Interaction()));
-		//		System.out.println(Arrays.stream(road.getAllowedInteractions()).map(Interaction::toString).collect(Collectors.joining("\n")));
-
+		System.out.println(road.getExpandedRule().sat(new Interaction()));
+		System.out.println(Arrays.stream(road.getAllowedInteractions()).map(Interaction::toString).collect(Collectors.joining("\n")));
 
 		ExecutionEngine ex = new ExecutionEngine(road,GreedyStrategy.getInstance(),new ConsoleOutput(),false,2);
 		ex.setSnapshotSemantics(true);

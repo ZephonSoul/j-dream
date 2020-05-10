@@ -1,12 +1,12 @@
 package com.dream.core.expressions;
 
+import com.dream.core.Bindable;
 import com.dream.core.Instance;
 import com.dream.core.coordination.EntityInstance;
 import com.dream.core.coordination.EntityInstanceActual;
-import com.dream.core.coordination.TypeRestriction;
 import com.dream.core.coordination.UnboundReferenceException;
 import com.dream.core.coordination.constraints.IncompatibleEntityReference;
-import com.dream.core.entities.CoordinatingEntity;
+import com.dream.core.entities.AbstractMotif;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.expressions.values.Value;
 
@@ -14,47 +14,23 @@ import com.dream.core.expressions.values.Value;
  * @author Alessandro Maggi
  *
  */
-public class PoolSize extends AbstractExpression {
+public class MapSize extends AbstractExpression {
 
-	public static final int BASE_CODE = 31;
+	public static final int BASE_CODE = 565;
 
 	private EntityInstance entityInstance;
-	private TypeRestriction type;
 	private Value value;
 
 	/**
 	 * @param entityInstance
-	 * @param type
-	 * @param value
 	 */
-	public PoolSize(
-			EntityInstance entityInstance, 
-			TypeRestriction type, 
-			Value value) {
+	public MapSize(EntityInstance entityInstance) {
 
 		this.entityInstance = entityInstance;
-		this.type = type;
-		this.value = value;
-	}
-
-	/**
-	 * @param entityInstance
-	 * @param type
-	 */
-	public PoolSize(EntityInstance entityInstance, TypeRestriction type) {
-		this(entityInstance,type,null);
-	}
-
-	public PoolSize(EntityInstance entityInstance) {
-		this(entityInstance,TypeRestriction.anyType());
 	}
 
 	public EntityInstance getEntityInstance() {
 		return entityInstance;
-	}
-
-	public TypeRestriction getTypeRestriction() {
-		return type;
 	}
 
 	@Override
@@ -62,22 +38,19 @@ public class PoolSize extends AbstractExpression {
 			Instance<I> reference,
 			Instance<I> actual) {
 
-		if (this.entityInstance.equals(reference))
-			return new PoolSize(
-					(EntityInstance) actual,
-					type,
-					value);
-		else
+		if (entityInstance instanceof EntityInstanceActual)
 			return this;
+		else
+			return new MapSize(Bindable.bindInstance(entityInstance,reference,actual));
 	}
 
 	@Override
 	public void evaluateOperands() {
 		if (value == null) 
 			if (entityInstance instanceof EntityInstanceActual) {
-				if (entityInstance.getActual() instanceof CoordinatingEntity) {
-					int size = ((CoordinatingEntity) entityInstance.getActual()).getPoolSize();
-					value = new NumberValue(size);
+				AbstractMotif motif = (AbstractMotif) entityInstance.getActual();
+				if (motif instanceof AbstractMotif) {
+					value = new NumberValue(motif.getMap().getNodesSize());
 				} else
 					throw new IncompatibleEntityReference(entityInstance,this.toString());
 			}
@@ -97,15 +70,13 @@ public class PoolSize extends AbstractExpression {
 
 	@Override
 	public boolean equals(Expression ex) {
-		return (ex instanceof PoolSize)
-				&& entityInstance.equals(((PoolSize) ex).getEntityInstance())
-				&& type.equals(((PoolSize) ex).getTypeRestriction());
+		return (ex instanceof MapSize)
+				&& entityInstance.equals(((MapSize) ex).getEntityInstance());
 	}
 
 	public String toString() {
-		return String.format("size(%s.C:%s)",
-				entityInstance.toString(),
-				type.toString()
+		return String.format("mapSize(%s)",
+				entityInstance.toString()
 				);
 	}
 
@@ -116,7 +87,7 @@ public class PoolSize extends AbstractExpression {
 
 	@Override
 	public int hashCode() {
-		return BASE_CODE + entityInstance.hashCode() + type.hashCode();
+		return BASE_CODE + entityInstance.hashCode();
 	}
 
 }

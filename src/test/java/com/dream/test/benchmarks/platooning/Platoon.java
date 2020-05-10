@@ -60,6 +60,10 @@ public class Platoon extends AbstractMotif {
 		setRule(newRule(this));
 	}
 	
+	public Platoon() {
+		this(null,new Entity[0]);
+	}
+	
 	@Override
 	public MapNode createMapNode() {
 		MapNode newNode = super.createMapNode();

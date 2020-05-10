@@ -114,7 +114,7 @@ public class FOILRule implements Rule {
 	public <I> Rule bindInstance(Instance<I> reference, Instance<I> actual) {
 		ruleInstance = new FOILRule(
 				declaration.bindInstance(reference, actual),
-				rule
+				rule.bindInstance(reference,actual)
 				);
 		ruleInstance = ruleInstance.expandDeclarations().bindInstance(reference, actual);
 		return ruleInstance;

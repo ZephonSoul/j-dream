@@ -75,12 +75,13 @@ public class CreateInstance extends AbstractOperation {
 			try {
 				Entity newActualInstance = entityType.getConstructor().newInstance();
 				parentEntity.addToPool(newActualInstance);
+				Operation boundOps = chainedOperation;
 				if (newInstance instanceof EntityInstanceRef) {
-					chainedOperation = chainedOperation.bindInstance(
+					boundOps = chainedOperation.bindInstance(
 							newInstance, new EntityInstanceActual(newActualInstance));
-					chainedOperation.evaluateOperands();
+					boundOps.evaluateOperands();
 				}
-				chainedOperation.execute();
+				boundOps.execute();
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException e) {
 				// TODO Auto-generated catch block
@@ -138,8 +139,8 @@ public class CreateInstance extends AbstractOperation {
 		if (newInstance != null) 
 			preamble = String.format("%s = ",newInstance.getName());
 		if (!(chainedOperation instanceof Skip))
-			chainedOpsString = String.format(";%s", chainedOperation.toString());
-		return String.format("%screate(%s.%s)%s",
+			chainedOpsString = String.format("%s", chainedOperation.toString());
+		return String.format("%screate(%s.%s)[%s]",
 				preamble,
 				parentInstance.toString(),
 				entityType.getSimpleName(),

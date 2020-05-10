@@ -97,9 +97,25 @@ public class AbstractMotif extends AbstractCoordinatingEntity implements Coordin
 		} else
 			return false;
 	}
+	
+	public boolean removeEntityMapping(Entity entity) {
+		if (pool.contains(entity)) {
+			return map.getNodeForEntity(entity).removeEntity(entity);
+		} else
+			return false;
+	}
 
 	public MapProperty<?> getMapProperty(String property) {
 		return map.getProperty(property);
+	}
+	
+	/**
+	 * @param entity 
+	 */
+	@Override
+	public void removeFromPool(Entity entity) {
+		removeEntityMapping(entity);
+		super.removeFromPool(entity);
 	}
 	
 	@SuppressWarnings("unchecked")

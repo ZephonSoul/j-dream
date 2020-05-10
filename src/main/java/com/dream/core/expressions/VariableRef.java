@@ -25,6 +25,10 @@ extends AbstractExpression implements Instance<LocalVariable> {
 		this.scope = scope;
 		this.localVariableName = localVariableName;
 	}
+	
+	public VariableRef(String localVariableName) {
+		this(null, localVariableName);
+	}
 
 	@Override
 	public boolean equals(Expression ex) {
@@ -49,23 +53,6 @@ extends AbstractExpression implements Instance<LocalVariable> {
 			else
 				throw new IllegalScopeException(actual,this.toString());
 		}
-//		if (this.scope.equals(reference)) {
-//			StoringInstance actualInstance = (StoringInstance) actual.getActual();
-//			if (actualInstance instanceof StoringInstance)
-//				return new VariableActual(actualInstance.getVariable(localVariableName));
-//			else
-//				throw new IllegalScopeException(actual,this.toString());
-//			if (actual.getActual() instanceof InteractingEntity)
-//				lvar = ((InteractingEntity)actual.getActual()).getStore()
-//				.getLocalVariable(localVariableName);
-//			else if (actual.getActual() instanceof MapNode)
-//				lvar = ((MapNode)actual.getActual()).getStore()
-//				.getLocalVariable(localVariableName);
-//			else
-//				throw new IncompatibleEntityReference(actual, this.toString());
-//			return new VariableActual(lvar);
-//		} else
-//			return this;
 	}
 
 	/**
@@ -84,7 +71,10 @@ extends AbstractExpression implements Instance<LocalVariable> {
 
 	@Override
 	public String toString() {
-		return String.format("%s.%s",scope.toString(),localVariableName);
+		String scopeString = "";
+		if (scope != null)
+			scopeString = scope.toString() + ".";
+		return String.format("%s%s",scopeString,localVariableName);
 	}
 
 	@Override

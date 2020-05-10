@@ -57,5 +57,12 @@ public class MapNodeVarEquals implements MapNodeInstance, Bindable<MapNodeInstan
 		}
 		return new MapNodeActual(node);
 	}
+	
+	public String toString() {
+		return String.format("%s.MapNode(%s=%s)",
+				scope.toString(),
+				varName,
+				testVarExpression.toString());
+	}
 
 }
