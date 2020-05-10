@@ -117,5 +117,10 @@ public class AtLeast extends AbstractFormula implements Formula {
 				types,
 				portName);
 	}
+	
+	@Override
+	public void evaluateExpressions() {
+		minInstances.evaluateOperands();
+	}
 
 }

@@ -34,5 +34,10 @@ public abstract class AbstractUnaryFormula extends AbstractFormula implements Fo
 	public int hashCode() {
 		return this.getClass().hashCode() + subformula.hashCode();
 	}
+	
+	@Override
+	public void evaluateExpressions() {
+		subformula.evaluateExpressions();
+	}
 
 }

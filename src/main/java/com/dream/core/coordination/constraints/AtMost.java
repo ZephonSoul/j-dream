@@ -117,5 +117,10 @@ public class AtMost extends AbstractFormula implements Formula {
 				types,
 				portName);
 	}
+	
+	@Override
+	public void evaluateExpressions() {
+		maxInstances.evaluateOperands();
+	}
 
 }

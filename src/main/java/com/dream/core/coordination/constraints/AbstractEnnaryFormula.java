@@ -48,6 +48,11 @@ public abstract class AbstractEnnaryFormula extends AbstractFormula implements F
 		return this.getClass().hashCode() +
 				subformulas.stream().mapToInt(Formula::hashCode).sum();
 	}
+	
+	@Override
+	public void evaluateExpressions() {
+		subformulas.stream().forEach(Formula::evaluateExpressions);
+	}
 
 	@Override
 	public abstract boolean sat(Interaction i);

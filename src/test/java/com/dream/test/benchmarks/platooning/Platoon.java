@@ -16,8 +16,10 @@ import com.dream.core.coordination.Quantifier;
 import com.dream.core.coordination.Rule;
 import com.dream.core.coordination.Term;
 import com.dream.core.coordination.TypeRestriction;
+import com.dream.core.coordination.constraints.And;
 import com.dream.core.coordination.constraints.Not;
 import com.dream.core.coordination.constraints.PortReference;
+import com.dream.core.coordination.constraints.predicates.CurrentControlLocation;
 import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.GreaterThan;
 import com.dream.core.entities.AbstractMotif;
@@ -52,18 +54,18 @@ public class Platoon extends AbstractMotif {
 			n.getStore().setVarValue("newLeader", new NumberValue(-1));
 			n.getStore().setVarValue("newLoc", new NumberValue(-1));
 		}
-		
+
 		for (int i=0; i<initialPool.length; i++)
 			setEntityPosition(initialPool[i], ((ArrayMap)map).getNodeAtIndex(i));
-		
+
 
 		setRule(newRule(this));
 	}
-	
+
 	public Platoon() {
 		this(null,new Entity[0]);
 	}
-	
+
 	@Override
 	public MapNode createMapNode() {
 		MapNode newNode = super.createMapNode();
@@ -103,7 +105,8 @@ public class Platoon extends AbstractMotif {
 						new GreaterThan(new PoolSize(scope),new NumberValue(1))
 						)
 				);
-		// \forall c:Car {c.speed != head(this).speed |> true -> c.speed := leader(this).speed}
+		// \forall c:Car {c.speed != head(this).speed /\ cloc(c,cruising) |> true 
+		//					-> c.speed := leader(this).speed}
 		allCars = new Declaration(
 				Quantifier.FORALL,
 				scope,
@@ -111,10 +114,13 @@ public class Platoon extends AbstractMotif {
 		c = allCars.getVariable();
 		Rule r3 = new FOILRule(allCars,
 				new ConjunctiveTerm(
-						new Not(new Equals(
-								new VariableRef(c, "speed"),
-								new VariableMapProperty(
-										scope,"head","speed"))),
+						new And(
+								new Not(new Equals(
+										new VariableRef(c, "speed"),
+										new VariableMapProperty(
+												scope,"head","speed"))),
+								new CurrentControlLocation(c,"cruising")
+								),
 						new Assign(
 								new VariableRef(c, "speed"),
 								new VariableMapProperty(

@@ -25,7 +25,7 @@ import com.dream.core.output.Output;
  */
 public class ExecutionEngine implements Runnable {
 	
-	public final static String version = "0.1.2";
+	public final static String version = "0.1.3";
 
 	private CoordinatingEntity rootEntity;
 	private ExecutionStrategy executionStrategy;
@@ -145,7 +145,7 @@ public class ExecutionEngine implements Runnable {
 		jsonOut.write("engine", getJSONDescriptor());
 		
 		System.out.println("============================");
-		System.out.println("DReAM execution engine 0.1.1");
+		System.out.println("DReAM execution engine "+version);
 		System.out.println("============================");
 		System.out.println(String.format("interactive: %s\nMax cycles: %s\nSnapshot semantics: %s\nExec strategy: %s",
 				interactive,

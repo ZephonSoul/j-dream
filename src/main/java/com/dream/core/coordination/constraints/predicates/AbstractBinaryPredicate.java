@@ -57,6 +57,12 @@ public abstract class AbstractBinaryPredicate extends AbstractPredicate implemen
 				term1.hashCode() + term2.hashCode();
 	}
 	
+	@Override
+	public void evaluateExpressions() {
+		term1.evaluateOperands();
+		term2.evaluateOperands();
+	}
+	
 	protected abstract boolean testValues(Value v1, Value v2);
 	
 	protected abstract String getPredicateSymbol();

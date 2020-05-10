@@ -15,6 +15,14 @@ public class ControlLocation {
 		this.name = name;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
+	public boolean hasName(String name) {
+		return this.name.equals(name);
+	}
+	
 	public String toString() {
 		return name;
 	}

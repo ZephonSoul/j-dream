@@ -17,5 +17,8 @@ public abstract class AbstractPredicate implements Predicate {
 	public boolean equals(Object o) {
 		return (o instanceof Predicate)	&& equals((Predicate) o);
 	}
+	
+	@Override
+	public void evaluateExpressions() {}
 
 }

@@ -55,6 +55,11 @@ public abstract class AbstractEnnaryPredicate extends AbstractPredicate implemen
 				Arrays.stream(terms).mapToInt(Expression::hashCode).sum();
 	}
 	
+	@Override
+	public void evaluateExpressions() {
+		Arrays.stream(terms).forEach(Expression::evaluateOperands);
+	}
+	
 	protected abstract boolean testValues(Value v1, Value v2);
 	
 	protected abstract String getPredicateSymbol();

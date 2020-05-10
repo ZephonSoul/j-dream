@@ -16,4 +16,6 @@ public interface Formula extends Bindable<Formula>, Caching {
 	
 	public boolean equals(Formula formula);
 	
+	public void evaluateExpressions();
+	
 }

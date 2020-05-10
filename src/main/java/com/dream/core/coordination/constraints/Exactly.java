@@ -117,5 +117,12 @@ public class Exactly extends AbstractFormula implements Formula {
 				types,
 				portName);
 	}
+	
+
+	
+	@Override
+	public void evaluateExpressions() {
+		nInstances.evaluateOperands();
+	}
 
 }

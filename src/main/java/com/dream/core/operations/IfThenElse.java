@@ -66,6 +66,7 @@ public class IfThenElse extends AbstractOperation {
 
 	@Override
 	public void evaluateOperands() {
+		condition.evaluateExpressions();
 		thenOperation.evaluateOperands();
 		elseOperation.evaluateOperands();
 	}

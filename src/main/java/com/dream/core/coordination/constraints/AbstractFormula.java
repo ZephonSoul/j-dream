@@ -19,4 +19,7 @@ public abstract class AbstractFormula implements Formula {
 		throw new RuntimeSatisfactionCheckException(this);
 	}
 	
+	@Override
+	public void evaluateExpressions() {}
+	
 }

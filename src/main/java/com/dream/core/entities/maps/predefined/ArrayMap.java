@@ -84,6 +84,11 @@ public class ArrayMap extends AbstractMap {
 		else
 			return index;
 	}
+	
+	private void refreshIndexes() {
+		for (int i=0; i<nodes.size(); i++)
+			nodes.get(i).getVariable("index").setValue(new NumberValue(i));
+	}
 
 	@Override
 	public boolean isEdge(MapNode node1,MapNode node2) {
@@ -94,6 +99,7 @@ public class ArrayMap extends AbstractMap {
 	public boolean deleteNode(MapNode node) {
 		boolean removed = super.deleteNode(node);
 		removed = nodes.remove(node) & removed;
+		refreshIndexes();
 		return removed;
 	}
 
