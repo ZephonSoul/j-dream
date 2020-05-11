@@ -1,7 +1,7 @@
 package com.dream.test.benchmarks.platooning;
 
 import java.util.Arrays;
-
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import com.dream.ExecutionEngine;
@@ -22,6 +22,7 @@ import com.dream.core.coordination.constraints.PortReference;
 import com.dream.core.coordination.constraints.predicates.CurrentControlLocation;
 import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.GreaterThan;
+import com.dream.core.coordination.maps.MapPropertyRef;
 import com.dream.core.entities.AbstractMotif;
 import com.dream.core.entities.maps.MapNode;
 import com.dream.core.entities.maps.predefined.ArrayMap;
@@ -29,11 +30,11 @@ import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.PoolSize;
 import com.dream.core.expressions.RandomNumber;
 import com.dream.core.expressions.Sum;
-import com.dream.core.expressions.VariableMapProperty;
 import com.dream.core.expressions.VariableRef;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.operations.Assign;
 import com.dream.core.output.ConsoleOutput;
+import com.dream.core.localstore.StoringInstance;
 
 /**
  * @author Alessandro Maggi
@@ -48,7 +49,14 @@ public class Platoon extends AbstractMotif {
 	public Platoon(Entity parent, Entity[] initialPool) {
 		super(	parent, 
 				Arrays.stream(initialPool).collect(Collectors.toSet()), 
-				new ArrayMap(initialPool.length)
+				new ArrayMap(
+						initialPool.length,
+						Comparator.comparing(
+								e -> ((NumberValue) 
+										((StoringInstance)
+												e).getVariable("pos").getValue()).getRawValue().doubleValue()
+								)
+						)
 				);
 		map.setOwner(this);
 		for (MapNode n : map.getNodes()) {
@@ -108,7 +116,8 @@ public class Platoon extends AbstractMotif {
 								new GreaterThan(new PoolSize(scope),new NumberValue(1)),
 								new Not(
 										new Equals(
-												new VariableMapProperty(scope,"head","id"),
+												new VariableRef(new MapPropertyRef<>(scope,"head"),"id"),
+//												new VariableMapProperty(scope,"head","id"),
 												new VariableRef(c,"id")
 												)
 										),
@@ -129,18 +138,23 @@ public class Platoon extends AbstractMotif {
 		Rule r3 = new FOILRule(allCars,
 				new ConjunctiveTerm(
 						new And(
-								new Not(new Equals(
-										new VariableRef(c, "speed"),
-										new VariableMapProperty(
-												scope,"head","speed"))),
+								new Not(
+										new Equals(
+												new VariableRef(c, "speed"),
+												new VariableRef(new MapPropertyRef<>(scope,"head"),"speed")
+												//new VariableMapProperty(scope,"head","speed"))
+												)
+										),
 								new CurrentControlLocation(c,"cruising")
 								),
 						new Assign(
 								new VariableRef(c, "speed"),
-								new VariableMapProperty(
-										scope,"head","speed"))
+								new VariableRef(new MapPropertyRef<>(scope,"head"),"speed")
+								//new VariableMapProperty(scope,"head","speed")
+								)
 						)
 				);
+
 		return new AndRule(r1,r2,r3);
 	}
 

@@ -16,6 +16,7 @@ import com.dream.core.expressions.values.Value;
  * @author Alessandro Maggi
  *
  */
+@Deprecated
 public class VariableMapProperty extends AbstractExpression {
 
 	private EntityInstance scope;

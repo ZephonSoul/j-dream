@@ -20,16 +20,16 @@ import com.dream.core.expressions.values.Value;
  *
  */
 public abstract class AbstractMap implements MotifMap {
-	
+
 	protected AbstractMotif owner;
 	protected Set<MapNode> nodes;
 	protected Map<Entity,MapNode> mapping;
 	protected Set<MapEdge> edges;
 	protected Map<String,MapProperty<?>> properties;
 	protected int nodeCounter;
-	
+
 	protected final Supplier<? extends MapEdge> edgeConstructor;
-	
+
 	public AbstractMap(
 			AbstractMotif owner,
 			Supplier<? extends MapEdge> edgeConstructor,
@@ -37,7 +37,7 @@ public abstract class AbstractMap implements MotifMap {
 			Map<Entity,MapNode> mapping,
 			Set<MapEdge> edges,
 			Map<String,MapProperty<?>> properties) {
-		
+
 		this.owner = owner;
 		this.nodes = nodes;
 		setNodesMap();
@@ -45,17 +45,17 @@ public abstract class AbstractMap implements MotifMap {
 		this.edges = edges;
 		this.properties = properties;
 		this.nodeCounter = nodes.size();
-		
+
 		this.edgeConstructor = edgeConstructor;
 	}
-	
+
 	public AbstractMap(
 			AbstractMotif owner,
 			Supplier<? extends MapEdge> edgeConstructor,
 			Set<MapNode> nodes,
 			Map<Entity,MapNode> mapping,
 			Set<MapEdge> edges) {
-		
+
 		this(
 				owner,
 				edgeConstructor,
@@ -68,7 +68,7 @@ public abstract class AbstractMap implements MotifMap {
 	public AbstractMap(
 			AbstractMotif owner,
 			Supplier<? extends MapEdge> edgeConstructor) {
-		
+
 		this(
 				owner,
 				edgeConstructor,
@@ -78,9 +78,9 @@ public abstract class AbstractMap implements MotifMap {
 				new HashMap<>()
 				);
 	}
-	
+
 	public AbstractMap(Supplier<? extends MapEdge> edgeConstructor) {
-		
+
 		this(
 				null,
 				edgeConstructor,
@@ -90,51 +90,51 @@ public abstract class AbstractMap implements MotifMap {
 				new HashMap<>()
 				);
 	}
-	
+
 	public AbstractMotif getOwner() {
 		return owner;
 	}
-	
+
 	public void setOwner(AbstractMotif owner) {
 		this.owner = owner;
 	}
-	
+
 	public void setProperties(Map<String,MapProperty<?>> properties) {
 		this.properties = properties;
 	}
-	
+
 	public Map<String,MapProperty<?>> getProperties() {
 		return properties;
 	}
-	
+
 	@Override
 	public MapProperty<?> getProperty(String property) {
 		return properties.get(property);
 	}
-	
+
 	public Set<MapNode> getNodes() {
 		return nodes;
 	}
-	
+
 	private void setNodesMap() {
 		nodes.stream().forEach(n -> n.setMap(this));
 	}
-	
+
 	public void setNodes(Set<MapNode> nodes) {
 		this.nodes = nodes;
 		setNodesMap();
 	}
-	
+
 	public void setNodes(MapNode... nodes) {
 		this.nodes = Arrays.stream(nodes).collect(Collectors.toSet());
 		setNodesMap();
 	}
-	
+
 	@Override
 	public MapNode getNodeForEntity(Entity entity) {
 		return mapping.get(entity);
 	}
-	
+
 	@Override
 	public void setEntityMapping(Entity entity,MapNode node) {
 		if (nodes.contains(node)) {
@@ -143,26 +143,29 @@ public abstract class AbstractMap implements MotifMap {
 		} else
 			throw new NodeNotFoundException(this, node);
 	}
-	
+
 	@Override
 	public void moveEntity(Entity entity,MapNode node) {
 		if (mapping.containsKey(entity)) {
 			if (nodes.contains(node)) {
-				mapping.get(entity).removeEntity(entity);
-				node.addEntity(entity);
-				mapping.put(entity,node);
+				MapNode oldMapping = mapping.get(entity);
+				if (!oldMapping.equals(node)) {
+					mapping.get(entity).removeEntity(entity);
+					node.addEntity(entity);
+					mapping.put(entity,node);
+				}
 			} else
 				throw new NodeNotFoundException(this, node);
 		} else
 			throw new MappingNotFoundException(this, entity);
 	}
-	
+
 	@Override
 	public boolean existsPath(MapNode node1,MapNode node2) {
 		//TODO: implement path search algorithm
 		return isEdge(node1,node2);
 	}
-	
+
 	@Override
 	public boolean isEdge(MapNode node1,MapNode node2) {
 		for (MapEdge edge : edges)
@@ -170,7 +173,7 @@ public abstract class AbstractMap implements MotifMap {
 				return true;
 		return false;
 	}
-	
+
 	@Override
 	public Set<Entity> getEntitiesForNode(MapNode node) {
 		if (nodes.contains(node))
@@ -178,7 +181,7 @@ public abstract class AbstractMap implements MotifMap {
 		else
 			throw new NodeNotFoundException(this,node);
 	}
-	
+
 	@Override
 	public boolean deleteNode(MapNode node) {
 		boolean removed = nodes.remove(node);
@@ -193,7 +196,7 @@ public abstract class AbstractMap implements MotifMap {
 		}
 		return removed;
 	}
-	
+
 	@Override
 	public boolean deleteEdge(MapNode node1,MapNode node2) {
 		//edges.stream().filter(e -> e.equals(node1,node2)).forEach(e -> edges.remove(e));
@@ -201,17 +204,17 @@ public abstract class AbstractMap implements MotifMap {
 		edge.setNodes(node1, node2);
 		return edges.remove(edge);
 	}
-	
+
 	@Override
 	public int getNodesSize() {
 		return nodes.size();
 	}
-	
+
 	@Override
 	public int getEdgesSize() {
 		return edges.size();
 	}
-	
+
 	@Override
 	public MapNode createNode() {
 		MapNode newNode = new MapNode(this,String.format("n_%d", nodeCounter));
@@ -219,7 +222,7 @@ public abstract class AbstractMap implements MotifMap {
 		nodes.add(newNode);
 		return newNode;
 	}
-	
+
 	@Override
 	public MapEdge createEdge(MapNode node1,MapNode node2) {
 		MapEdge newEdge = edgeConstructor.get();
@@ -229,12 +232,12 @@ public abstract class AbstractMap implements MotifMap {
 		else
 			throw new DuplicateEdgeException(this,newEdge);
 	}
-	
+
 	@Override
 	public boolean hasNode(MapNode node) {
 		return nodes.contains(node);
 	}
-	
+
 	@Override
 	public MapNode getNodeVarEquals(String varName, Value value) {
 		for (MapNode n : nodes) {
@@ -244,20 +247,20 @@ public abstract class AbstractMap implements MotifMap {
 		}
 		throw new NodeNotFoundException(this, varName + "=" + value.toString());
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public JSONObject getJSONDescriptor() {
 		JSONObject descriptor = new JSONObject();
 		descriptor.put("type", this.getClass().getSimpleName());
-		
+
 		JSONArray nodesDescriptor = new JSONArray();
 		nodes.stream().forEach(n -> nodesDescriptor.add(n.getJSONDescriptor()));
 		descriptor.put("nodes", nodesDescriptor);
-		
+
 		JSONArray edgesDescriptor = new JSONArray();
 		edges.stream().forEach(e -> edgesDescriptor.add(e.getJSONDescriptor()));
 		descriptor.put("edges", edgesDescriptor);
-		
+
 		return descriptor;
 	}
 

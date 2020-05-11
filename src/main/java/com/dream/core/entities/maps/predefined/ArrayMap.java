@@ -4,8 +4,10 @@
 package com.dream.core.entities.maps.predefined;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -29,6 +31,7 @@ import com.dream.core.expressions.values.Value;
 public class ArrayMap extends AbstractMap {
 
 	ArrayList<MapNode> nodes;
+	Comparator<Object> ordering;
 
 	/**
 	 * @param owner
@@ -39,29 +42,38 @@ public class ArrayMap extends AbstractMap {
 	public ArrayMap(
 			AbstractMotif owner,
 			ArrayList<MapNode> nodes,
-			Map<Entity, MapNode> mapping) {
+			Map<Entity, MapNode> mapping,
+			Comparator<Object> ordering) {
 
 		super(owner, null, nodes.stream().collect(Collectors.toSet()), mapping, new HashSet<>());
 		this.nodes = nodes;
 		properties.put(
 				"head", 
 				() -> {
-					return nodes.get(0).getMappedEntities().stream().findFirst().get();
-				});
-		properties.put(
-				"tail", 
-				() -> {
-					for (int i=nodes.size()-1; i>=0; i--) {
-						MapNode n = nodes.get(i);
+					MapNode n;
+					for (int i=0; i<nodes.size(); i++) {
+						n = nodes.get(i);
 						if (!n.getMappedEntities().isEmpty())
 							return n.getMappedEntities().stream().findFirst().get();
 					}
 					return null;
 				});
+		properties.put(
+				"tail", 
+				() -> {
+					MapNode n;
+					for (int i=nodes.size()-1; i>=0; i--) {
+						 n = nodes.get(i);
+						if (!n.getMappedEntities().isEmpty())
+							return n.getMappedEntities().stream().findFirst().get();
+					}
+					return null;
+				});
+		this.ordering = ordering;
 	}
 
-	public ArrayMap(int size) {
-		this(null, new ArrayList<>(), new HashMap<>());
+	public ArrayMap(int size,Comparator<Object> ordering) {
+		this(null, new ArrayList<>(), new HashMap<>(),ordering);
 		createNodes(size);
 	}
 
@@ -156,6 +168,22 @@ public class ArrayMap extends AbstractMap {
 			return nodes.get(((NumberValue)value).getRawValue().intValue());
 		else
 			return super.getNodeVarEquals(varName,value);
+	}
+	
+	@Override
+	public void refresh() {
+		List<Entity> entities = owner.getPool().stream().collect(Collectors.toList());
+		
+		// Compensate distortions: more entities than MapNodes
+		int distortion = entities.size() - nodes.size();
+		if (distortion > 0)
+			for (int i=0; i<distortion; i++)
+				owner.createMapNode();
+		
+		entities.sort(ordering.reversed());
+		for (int i=0; i<entities.size(); i++) {
+			moveEntity(entities.get(i), nodes.get(i));
+		}
 	}
 
 }
