@@ -63,7 +63,7 @@ public class ArrayMap extends AbstractMap {
 				() -> {
 					MapNode n;
 					for (int i=nodes.size()-1; i>=0; i--) {
-						 n = nodes.get(i);
+						n = nodes.get(i);
 						if (!n.getMappedEntities().isEmpty())
 							return n.getMappedEntities().stream().findFirst().get();
 					}
@@ -96,7 +96,7 @@ public class ArrayMap extends AbstractMap {
 		else
 			return index;
 	}
-	
+
 	private void refreshIndexes() {
 		for (int i=0; i<nodes.size(); i++)
 			nodes.get(i).getVariable("index").setValue(new NumberValue(i));
@@ -161,7 +161,7 @@ public class ArrayMap extends AbstractMap {
 		for (int i=0;i<size; i++)
 			createNode();
 	}
-	
+
 	@Override
 	public MapNode getNodeVarEquals(String varName, Value value) {
 		if (varName.equals("index") && value instanceof NumberValue)
@@ -169,20 +169,22 @@ public class ArrayMap extends AbstractMap {
 		else
 			return super.getNodeVarEquals(varName,value);
 	}
-	
+
 	@Override
 	public void refresh() {
-		List<Entity> entities = owner.getPool().stream().collect(Collectors.toList());
-		
-		// Compensate distortions: more entities than MapNodes
-		int distortion = entities.size() - nodes.size();
-		if (distortion > 0)
-			for (int i=0; i<distortion; i++)
-				owner.createMapNode();
-		
-		entities.sort(ordering.reversed());
-		for (int i=0; i<entities.size(); i++) {
-			moveEntity(entities.get(i), nodes.get(i));
+		if (ordering != null) {
+			List<Entity> entities = owner.getPool().stream().collect(Collectors.toList());
+
+			// Compensate distortions: more entities than MapNodes
+			int distortion = entities.size() - nodes.size();
+			if (distortion > 0)
+				for (int i=0; i<distortion; i++)
+					owner.createMapNode();
+
+			entities.sort(ordering.reversed());
+			for (int i=0; i<entities.size(); i++) {
+				moveEntity(entities.get(i), nodes.get(i));
+			}
 		}
 	}
 

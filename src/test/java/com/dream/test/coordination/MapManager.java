@@ -49,7 +49,7 @@ public class MapManager extends AbstractMotif {
 		DullComponent c = new DullComponent();
 		Set<Entity> pool = new HashSet<>();
 		pool.add(c);
-		MotifMap map = new ArrayMap(0);
+		MotifMap map = new ArrayMap(0,null);
 		CoordinatingEntity root = new MapManager(null,pool,map);
 		
 		ExecutionEngine ex = new ExecutionEngine(root,GreedyStrategy.getInstance(),new ConsoleOutput(),false,2);
