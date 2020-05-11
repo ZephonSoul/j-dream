@@ -17,10 +17,10 @@ public class CreateInstance extends AbstractOperation {
 
 	final static int BASE_CODE = 1000;
 
-	private Class<? extends Entity> entityType;
-	private Instance<Entity> parentInstance;
-	private EntityInstanceRef newInstance;
-	private Operation chainedOperation;
+	protected Class<? extends Entity> entityType;
+	protected Instance<Entity> parentInstance;
+	protected EntityInstanceRef newInstance;
+	protected Operation chainedOperation;
 
 	public CreateInstance(Class<? extends Entity> entityType, 
 			Instance<Entity> parentInstance, 

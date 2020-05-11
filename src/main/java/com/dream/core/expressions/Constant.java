@@ -58,7 +58,7 @@ public class Constant extends AbstractExpression {
 	}
 
 	@Override
-	protected boolean allOperandsValued() {
+	public boolean allOperandsValued() {
 		return true;
 	}
 

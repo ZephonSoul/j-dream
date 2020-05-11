@@ -98,7 +98,7 @@ public class IfThenElse extends AbstractOperation {
 		String elseBranch = "";
 		if (!(elseOperation instanceof Skip))
 			elseBranch = String.format(" ELSE [%s]", elseOperation.toString());
-		return String.format("IF (%s) [%s]%s",
+		return String.format("IF (%s) THEN [%s]%s",
 				condition.toString(),
 				thenOperation.toString(),
 				elseBranch);

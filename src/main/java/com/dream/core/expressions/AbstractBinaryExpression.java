@@ -62,15 +62,7 @@ public abstract class AbstractBinaryExpression extends AbstractExpression implem
 
 	@Override
 	public Value computeResult() {
-		// check if all operands are integer
-		//		boolean int_operands = 
-		//				(operandValue1.intValue() == (int)operandValue1.doubleValue())
-		//				&& (operandValue2.intValue() == (int)operandValue2.doubleValue());
 		Value result = op(operandValue1,operandValue2);
-		// return integer result if all operands are integer AND the result is integer
-		//		if (int_operands && (result.intValue() == (int)result.doubleValue()))
-		//			return result.intValue();
-		//		else
 		return result;
 	}
 

@@ -54,7 +54,7 @@ public class AbsValue extends AbstractExpression {
 	}
 
 	@Override
-	protected boolean allOperandsValued() {
+	public boolean allOperandsValued() {
 		return value != null;
 	}
 	

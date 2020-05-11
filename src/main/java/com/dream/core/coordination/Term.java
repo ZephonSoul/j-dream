@@ -59,15 +59,6 @@ public class Term implements Rule  {
 			return new OperationsSet();
 	}
 
-//	@Override
-//	public Rule bindEntityReference(
-//			EntityInstanceRef componentReference, 
-//			EntityInstanceActual actualComponent) {
-//
-//		return new Term(constraint.bindInstance(componentReference,actualComponent),
-//				operation.bindInstance(componentReference,actualComponent));
-//	}
-
 	@Override
 	public Rule expandDeclarations() {
 		return this;

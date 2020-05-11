@@ -80,7 +80,7 @@ public class VariableMapProperty extends AbstractExpression {
 	}
 
 	@Override
-	protected boolean allOperandsValued() {
+	public boolean allOperandsValued() {
 		return (variableValue != null);
 	}
 

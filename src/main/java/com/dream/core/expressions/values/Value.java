@@ -10,4 +10,8 @@ public interface Value extends Expression {
 
 	public boolean equals(Value value);
 	
+	public default boolean allOperandsValued() {
+		return true;
+	}
+	
 }

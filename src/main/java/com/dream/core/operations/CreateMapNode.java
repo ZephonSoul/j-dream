@@ -77,9 +77,9 @@ public class CreateMapNode extends AbstractOperation {
 		if (newMapNode == null)
 			output = String.format("addNode(%s)", mapScope.toString());
 		else
-			output = String.format("addNode(%s,%s)", 
-					mapScope.toString(),
-					newMapNode.toString());
+			output = String.format("%s = addNode(%s)", 
+					newMapNode.toString(),
+					mapScope.toString());
 		if (!chainedOperation.equals(Skip.getInstance()))
 			output += String.format("[%s]", chainedOperation.toString());
 		return output;

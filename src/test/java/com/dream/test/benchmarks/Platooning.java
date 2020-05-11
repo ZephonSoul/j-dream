@@ -29,6 +29,7 @@ import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.GreaterThan;
 import com.dream.core.coordination.constraints.predicates.LessThan;
 import com.dream.core.coordination.constraints.predicates.SameInstance;
+import com.dream.core.coordination.maps.MapNodeActual;
 import com.dream.core.coordination.maps.MapNodeForEntity;
 import com.dream.core.coordination.maps.MapNodeInstance;
 import com.dream.core.coordination.maps.MapNodeRef;
@@ -50,6 +51,7 @@ import com.dream.core.expressions.values.Value;
 import com.dream.core.operations.Assign;
 import com.dream.core.operations.CreateInstance;
 import com.dream.core.operations.CreateMapNode;
+import com.dream.core.operations.CreateMotifInstance;
 import com.dream.core.operations.DeleteInstance;
 import com.dream.core.operations.DeleteMapNode;
 import com.dream.core.operations.ForLoop;
@@ -96,44 +98,52 @@ public class Platooning extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		EntityInstanceRef p2 = allPlatoons2.getVariable();
+		Declaration allCarsBis = new Declaration(
+				Quantifier.FORALL,
+				p2,
+				new TypeRestriction(Car.class));
+		EntityInstanceRef cc = allCarsBis.getVariable();
 		MapNodeRef n = new MapNodeRef();
 		// \forall p : Platoon {
 		//		\forall c : p.Car {
 		//			\exists p' : Platoon{ 
-		//				c.initJoin |> p != p' /\ (tail(p').pos - head(p).pos < Delta) 
-		//				-> addNode(p'); c.speed := head(p').speed; 
-		//					@(c).newLeader := head(p').id; @(c).newLoc := mapSize(p')+@(c) }}}
+		//				\forall c' : p'.Car {
+		//					c.initJoin |> p != p' /\ (|tail(p').pos - head(p).pos| < Delta) 
+		//correction		c.initJoin |> p != p' /\ ¬c'.initSplit /\ (0 < tail(p').pos - head(p).pos < Delta) 
+		//					-> addNode(p'); c.speed := head(p').speed; 
+		//						@(c).newLeader := head(p').id; @(c).newLoc := mapSize(p')+@(c) }}}}
 		Rule join1 = 
 				new FOILRule(allPlatoons1, 
 						new FOILRule(allCars,
 								new FOILRule(allPlatoons2,
-										new ConjunctiveTerm(
-												new PortReference(c, "initJoin"), 
-												new And(
-														new Not(new SameInstance(p1,p2)),
-														new LessThan(
-																new AbsValue(
+										new FOILRule(allCarsBis,
+												new ConjunctiveTerm(
+														new PortReference(c, "initJoin"), 
+														new And(
+																new Not(new SameInstance(p1,p2)),
+																new Not(new PortReference(cc,"initSplit")),
+																new LessThan(
+																		new NumberValue(0),
 																		new Difference(
 																				new VariableMapProperty(p2,"tail","pos"),
 																				new VariableMapProperty(p1,"head","pos")
-																				)
-																		),
-																new NumberValue(joinDistance)
+																				),
+																		new NumberValue(joinDistance)
+																		)
+																),
+														new CreateMapNode(p2, n, 
+																new OperationsSequence(
+																		new Assign(new VariableRef(c,"speed"),
+																				new VariableMapProperty(p2,"head","speed")),
+																		new Assign(new VariableRef(new MapNodeForEntity(c),"newLeader"),
+																				new VariableMapProperty(p2,"head","id")),
+																		new Assign(new VariableRef(new MapNodeForEntity(c),"newLoc"),
+																				new Sum(
+																						new MapSize(p2),
+																						new VariableRef(new MapNodeForEntity(c),"index")
+																						)))
 																)
-														),
-												new CreateMapNode(p2, n, 
-														new OperationsSequence(
-																new Assign(new VariableRef(c,"speed"),
-																		new VariableMapProperty(p2,"head","speed")),
-																new Assign(new VariableRef(new MapNodeForEntity(c),"newLeader"),
-																		new VariableMapProperty(p2,"head","id")),
-																new Assign(new VariableRef(new MapNodeForEntity(c),"newLoc"),
-																		new Sum(
-																				new PoolSize(p2),//TODO: replace with MapSize
-																				new VariableRef(new MapNodeForEntity(c),"index")
-																				)))
-														)
-												))));
+														)))));
 
 		allPlatoons1 = new Declaration(
 				Quantifier.FORALL,
@@ -209,9 +219,10 @@ public class Platooning extends AbstractMotif {
 								new ConjunctiveTerm(
 										new PortReference(c,"initSplit"),
 										new OperationsSequence(
-												new CreateInstance(
+												new CreateMotifInstance(
 														Platoon.class, 
-														scope, 
+														scope,
+														new MapNodeActual(((DummyMap)this.map).getNode()),
 														p2, 
 														new OperationsSequence(
 																new CreateMapNode(
@@ -254,7 +265,7 @@ public class Platooning extends AbstractMotif {
 		// \forall p : Platoon {
 		//		\forall c1 : p.Car {
 		//			\forall c2 : p.Car {
-		//				c1.initSplit |> c2.ackSplit \/ @(c1).index >= @(c2).index
+		//				c1.initSplit |> c2.ackSplit \/ (¬(c2.ackSplit) /\ @(c1).index >= @(c2).index)
 		//				-> IF (@(c1).index <= @(c2).index) THEN [
 		//					@(c2).newLeader := c1.id;
 		//					@(c2).newLoc := @(c2).index - @(c1).index]
@@ -266,11 +277,15 @@ public class Platooning extends AbstractMotif {
 										new PortReference(c1,"initSplit"),
 										new Or(
 												new PortReference(c2,"ackSplit"),
-												new Not(
-														new LessThan(
-																new VariableRef(new MapNodeForEntity(c1),"index"),
-																new VariableRef(new MapNodeForEntity(c2),"index")
-																))
+												new And(
+														new Not(new PortReference(c2,"ackSplit")),
+														new Not(
+																new LessThan(
+																		new VariableRef(new MapNodeForEntity(c1),"index"),
+																		new VariableRef(new MapNodeForEntity(c2),"index")
+																		)
+																)
+														)
 												),
 										new IfThenElse(
 												new Not(
@@ -402,27 +417,8 @@ public class Platooning extends AbstractMotif {
 												)
 										))));
 
-		//		allPlatoons1 = new Declaration(
-		//				Quantifier.FORALL,
-		//				scope,
-		//				new TypeRestriction(Platoon.class));
-		//		p1 = allPlatoons1.getVariable();
-		//		allCars = new Declaration(
-		//				Quantifier.FORALL,
-		//				p1,
-		//				new TypeRestriction(Car.class));
-		//		c = allCars.getVariable();
-		//		Rule r0 = 
-		//				new FOILRule(allPlatoons1,
-		//						new FOILRule(allCars,
-		//								new Term(new Not(new PortReference(c,"ackSplit")))));
-		//										new Or(
-		//												new PortReference(c,"initSplit"),
-		//												new PortReference(c,"ackSplit"))
-		//										))));
-
-
-		setRule(new AndRule(join1,join2,split1,split2,split2b,split3));
+		setRule(join1);
+		//setRule(new AndRule(join1,join2,split1,split2,split2b,split3));
 
 	}
 
@@ -433,20 +429,23 @@ public class Platooning extends AbstractMotif {
 		//		AbstractMotif platoon1 = new Platoon(null,cars1);
 		//		Car[] cars2 = {new Car(4.0,1.0),new Car(2.5, 1.0)};
 		//		AbstractMotif platoon2 = new Platoon(null,cars2);
-		Car[] cars3 = {new Car(0.0,2.0),new Car(3.0, 1.0),new Car(5.0, 1.5)};
+		Car[] cars3 = {new Car(4.0, 1.5),new Car(2.0, 1.0),new Car(0.0,2.0)};
 		AbstractMotif platoon3 = new Platoon(null,cars3);
+		Car[] cars4 = {new Car(9.0, 1.5),new Car(7.0, 1.5)};
+		AbstractMotif platoon4 = new Platoon(null,cars4);
 		Set<Entity> pool = new HashSet<>();
 		//		pool.add(platoon1);
 		//		pool.add(platoon2);
 		pool.add(platoon3);
-		Platooning road = new Platooning(pool,1);
+		pool.add(platoon4);
+		Platooning road = new Platooning(pool,2);
 
 		System.out.println(road.getJSONDescriptor());
 		System.out.println(road.getExpandedRule().toString());
-		System.out.println(road.getExpandedRule().sat(new Interaction()));
-		System.out.println(Arrays.stream(road.getAllowedInteractions()).map(Interaction::toString).collect(Collectors.joining("\n")));
+		//		System.out.println(road.getExpandedRule().sat(new Interaction()));
+		//		System.out.println(Arrays.stream(road.getAllowedInteractions()).map(Interaction::toString).collect(Collectors.joining("\n")));
 
-		ExecutionEngine ex = new ExecutionEngine(road,GreedyStrategy.getInstance(),new ConsoleOutput(),false,2);
+		ExecutionEngine ex = new ExecutionEngine(road,GreedyStrategy.getInstance(),new ConsoleOutput(),false,10);
 		ex.setSnapshotSemantics(true);
 		ex.run();
 	}

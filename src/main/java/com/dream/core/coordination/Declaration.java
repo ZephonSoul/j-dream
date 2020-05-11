@@ -184,30 +184,6 @@ public class Declaration implements Bindable<Declaration>, Caching {
 				filterString);
 	}
 
-//	@Override
-//	public Declaration bindEntityReference(
-//			EntityInstanceRef entityReference, 
-//			EntityInstanceActual entityActual) {
-//
-//		if (scope.equals(entityReference))
-//			return new Declaration(
-//					quantifier,
-//					entityActual,
-//					type,
-//					instanceFilter.bindInstance(entityReference, entityActual),
-//					variable
-//					);
-//		else
-//			return new Declaration(
-//					quantifier,
-//					scope,
-//					type,
-//					instanceFilter.bindInstance(entityReference, entityActual),
-//					variable
-//					);
-//
-//	}
-
 	@Override
 	public int hashCode() {
 		return quantifier.hashCode() + scope.hashCode() + type.hashCode() + variable.hashCode();
@@ -220,22 +196,22 @@ public class Declaration implements Bindable<Declaration>, Caching {
 
 	@Override
 	public <I> Declaration bindInstance(Instance<I> reference, Instance<I> actual) {
-		if (scope.equals(reference))
-			return new Declaration(
-					quantifier,
-					(EntityInstance)actual,
-					type,
-					instanceFilter.bindInstance(reference, actual),
-					variable
-					);
-		else
-			return new Declaration(
-					quantifier,
-					scope,
-					type,
-					instanceFilter.bindInstance(reference, actual),
-					variable
-					);
+		//		if (scope.equals(reference))
+		return new Declaration(
+				quantifier,
+				Bindable.bindInstance(scope, reference, actual),
+				type,
+				instanceFilter.bindInstance(reference, actual),
+				variable
+				);
+		//		else
+		//			return new Declaration(
+		//					quantifier,
+		//					scope,
+		//					type,
+		//					instanceFilter.bindInstance(reference, actual),
+		//					variable
+		//					);
 	}
 
 }

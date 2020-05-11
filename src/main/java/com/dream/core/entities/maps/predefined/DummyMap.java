@@ -41,6 +41,10 @@ public class DummyMap implements MotifMap {
 	public DummyMap() {
 		this(null);
 	}
+	
+	public MapNode getNode() {
+		return node;
+	}
 
 	@Override
 	public AbstractMotif getOwner() {

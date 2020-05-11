@@ -16,4 +16,6 @@ public interface Expression extends Bindable<Expression> {
 	public void clearCache();
 	
 	public boolean equals(Expression ex);
+	
+	public boolean allOperandsValued();
 }

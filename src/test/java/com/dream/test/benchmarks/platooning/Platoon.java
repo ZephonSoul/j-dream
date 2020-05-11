@@ -27,6 +27,7 @@ import com.dream.core.entities.maps.MapNode;
 import com.dream.core.entities.maps.predefined.ArrayMap;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.PoolSize;
+import com.dream.core.expressions.RandomNumber;
 import com.dream.core.expressions.Sum;
 import com.dream.core.expressions.VariableMapProperty;
 import com.dream.core.expressions.VariableRef;
@@ -93,7 +94,8 @@ public class Platoon extends AbstractMotif {
 								)
 						)
 				);
-		// \forall c:Car {c.initSplit |> poolSize(this)>1 -> 0}
+		// \forall c:Car {c.initSplit |> 
+		//					poolSize(this)>1 /\ head(this).id != c.id /\ Rand(1) > 0.7 -> 0}
 		allCars = new Declaration(
 				Quantifier.FORALL,
 				scope,
@@ -102,7 +104,19 @@ public class Platoon extends AbstractMotif {
 		Rule r2 = new FOILRule(allCars,
 				new ConjunctiveTerm(
 						new PortReference(c, "initSplit"),
-						new GreaterThan(new PoolSize(scope),new NumberValue(1))
+						new And(
+								new GreaterThan(new PoolSize(scope),new NumberValue(1)),
+								new Not(
+										new Equals(
+												new VariableMapProperty(scope,"head","id"),
+												new VariableRef(c,"id")
+												)
+										),
+								new GreaterThan(
+										new RandomNumber(),
+										new NumberValue(0.7)
+										)
+								)
 						)
 				);
 		// \forall c:Car {c.speed != head(this).speed /\ cloc(c,cruising) |> true 

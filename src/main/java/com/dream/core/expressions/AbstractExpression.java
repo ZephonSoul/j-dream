@@ -32,6 +32,4 @@ public abstract class AbstractExpression implements Expression {
 
 	protected abstract Value computeResult();
 
-	protected abstract boolean allOperandsValued();
-
 }

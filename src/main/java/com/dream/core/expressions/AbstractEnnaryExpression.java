@@ -67,22 +67,6 @@ public abstract class AbstractEnnaryExpression extends AbstractExpression implem
 
 	@Override
 	public Value computeResult() {
-		// check if all parameters are integer
-//		boolean int_operands = true;
-//		for (Value n : operandsValue) {
-//			if (n.intValue() != (int)n.doubleValue()) {
-//				int_operands = false;
-//				break;
-//			}
-//		}
-//		Value result = getNeutralValue();
-//		for (Value n : operandsValue)
-//			result = op(result,n);
-		// return integer result if all params are integer AND the result is integer
-//		if (int_operands && (result.intValue() == (int)result.doubleValue()))
-//			return result.intValue();
-//		else
-//			return result;
 		Value result = operandsValue[0];
 		if (operandsValue.length > 1)
 			for (int i=1; i<operandsValue.length; i++)

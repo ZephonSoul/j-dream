@@ -5,6 +5,7 @@ import com.dream.core.Entity;
 import com.dream.core.Instance;
 import com.dream.core.OrphanEntityException;
 import com.dream.core.entities.CoordinatingEntity;
+import com.dream.core.entities.maps.MappingNotFoundException;
 
 /**
  * @author Alessandro Maggi
@@ -33,7 +34,11 @@ public class DeleteInstance extends AbstractOperation {
 			CoordinatingEntity parent = 
 					(CoordinatingEntity) targetInstance.getActual().getParent();
 			if (parent instanceof CoordinatingEntity)
-				parent.removeFromPool(targetInstance.getActual());
+				try {
+					parent.removeFromPool(targetInstance.getActual());
+				} catch (MappingNotFoundException ex) {
+					//Multiple deletes may leave the entity already unmapped
+				}
 			else
 				throw new IllegalScopeException(parent, this.toString());
 		} catch (OrphanEntityException e) {
