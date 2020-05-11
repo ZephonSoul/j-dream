@@ -6,6 +6,7 @@ package com.dream.core.coordination.maps;
 import com.dream.core.Bindable;
 import com.dream.core.Entity;
 import com.dream.core.Instance;
+import com.dream.core.coordination.UnboundReferenceException;
 import com.dream.core.entities.AbstractMotif;
 import com.dream.core.entities.maps.MapNode;
 import com.dream.core.entities.maps.NodeNotFoundException;
@@ -37,7 +38,7 @@ public class MapNodeVarEquals implements MapNodeInstance, Bindable<MapNodeInstan
 		try {
 			node = ((AbstractMotif) scope.getActual()).getMap().getNodeVarEquals(varName,testVarExpression.eval());
 		} catch (NodeNotFoundException ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
 		return node;
 	}
@@ -50,9 +51,9 @@ public class MapNodeVarEquals implements MapNodeInstance, Bindable<MapNodeInstan
 		try {
 			//TODO: insert check for AbstractMotif instance
 			node = ((AbstractMotif)newScope.getActual()).getMap().getNodeVarEquals(varName,newExpression.eval());
-		} catch (NodeNotFoundException ex) {
-			ex.printStackTrace();
-		} catch (RuntimeException ex) {
+		} catch (NodeNotFoundException | UnboundReferenceException ex) {
+//			ex.printStackTrace();
+//		} catch (UnboundReferenceException ex) {
 			return new MapNodeVarEquals(newScope,varName,newExpression);
 		}
 		return new MapNodeActual(node);

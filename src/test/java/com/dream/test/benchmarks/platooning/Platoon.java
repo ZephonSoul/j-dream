@@ -22,6 +22,7 @@ import com.dream.core.coordination.constraints.PortReference;
 import com.dream.core.coordination.constraints.predicates.CurrentControlLocation;
 import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.GreaterThan;
+import com.dream.core.coordination.constraints.predicates.LessThan;
 import com.dream.core.coordination.maps.MapPropertyRef;
 import com.dream.core.entities.AbstractMotif;
 import com.dream.core.entities.maps.MapNode;
@@ -42,6 +43,8 @@ import com.dream.core.localstore.StoringInstance;
  */
 public class Platoon extends AbstractMotif {
 
+	public static NumberValue splitProb = new NumberValue(0.2);
+	
 	/**
 	 * @param parent
 	 * @param pool
@@ -68,7 +71,7 @@ public class Platoon extends AbstractMotif {
 			setEntityPosition(initialPool[i], ((ArrayMap)map).getNodeAtIndex(i));
 
 
-		setRule(newRule(this));
+		setRule(newRule(this,splitProb));
 	}
 
 	public Platoon() {
@@ -83,7 +86,7 @@ public class Platoon extends AbstractMotif {
 		return newNode;
 	}
 
-	private static Rule newRule(AbstractMotif current) {
+	private static Rule newRule(AbstractMotif current, NumberValue splitProb) {
 		EntityInstanceActual scope = new EntityInstanceActual(current);
 		// \forall c:Car {true -> c.pos := c.pos + c.speed \times \varDelta_t}
 		Declaration allCars = new Declaration(
@@ -121,9 +124,9 @@ public class Platoon extends AbstractMotif {
 												new VariableRef(c,"id")
 												)
 										),
-								new GreaterThan(
+								new LessThan(
 										new RandomNumber(),
-										new NumberValue(0.7)
+										splitProb
 										)
 								)
 						)

@@ -164,8 +164,13 @@ public class ArrayMap extends AbstractMap {
 
 	@Override
 	public MapNode getNodeVarEquals(String varName, Value value) {
-		if (varName.equals("index") && value instanceof NumberValue)
-			return nodes.get(((NumberValue)value).getRawValue().intValue());
+		if (varName.equals("index") && value instanceof NumberValue) {
+			int index = ((NumberValue)value).getRawValue().intValue();
+			if (index >= 0 && index < nodes.size())
+				return nodes.get(index);
+			else
+				return super.getNodeVarEquals(varName,value);
+		}
 		else
 			return super.getNodeVarEquals(varName,value);
 	}

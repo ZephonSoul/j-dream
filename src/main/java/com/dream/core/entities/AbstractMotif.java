@@ -20,7 +20,7 @@ import com.dream.core.entities.maps.MotifMap;
  *
  */
 public class AbstractMotif extends AbstractCoordinatingEntity implements CoordinatingEntity {
-	
+
 	protected MotifMap map;
 
 	/**
@@ -85,11 +85,11 @@ public class AbstractMotif extends AbstractCoordinatingEntity implements Coordin
 	public MapNode getMapNodeForEntity(Entity entity) {
 		return map.getNodeForEntity(entity);
 	}
-	
+
 	public MapNode createMapNode() {
 		return map.createNode();
 	}
-	
+
 	public boolean setEntityPosition(Entity entity,MapNode node) {
 		if (pool.contains(entity) && map.hasNode(node)) {
 			map.setEntityMapping(entity, node);
@@ -97,18 +97,15 @@ public class AbstractMotif extends AbstractCoordinatingEntity implements Coordin
 		} else
 			return false;
 	}
-	
-	public boolean removeEntityMapping(Entity entity) {
-		if (pool.contains(entity)) {
-			return map.getNodeForEntity(entity).removeEntity(entity);
-		} else
-			return false;
+
+	public void removeEntityMapping(Entity entity) {
+		map.removeEntityMapping(entity);
 	}
 
 	public MapProperty<?> getMapProperty(String property) {
 		return map.getProperty(property);
 	}
-	
+
 	/**
 	 * @param entity 
 	 */
@@ -117,7 +114,7 @@ public class AbstractMotif extends AbstractCoordinatingEntity implements Coordin
 		removeEntityMapping(entity);
 		super.removeFromPool(entity);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject getJSONDescriptor() {		

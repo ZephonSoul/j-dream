@@ -98,6 +98,8 @@ public class Platooning extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		EntityInstanceRef p2 = allPlatoons2.getVariable();
+		// force p1 != p2
+		allPlatoons2.setInstanceFilter(new Not(new SameInstance(p1,p2)));
 		Declaration allCarsBis = new Declaration(
 				Quantifier.FORALL,
 				p2,
@@ -122,7 +124,7 @@ public class Platooning extends AbstractMotif {
 												new ConjunctiveTerm(
 														new PortReference(c, "initJoin"), 
 														new And(
-																new Not(new SameInstance(p1,p2)),
+																//new Not(new SameInstance(p1,p2)),
 																new Idle(cc),
 																new CurrentControlLocation(cc, "cruising"),
 																new LessThan(
@@ -167,6 +169,8 @@ public class Platooning extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		p2 = allPlatoons2.getVariable();
+		// force p1 != p2
+		allPlatoons2.setInstanceFilter(new Not(new SameInstance(p1,p2)));
 		// \forall p1 : Platoon {
 		//		\forall c : Car {
 		//			\exists p2 : Platoon {
@@ -186,7 +190,7 @@ public class Platooning extends AbstractMotif {
 												new OperationsSequence(
 														new MigrateMotif(
 																c, 
-																p2, 
+																p2,
 																new MapNodeVarEquals(
 																		p2,
 																		"index",
@@ -420,6 +424,8 @@ public class Platooning extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		p2 = allPlatoons2.getVariable();
+		// force p1 != p2
+		allPlatoons2.setInstanceFilter(new Not(new SameInstance(p1,p2)));
 		// \forall p1 : Platoon {
 		//		\forall c : p.Car {
 		//			\exists p2 : Platoon{ 

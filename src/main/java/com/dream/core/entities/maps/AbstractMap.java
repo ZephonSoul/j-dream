@@ -143,6 +143,14 @@ public abstract class AbstractMap implements MotifMap {
 		} else
 			throw new NodeNotFoundException(this, node);
 	}
+	
+	@Override
+	public void removeEntityMapping(Entity entity) {
+		if (mapping.containsKey(entity)) {
+			mapping.get(entity).removeEntity(entity);
+			mapping.remove(entity);
+		}
+	}
 
 	@Override
 	public void moveEntity(Entity entity,MapNode node) {

@@ -164,5 +164,10 @@ public class DummyMap implements MotifMap {
 			throw new NodeNotFoundException(this, varName + "=" + value.toString());
 	}
 
+	@Override
+	public void removeEntityMapping(Entity entity) {
+		node.removeEntity(entity);
+	}
+
 
 }

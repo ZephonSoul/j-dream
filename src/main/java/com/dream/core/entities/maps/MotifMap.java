@@ -24,6 +24,8 @@ public interface MotifMap {
 	
 	public void setEntityMapping(Entity entity,MapNode node);
 	
+	public void removeEntityMapping(Entity entity);
+	
 	public void moveEntity(Entity entity,MapNode node);
 	
 	public boolean existsPath(MapNode node1,MapNode node2);
