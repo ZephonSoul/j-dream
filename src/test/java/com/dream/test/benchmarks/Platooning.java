@@ -25,6 +25,7 @@ import com.dream.core.coordination.constraints.And;
 import com.dream.core.coordination.constraints.Not;
 import com.dream.core.coordination.constraints.Or;
 import com.dream.core.coordination.constraints.PortReference;
+import com.dream.core.coordination.constraints.predicates.CurrentControlLocation;
 import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.GreaterThan;
 import com.dream.core.coordination.constraints.predicates.LessThan;
@@ -109,7 +110,7 @@ public class Platooning extends AbstractMotif {
 		//			\exists p' : Platoon{ 
 		//				\forall c' : p'.Car {
 		//					c.initJoin |> p != p' /\ (|tail(p').pos - head(p).pos| < Delta) 
-		//correction		c.initJoin |> p != p' /\ ¬c'.initSplit /\ (0 < tail(p').pos - head(p).pos < Delta) 
+		//correction		c.initJoin |> p != p' /\ ¬c'.initSplit /\ c'.cruising /\ (0 < tail(p').pos - head(p).pos < Delta) 
 		//					-> addNode(p'); c.speed := head(p').speed; 
 		//						@(c).newLeader := head(p').id; @(c).newLoc := mapSize(p')+@(c) }}}}
 		Rule join1 = 
@@ -122,6 +123,8 @@ public class Platooning extends AbstractMotif {
 														new And(
 																new Not(new SameInstance(p1,p2)),
 																new Not(new PortReference(cc,"initSplit")),
+																//new Not(new PortReference(cc,"finishJoin")),
+																new CurrentControlLocation(cc, "cruising"),
 																new LessThan(
 																		new NumberValue(0),
 																		new Difference(
@@ -265,7 +268,7 @@ public class Platooning extends AbstractMotif {
 		// \forall p : Platoon {
 		//		\forall c1 : p.Car {
 		//			\forall c2 : p.Car {
-		//				c1.initSplit |> c2.ackSplit \/ (¬(c2.ackSplit) /\ @(c1).index >= @(c2).index)
+		//				c1.initSplit |> c1=c2 \/ c2.ackSplit \/ (¬(c2.initSplit) /\ @(c1).index > @(c2).index)
 		//				-> IF (@(c1).index <= @(c2).index) THEN [
 		//					@(c2).newLeader := c1.id;
 		//					@(c2).newLoc := @(c2).index - @(c1).index]
@@ -276,14 +279,13 @@ public class Platooning extends AbstractMotif {
 								new ConjunctiveTerm(
 										new PortReference(c1,"initSplit"),
 										new Or(
+												new SameInstance(c1,c2),
 												new PortReference(c2,"ackSplit"),
 												new And(
-														new Not(new PortReference(c2,"ackSplit")),
-														new Not(
-																new LessThan(
-																		new VariableRef(new MapNodeForEntity(c1),"index"),
-																		new VariableRef(new MapNodeForEntity(c2),"index")
-																		)
+														new Not(new PortReference(c2,"initSplit")),
+														new GreaterThan(
+																new VariableRef(new MapNodeForEntity(c1),"index"),
+																new VariableRef(new MapNodeForEntity(c2),"index")
 																)
 														)
 												),
@@ -417,18 +419,18 @@ public class Platooning extends AbstractMotif {
 												)
 										))));
 
-		setRule(join1);
-		//setRule(new AndRule(join1,join2,split1,split2,split2b,split3));
+		//setRule(join1);
+		setRule(new AndRule(join1,join2,split1,split2,split2b,split3));
 
 	}
 
 
 	public static void main(String[] args) {
 
-		//		Car[] cars1 = {new Car(2.0,2.0),new Car(0.0, 1.5)};
-		//		AbstractMotif platoon1 = new Platoon(null,cars1);
-		//		Car[] cars2 = {new Car(4.0,1.0),new Car(2.5, 1.0)};
-		//		AbstractMotif platoon2 = new Platoon(null,cars2);
+		//Car[] cars1 = {new Car(2.0,2.0)};
+		//AbstractMotif platoon1 = new Platoon(null,cars1);
+		//Car[] cars2 = {new Car(4.0,1.0)};
+		//AbstractMotif platoon2 = new Platoon(null,cars2);
 		Car[] cars3 = {new Car(4.0, 1.5),new Car(2.0, 1.0),new Car(0.0,2.0)};
 		AbstractMotif platoon3 = new Platoon(null,cars3);
 		Car[] cars4 = {new Car(9.0, 1.5),new Car(7.0, 1.5)};
@@ -443,9 +445,9 @@ public class Platooning extends AbstractMotif {
 		System.out.println(road.getJSONDescriptor());
 		System.out.println(road.getExpandedRule().toString());
 		//		System.out.println(road.getExpandedRule().sat(new Interaction()));
-		//		System.out.println(Arrays.stream(road.getAllowedInteractions()).map(Interaction::toString).collect(Collectors.joining("\n")));
+		//System.out.println(Arrays.stream(road.getAllowedInteractions()).map(Interaction::toString).collect(Collectors.joining("\n")));
 
-		ExecutionEngine ex = new ExecutionEngine(road,GreedyStrategy.getInstance(),new ConsoleOutput(),false,10);
+		ExecutionEngine ex = new ExecutionEngine(road,GreedyStrategy.getInstance(),new ConsoleOutput(),false,20);
 		ex.setSnapshotSemantics(true);
 		ex.run();
 	}

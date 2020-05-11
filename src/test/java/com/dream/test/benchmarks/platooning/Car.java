@@ -48,7 +48,7 @@ public class Car extends AbstractComponent {
 				new Port("initSplit"), 
 				new Port("ackSplit"), 
 				new Port("closeSplit"), 
-				new Port("initJoin"), 
+				new Port("initJoin"),
 				new Port("finishJoin")};
 		return ports;
 	}

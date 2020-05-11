@@ -54,21 +54,8 @@ public class FOILRule implements Rule {
 						.collect(Collectors.toSet()));
 			break;
 		}
-		return ruleInstance;
+		return ruleInstance.expandDeclarations();
 	}
-
-//	@Override
-//	public Rule bindEntityReference(
-//			EntityInstanceRef componentReference,
-//			EntityInstanceActual actualComponent) {
-//
-//		ruleInstance = new FOILRule(
-//				declaration.bindEntityReference(componentReference, actualComponent),
-//				rule
-//				);
-//		ruleInstance = ruleInstance.expandDeclarations().bindInstance(componentReference, actualComponent);
-//		return ruleInstance;
-//	}
 
 	@Override
 	public boolean sat(Interaction i) {
@@ -112,12 +99,10 @@ public class FOILRule implements Rule {
 
 	@Override
 	public <I> Rule bindInstance(Instance<I> reference, Instance<I> actual) {
-		ruleInstance = new FOILRule(
+		return new FOILRule(
 				declaration.bindInstance(reference, actual),
 				rule.bindInstance(reference,actual)
 				);
-		ruleInstance = ruleInstance.expandDeclarations();//.bindInstance(reference, actual);
-		return ruleInstance;
 	}
 
 }
