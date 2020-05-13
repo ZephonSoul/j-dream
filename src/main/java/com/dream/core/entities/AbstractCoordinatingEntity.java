@@ -244,11 +244,11 @@ implements CoordinatingEntity {
 		boolean sat = false;
 		long startTime = System.nanoTime();
 		long timeCap = 30000000000L;
-		boolean fallback = false;
+		boolean fallbackUsed = false;
 		do {
-			if (!fallback && (System.nanoTime() - startTime >= timeCap)) {
+			if (!fallbackUsed && (System.nanoTime() - startTime >= timeCap)) {
 				// fallback, try empty interaction if searching is taking too long
-				fallback = true;
+				fallbackUsed = true;
 				interaction = new Interaction();
 				System.out.println(String.format("WARNING: timecap of %d s reached in %s! Attempting fallback interaction {}", 
 						timeCap/1000000000,toString()));

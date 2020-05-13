@@ -2,6 +2,7 @@ package com.dream.test.benchmarks.platooning;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import com.dream.ExecutionEngine;
@@ -30,7 +31,9 @@ import com.dream.core.coordination.maps.MapNodeForEntity;
 import com.dream.core.coordination.maps.MapPropertyRef;
 import com.dream.core.entities.AbstractMotif;
 import com.dream.core.entities.maps.MapNode;
+import com.dream.core.entities.maps.MapProperty;
 import com.dream.core.entities.maps.predefined.ArrayMap;
+import com.dream.core.entities.maps.predefined.GraphMap;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.PoolSize;
 import com.dream.core.expressions.RandomNumber;
@@ -45,46 +48,63 @@ import com.dream.core.localstore.StoringInstance;
  * @author Alessandro Maggi
  *
  */
-public class PlatoonOrig extends AbstractMotif {
+public class Platoon2 extends AbstractMotif {
 
 	/**
 	 * @param parent
 	 * @param pool
 	 */
-	public PlatoonOrig(Entity parent, Entity[] initialPool) {
+	public Platoon2(Entity parent, Entity[] initialPool) {
 		super(	parent, 
 				Arrays.stream(initialPool).collect(Collectors.toSet()), 
-				new ArrayMap(
-						initialPool.length,
-						Comparator.comparing(
-								e -> ((NumberValue) 
-										((StoringInstance)
-												e).getVariable("pos").getValue()).getRawValue().doubleValue()
-								)
-						)
-				);
+				new GraphMap(null));
 		map.setOwner(this);
-		for (MapNode n : map.getNodes()) {
-			n.getStore().setVarValue("newLeader", new NumberValue(-1));
-			n.getStore().setVarValue("newLoc", new NumberValue(-1));
-		}
-
-		for (int i=0; i<initialPool.length; i++)
-			setEntityPosition(initialPool[i], ((ArrayMap)map).getNodeAtIndex(i));
+		HashMap<String,MapProperty<?>> properties = new HashMap<>();
+		properties.put("head",
+				(map) -> {
+					NumberValue maxPos = null;
+					Entity head = null;
+					for (Entity e : map.getOwner().getPool()) {
+						NumberValue pos = (NumberValue) ((StoringInstance)e).getVariable("pos").getValue();
+						if (maxPos == null || pos.greaterThan(maxPos)) {
+							maxPos = pos;
+							head = e;
+						}
+					}
+					return head;					
+				});
+		properties.put("tail",
+				(map) -> {
+					NumberValue minPos = null;
+					Entity tail = null;
+					for (Entity e : map.getOwner().getPool()) {
+						NumberValue pos = (NumberValue) ((StoringInstance)e).getVariable("pos").getValue();
+						if (minPos==null || pos.lessThan(minPos)) {
+							minPos = pos;
+							tail = e;
+						}
+					}
+					return tail;		
+				});
+		((GraphMap)map).setProperties(properties);
+		pool.stream().forEach(e -> {
+			MapNode n = createMapNode();
+			setEntityPosition(e, n);
+		});
 
 
 		setRule(newRule(this));
 	}
 
-	public PlatoonOrig() {
+	public Platoon2() {
 		this(null,new Entity[0]);
 	}
 
 	@Override
 	public MapNode createMapNode() {
 		MapNode newNode = super.createMapNode();
-		newNode.getStore().setVarValue("newLeader", new NumberValue(-1));
-		newNode.getStore().setVarValue("newLoc", new NumberValue(-1));
+		newNode.setVariable("newLeader", new NumberValue(-1));
+		newNode.setVariable("newLoc", new NumberValue(-1));
 		return newNode;
 	}
 
@@ -292,7 +312,7 @@ public class PlatoonOrig extends AbstractMotif {
 	 */
 	public static void main(String[] args) {
 		Car[] cars = {new Car(0.0, 1.5), new Car(2.0,2.0)};//, new Car(5,1)};
-		AbstractMotif platoon = new PlatoonOrig(null,cars);
+		AbstractMotif platoon = new Platoon(null,cars);
 		System.out.println(platoon.getJSONDescriptor());
 		System.out.println(platoon.getExpandedRule().toString());
 		System.out.println(Arrays.stream(platoon.getAllowedInteractions()).map(Interaction::toString).collect(Collectors.joining("\n")));

@@ -174,5 +174,8 @@ public class DummyMap implements MotifMap {
 		return false;
 	}
 
+	@Override
+	public void addProperty(String propertyName, MapProperty<?> property) {}
+
 
 }

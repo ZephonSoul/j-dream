@@ -117,6 +117,11 @@ public abstract class AbstractMap implements MotifMap {
 	public boolean hasProperty(String property) {
 		return properties.containsKey(property);
 	}
+	
+	@Override
+	public void addProperty(String propertyName, MapProperty<?> property) {
+		properties.put(propertyName,property);
+	}
 
 	public Set<MapNode> getNodes() {
 		return nodes;

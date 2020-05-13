@@ -80,9 +80,9 @@ public class MapNode implements StoringInstance {
 
 	@Override
 	public String toString() {
-		if (map != null && map.getOwner() != null)
-			return String.format("%s.%s", map.getOwner().toString(),name);
-		else
+//		if (map != null && map.getOwner() != null)
+//			return String.format("%s.%s", map.getOwner().toString(),name);
+//		else
 			return name;
 	}
 

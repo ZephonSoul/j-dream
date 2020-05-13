@@ -43,6 +43,7 @@ public class GraphMap extends AbstractMap implements MotifMap {
 			Supplier<? extends MapEdge> edgeConstructor) {
 		
 		super(owner,edgeConstructor);
+		owner.createMapNode();
 	}
 	
 	/**

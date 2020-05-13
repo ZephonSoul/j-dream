@@ -88,7 +88,7 @@ public class LocalVariable {
 	public String getInstanceName() {
 		String name = this.name;
 		if (owner != null)
-			name += "[" + owner.toString() + "]";
+			name = owner.toString() + "." + name;
 		return name;
 	}
 

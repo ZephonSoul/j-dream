@@ -1,10 +1,8 @@
-package com.dream.test.benchmarks.platooning;
+package com.dream.test.benchmarks.platooning2;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.stream.Collectors;
 
-import com.dream.ExecutionEngine;
 import com.dream.core.Entity;
 import com.dream.core.coordination.AndRule;
 import com.dream.core.coordination.ConjunctiveTerm;
@@ -24,21 +22,17 @@ import com.dream.core.coordination.constraints.PortReference;
 import com.dream.core.coordination.constraints.predicates.CurrentControlLocation;
 import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.GreaterThan;
-import com.dream.core.coordination.constraints.predicates.LessThan;
 import com.dream.core.coordination.constraints.predicates.SameInstance;
-import com.dream.core.coordination.maps.MapNodeForEntity;
 import com.dream.core.coordination.maps.MapPropertyRef;
 import com.dream.core.entities.AbstractMotif;
 import com.dream.core.entities.maps.MapNode;
-import com.dream.core.entities.maps.predefined.ArrayMap;
-import com.dream.core.exec.GreedyStrategy;
+import com.dream.core.entities.maps.predefined.GraphMap;
+import com.dream.core.expressions.InstanceIdentifier;
 import com.dream.core.expressions.PoolSize;
-import com.dream.core.expressions.RandomNumber;
 import com.dream.core.expressions.Sum;
 import com.dream.core.expressions.VariableRef;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.operations.Assign;
-import com.dream.core.output.ConsoleOutput;
 import com.dream.core.localstore.StoringInstance;
 
 /**
@@ -54,38 +48,48 @@ public class Platoon extends AbstractMotif {
 	public Platoon(Entity parent, Entity[] initialPool) {
 		super(	parent, 
 				Arrays.stream(initialPool).collect(Collectors.toSet()), 
-				new ArrayMap(
-						initialPool.length,
-						Comparator.comparing(
-								e -> ((NumberValue) 
-										((StoringInstance)
-												e).getVariable("pos").getValue()).getRawValue().doubleValue()
-								)
-						)
+				new GraphMap(null)
 				);
 		map.setOwner(this);
-		for (MapNode n : map.getNodes()) {
-			n.getStore().setVarValue("newLeader", new NumberValue(-1));
-			n.getStore().setVarValue("newLoc", new NumberValue(-1));
-		}
-
-		for (int i=0; i<initialPool.length; i++)
-			setEntityPosition(initialPool[i], ((ArrayMap)map).getNodeAtIndex(i));
-
+		MapNode node = createMapNode();
+		Arrays.stream(initialPool).forEach(e -> setEntityPosition(e,  node));
+		
+		map.addProperty("leader",
+				(map) -> {
+					NumberValue maxPos = null;
+					Entity head = null;
+					for (Entity e : map.getOwner().getPool()) {
+						NumberValue pos = (NumberValue) ((StoringInstance)e).getVariable("pos").getValue();
+						if (maxPos == null || pos.greaterThan(maxPos)) {
+							maxPos = pos;
+							head = e;
+						}
+					}
+					return head;					
+				});
+		map.addProperty("tail",
+				(map) -> {
+					NumberValue minPos = null;
+					Entity tail = null;
+					for (Entity e : map.getOwner().getPool()) {
+						NumberValue pos = (NumberValue) ((StoringInstance)e).getVariable("pos").getValue();
+						if (minPos==null || pos.lessThan(minPos)) {
+							minPos = pos;
+							tail = e;
+						}
+					}
+					return tail;		
+				});
+		map.addProperty("root",
+				(map) -> map.getNodes().stream().findAny().get()
+				);
+		
 
 		setRule(newRule(this));
 	}
 
 	public Platoon() {
 		this(null,new Entity[0]);
-	}
-
-	@Override
-	public MapNode createMapNode() {
-		MapNode newNode = super.createMapNode();
-		newNode.getStore().setVarValue("newLeader", new NumberValue(-1));
-		newNode.getStore().setVarValue("newLoc", new NumberValue(-1));
-		return newNode;
 	}
 
 	private static Rule newRule(AbstractMotif current) {
@@ -108,7 +112,7 @@ public class Platoon extends AbstractMotif {
 						)
 				);
 		// \forall c:Car {c.initSplit |> 
-		//					poolSize(this)>1 /\ head(this).id != c.id -> 0}
+		//					poolSize(this)>1 /\ leader(this).id != c.id -> 0}
 		allCars = new Declaration(
 				Quantifier.FORALL,
 				scope,
@@ -121,14 +125,14 @@ public class Platoon extends AbstractMotif {
 								new GreaterThan(new PoolSize(scope),new NumberValue(1)),
 								new Not(
 										new Equals(
-												new VariableRef(new MapPropertyRef<>(scope,"head"),"id"),
-												new VariableRef(c,"id")
+												new VariableRef(new MapPropertyRef<>(scope,"leader"),"id"),
+												new InstanceIdentifier(c)
 												)
 										)
 								)
 						)
 				);
-		// \forall c:Car {c.speed != head(this).speed /\ cloc(c,cruising) |> true 
+		// \forall c:Car {c.speed != leader(this).speed /\ cloc(c,cruising) |> true 
 		//					-> c.speed := leader(this).speed}
 		allCars = new Declaration(
 				Quantifier.FORALL,
@@ -141,16 +145,14 @@ public class Platoon extends AbstractMotif {
 								new Not(
 										new Equals(
 												new VariableRef(c, "speed"),
-												new VariableRef(new MapPropertyRef<>(scope,"head"),"speed")
-												//new VariableMapProperty(scope,"head","speed"))
+												new VariableRef(new MapPropertyRef<>(scope,"leader"),"speed")
 												)
 										),
 								new CurrentControlLocation(c,"cruising")
 								),
 						new Assign(
 								new VariableRef(c, "speed"),
-								new VariableRef(new MapPropertyRef<>(scope,"head"),"speed")
-								//new VariableMapProperty(scope,"head","speed")
+								new VariableRef(new MapPropertyRef<>(scope,"leader"),"speed")
 								)
 						)
 				);
@@ -284,7 +286,7 @@ public class Platoon extends AbstractMotif {
 						)
 				);
 
-		return new AndRule(r1,r2,r3,r4,r5,r6,r8,r9);
+		return new AndRule(r1,r2,r3,r4,r5,r6,r7,r8,r9);
 	}
 
 	/**

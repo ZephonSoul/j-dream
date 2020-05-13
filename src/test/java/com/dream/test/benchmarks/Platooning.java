@@ -58,7 +58,6 @@ import com.dream.core.output.ConsoleOutput;
 import com.dream.core.output.DummyOutput;
 import com.dream.test.benchmarks.platooning.Car;
 import com.dream.test.benchmarks.platooning.Platoon;
-import com.dream.test.benchmarks.platooning.PlatoonOrig;
 
 /**
  * @author Alessandro Maggi
@@ -474,7 +473,7 @@ public class Platooning extends AbstractMotif {
 					globalPos = globalPos + baseCarSpace + avgInterCarSpaceDelta * Math.random();
 				cars[carsPerPlatoon-j-1] = new Car(globalPos,(baseCarSpeed + avgSpeedDelta * Math.random()));
 			}
-			pool.add(new PlatoonOrig(null,cars));
+			pool.add(new Platoon(null,cars));
 			globalPos = globalPos + basePlatoonSpace + avgInterPlatoonSpaceDelta * Math.random();
 		}
 		return new Platooning(pool,joinDistance,speedDelta);
@@ -485,7 +484,7 @@ public class Platooning extends AbstractMotif {
 	public static void main(String[] args) {
 
 		// number of platoons
-		int[] pN = {2};//6,4,3,2};
+		int[] pN = {3};//6,4,3,2};
 		// number of cars per platoon
 		int[] cN = {3};//2,3,4,6};
 		// average car speed
@@ -503,7 +502,7 @@ public class Platooning extends AbstractMotif {
 		// minimum join distance
 		double[] jD = {25,25,25,25,25,25};
 		// relative speed variation after splitting
-		double[] sD = {0.2,0.2,0.2,0.2,0.2,0.2};
+		double[] sD = {0.1,0.2,0.2,0.2,0.2,0.2};
 		// number of cycles
 		int[] cycles = {50,100,100,100,100,100,100};
 

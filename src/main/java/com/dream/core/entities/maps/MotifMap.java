@@ -57,5 +57,7 @@ public interface MotifMap {
 	public default void refresh() {}
 
 	public boolean hasProperty(String property);
+
+	public void addProperty(String propertyName, MapProperty<?> property);
 	
 }
