@@ -1,7 +1,10 @@
 package com.dream.core.coordination.constraints;
 
+import com.dream.core.ActualInstance;
+import com.dream.core.Bindable;
+import com.dream.core.Entity;
 import com.dream.core.Instance;
-import com.dream.core.coordination.EntityInstanceRef;
+import com.dream.core.coordination.EntityInstanceActual;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.coordination.UnboundReferenceException;
 import com.dream.core.entities.InteractingEntity;
@@ -15,18 +18,18 @@ public class PortReference extends AbstractFormula implements Instance<Port> {
 	
 	private static final int BASE_CODE = 25;
 	
-	private EntityInstanceRef entityInstance;
+	private Instance<Entity> entityInstance;
 
 	private String portName;
 	
-	public PortReference(EntityInstanceRef entityInstance,String portName) {
+	public PortReference(Instance<Entity> entityInstance,String portName) {
 		this.entityInstance = entityInstance;
 		this.portName = portName;
 	}
 	/**
 	 * @return the componentInstance
 	 */
-	public EntityInstanceRef getEntityInstance() {
+	public Instance<Entity> getEntityInstance() {
 		return entityInstance;
 	}
 
@@ -63,15 +66,17 @@ public class PortReference extends AbstractFormula implements Instance<Port> {
 	
 	@Override
 	public <I> Formula bindInstance(Instance<I> reference, Instance<I> actual) {
-		if (reference.equals(this.entityInstance)) {
-			if (actual.getActual() instanceof InteractingEntity)
+		Instance<Entity> newInstance = Bindable.bindInstance(entityInstance,reference,actual);
+		//TODO: streamline actual instances
+		if ((newInstance instanceof EntityInstanceActual) || (newInstance instanceof ActualInstance<?>)) {
+			if (newInstance.getActual() instanceof InteractingEntity)
 				return new PortAtom(
-						((InteractingEntity)actual.getActual())
+						((InteractingEntity)newInstance.getActual())
 						.getPortByName(portName));
 			else
 				throw new IncompatibleEntityReference(actual,this.toString());
 		} else
-			return this;
+			return new PortReference(newInstance,portName);
 	}
 	
 	@Override

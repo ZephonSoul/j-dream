@@ -55,5 +55,7 @@ public interface MotifMap {
 	public MapNode getNodeVarEquals(String varName, Value value);
 	
 	public default void refresh() {}
+
+	public boolean hasProperty(String property);
 	
 }

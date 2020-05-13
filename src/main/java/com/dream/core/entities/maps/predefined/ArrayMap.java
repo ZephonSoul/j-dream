@@ -3,16 +3,13 @@
  */
 package com.dream.core.entities.maps.predefined;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.dream.core.Entity;
 import com.dream.core.entities.AbstractMotif;
@@ -30,7 +27,6 @@ import com.dream.core.expressions.values.Value;
  */
 public class ArrayMap extends AbstractMap {
 
-	ArrayList<MapNode> nodes;
 	Comparator<Object> ordering;
 
 	/**
@@ -41,66 +37,75 @@ public class ArrayMap extends AbstractMap {
 	 */
 	public ArrayMap(
 			AbstractMotif owner,
-			ArrayList<MapNode> nodes,
+			Set<MapNode> nodes,
 			Map<Entity, MapNode> mapping,
 			Comparator<Object> ordering) {
 
-		super(owner, null, nodes.stream().collect(Collectors.toSet()), mapping, new HashSet<>());
+		super(owner, null, nodes, mapping, new HashSet<>());
 		this.nodes = nodes;
 		properties.put(
 				"head", 
-				() -> {
-					MapNode n;
-					for (int i=0; i<nodes.size(); i++) {
-						n = nodes.get(i);
-						if (!n.getMappedEntities().isEmpty())
-							return n.getMappedEntities().stream().findFirst().get();
+				(map) -> {
+					NumberValue minIndex = null;
+					MapNode head = null;
+					for (MapNode node : nodes) {
+						NumberValue index = (NumberValue) node.getVariable("index").getValue();
+						if (minIndex == null || minIndex.greaterThan(index)) {
+							if (!node.getMappedEntities().isEmpty()) {
+								minIndex = index;
+								head = node;
+							}
+						}
 					}
-					return null;
+					return head.getMappedEntities().stream().findFirst().get();
 				});
 		properties.put(
 				"tail", 
-				() -> {
-					MapNode n;
-					for (int i=nodes.size()-1; i>=0; i--) {
-						n = nodes.get(i);
-						if (!n.getMappedEntities().isEmpty())
-							return n.getMappedEntities().stream().findFirst().get();
+				(map) -> {
+					NumberValue maxIndex = null;
+					MapNode tail = null;
+					for (MapNode node : nodes) {
+						NumberValue index = (NumberValue) node.getVariable("index").getValue();
+						if (maxIndex == null || maxIndex.lessThan(index)) {
+							if (!node.getMappedEntities().isEmpty()) {
+								maxIndex = index;
+								tail = node;
+							}
+						}
 					}
-					return null;
+					return tail.getMappedEntities().stream().findFirst().get();
 				});
 		this.ordering = ordering;
 	}
 
 	public ArrayMap(int size,Comparator<Object> ordering) {
-		this(null, new ArrayList<>(), new HashMap<>(),ordering);
+		this(null, new HashSet<>(), new HashMap<>(),ordering);
 		createNodes(size);
 	}
 
 	public MapNode getNodeAtIndex(int index) {
-		return nodes.get(index);
+		return getNodeVarEquals("index", new NumberValue(index));
 	}
 
 	public MapNode getNodeAtIndex(Value index) {
 		NumberValue iValue = (NumberValue) index;
 		if (iValue instanceof NumberValue)
-			return nodes.get(iValue.getRawValue().intValue());
+			return getNodeVarEquals("index",iValue);
 		else
 			throw new IncompatibleValueException(index, NumberValue.class);
 	}
 
 	public int getIndexForNode(MapNode node) {
-		int index = nodes.indexOf(node);
-		if (index == -1)
+		if (!nodes.contains(node))
 			throw new NodeNotFoundException(this, node);
 		else
-			return index;
+			return ((NumberValue) node.getVariable("index").getValue()).getRawValue().intValue();
 	}
 
-	private void refreshIndexes() {
-		for (int i=0; i<nodes.size(); i++)
-			nodes.get(i).getVariable("index").setValue(new NumberValue(i));
-	}
+	//	private void refreshIndexes() {
+	//		for (int i=0; i<nodes.size(); i++)
+	//			nodes.get(i).getVariable("index").setValue(new NumberValue(i));
+	//	}
 
 	@Override
 	public boolean isEdge(MapNode node1,MapNode node2) {
@@ -111,7 +116,7 @@ public class ArrayMap extends AbstractMap {
 	public boolean deleteNode(MapNode node) {
 		boolean removed = super.deleteNode(node);
 		removed = nodes.remove(node) & removed;
-		refreshIndexes();
+		//		refreshIndexes();
 		return removed;
 	}
 
@@ -128,9 +133,17 @@ public class ArrayMap extends AbstractMap {
 	@Override
 	public MapNode createNode() {
 		MapNode newNode = super.createNode();
-		int index = nodes.size();
-		newNode.getStore().setVarValue("index", new NumberValue(index));
-		nodes.add(newNode);
+
+		NumberValue maxIndex = new NumberValue(-1);
+		for (MapNode node : nodes) {
+			if (!node.equals(newNode)) {
+				NumberValue index = (NumberValue) node.getVariable("index").getValue();
+				if (index.greaterThan(maxIndex))
+					maxIndex = index;
+			}
+		}
+		newNode.getStore().setVarValue("index", maxIndex.add(new NumberValue(1)));
+		
 		return newNode;
 	}
 
@@ -139,57 +152,51 @@ public class ArrayMap extends AbstractMap {
 		return null;
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public JSONObject getJSONDescriptor() {
-		JSONObject descriptor = new JSONObject();
-		descriptor.put("type", this.getClass().getSimpleName());
-
-		JSONArray nodesDescriptor = new JSONArray();
-		for (int i=0; i<nodes.size(); i++) {
-			JSONObject nDesc = new JSONObject();
-			nDesc.put(i, nodes.get(i).getJSONDescriptor());
-			nodesDescriptor.add(nDesc);
-		}
-		//		nodes.stream().forEach(n -> nodesDescriptor.add(n.getJSONDescriptor()));
-		descriptor.put("nodes", nodesDescriptor);
-
-		return descriptor;
-	}
+	//	@Override
+	//	@SuppressWarnings("unchecked")
+	//	public JSONObject getJSONDescriptor() {
+	//		JSONObject descriptor = new JSONObject();
+	//		descriptor.put("type", this.getClass().getSimpleName());
+	//
+	//		JSONArray nodesDescriptor = new JSONArray();
+	//		for (int i=0; i<nodes.size(); i++) {
+	//			JSONObject nDesc = new JSONObject();
+	//			nDesc.put(i, getNodeAtIndex(i).getJSONDescriptor());
+	//			nodesDescriptor.add(nDesc);
+	//		}
+	//		//		nodes.stream().forEach(n -> nodesDescriptor.add(n.getJSONDescriptor()));
+	//		descriptor.put("nodes", nodesDescriptor);
+	//
+	//		return descriptor;
+	//	}
 
 	private void createNodes(int size) {
 		for (int i=0;i<size; i++)
 			createNode();
 	}
 
-	@Override
-	public MapNode getNodeVarEquals(String varName, Value value) {
-		if (varName.equals("index") && value instanceof NumberValue) {
-			int index = ((NumberValue)value).getRawValue().intValue();
-			if (index >= 0 && index < nodes.size())
-				return nodes.get(index);
-			else
-				return super.getNodeVarEquals(varName,value);
-		}
-		else
-			return super.getNodeVarEquals(varName,value);
-	}
+	//	@Override
+	//	public MapNode getNodeVarEquals(String varName, Value value) {
+	//		if (varName.equals("index") && value instanceof NumberValue) {
+	//			int index = ((NumberValue)value).getRawValue().intValue();
+	//			if (index >= 0 && index < nodes.size())
+	//				return nodes.get(index);
+	//			else
+	//				return super.getNodeVarEquals(varName,value);
+	//		}
+	//		else
+	//			return super.getNodeVarEquals(varName,value);
+	//	}
 
 	@Override
 	public void refresh() {
+		//TODO: needs work
 		if (ordering != null) {
 			List<Entity> entities = owner.getPool().stream().collect(Collectors.toList());
 
-			// Compensate distortions: more entities than MapNodes
-			int distortion = entities.size() - nodes.size();
-			if (distortion > 0)
-				for (int i=0; i<distortion; i++)
-					owner.createMapNode();
-
 			entities.sort(ordering.reversed());
-			for (int i=0; i<entities.size(); i++) {
-				moveEntity(entities.get(i), nodes.get(i));
-			}
+			for (int i=0; i<entities.size(); i++)
+				mapping.get(entities.get(i)).getStore().setVarValue("index", new NumberValue(i));
 		}
 	}
 

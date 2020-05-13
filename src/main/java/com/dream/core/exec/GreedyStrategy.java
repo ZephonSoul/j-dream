@@ -10,9 +10,9 @@ import com.dream.core.entities.CoordinatingEntity;
 public class GreedyStrategy implements ExecutionStrategy {
 
 	private static ExecutionStrategy instance;
-	
+
 	public GreedyStrategy() {}
-	
+
 	public static ExecutionStrategy getInstance() {
 		if (instance == null)
 			instance = new GreedyStrategy();
@@ -21,7 +21,8 @@ public class GreedyStrategy implements ExecutionStrategy {
 
 	@Override
 	public Interaction selectInteraction(CoordinatingEntity rootComponent) {
-		return rootComponent.getAllowedInteraction();
+		Interaction interaction = rootComponent.getAllowedInteraction();
+		return interaction;
 	}
 
 }

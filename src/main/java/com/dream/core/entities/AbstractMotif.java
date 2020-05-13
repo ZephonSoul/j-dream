@@ -12,7 +12,6 @@ import com.dream.core.Entity;
 import com.dream.core.coordination.DummyRule;
 import com.dream.core.coordination.Rule;
 import com.dream.core.entities.maps.MapNode;
-import com.dream.core.entities.maps.MapProperty;
 import com.dream.core.entities.maps.MotifMap;
 
 /**
@@ -102,8 +101,11 @@ public class AbstractMotif extends AbstractCoordinatingEntity implements Coordin
 		map.removeEntityMapping(entity);
 	}
 
-	public MapProperty<?> getMapProperty(String property) {
-		return map.getProperty(property);
+	public Object getMapProperty(String property) {
+		if (map.hasProperty(property))
+			return map.getProperty(property).get(map);
+		else
+			return null;
 	}
 
 	/**

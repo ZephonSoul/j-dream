@@ -169,5 +169,10 @@ public class DummyMap implements MotifMap {
 		node.removeEntity(entity);
 	}
 
+	@Override
+	public boolean hasProperty(String property) {
+		return false;
+	}
+
 
 }

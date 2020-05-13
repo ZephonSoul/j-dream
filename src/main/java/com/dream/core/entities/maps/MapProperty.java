@@ -10,6 +10,6 @@ package com.dream.core.entities.maps;
 @FunctionalInterface
 public interface MapProperty<T> {
 	
-	public T get();
+	public T get(MotifMap map);
 
 }

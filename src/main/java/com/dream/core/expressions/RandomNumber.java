@@ -5,6 +5,7 @@ package com.dream.core.expressions;
 
 import com.dream.core.expressions.values.IncompatibleValueException;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.expressions.values.RandomNumberFactory;
 import com.dream.core.expressions.values.Value;
 
 /**
@@ -23,10 +24,6 @@ public class RandomNumber extends AbstractExpression {
 	public RandomNumber() {
 		this(new NumberValue(1));
 	}
-	
-	private double getRandomDouble(double max) {
-		return Math.random() * max;
-	}
 
 	@Override
 	public void evaluateOperands() {
@@ -34,7 +31,9 @@ public class RandomNumber extends AbstractExpression {
 			maxValue.evaluateOperands();
 			NumberValue max = (NumberValue)maxValue.eval();
 			if (max instanceof NumberValue)
-				value = new NumberValue(getRandomDouble(max.getRawValue().doubleValue()));
+				value = new NumberValue(
+						RandomNumberFactory.getInstance().getRandomDouble(
+								max.getRawValue().doubleValue()));
 			else
 				throw new IncompatibleValueException(max, NumberValue.class);
 		}

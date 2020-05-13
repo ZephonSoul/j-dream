@@ -27,6 +27,7 @@ extends AbstractInteractingEntity
 implements InteractingEntity {
 
 	private LTS behavior;
+	protected Set<Interaction> forbiddenInteractions;
 	
 	/**
 	 * @param parent
@@ -42,6 +43,7 @@ implements InteractingEntity {
 		
 		super(parent, store, cInterface);
 		this.behavior = behavior;
+		forbiddenInteractions = new HashSet<>();
 	}
 
 	/**
@@ -54,8 +56,7 @@ implements InteractingEntity {
 			VarStore store, 
 			Map<String, Port> cInterface) {
 		
-		super(parent, store, cInterface);
-		this.behavior = null;
+		this(parent, store, cInterface,null);
 	}
 	
 	/**
@@ -86,6 +87,7 @@ implements InteractingEntity {
 	
 	public AbstractComponent(Entity parent) {
 		super(parent);
+		forbiddenInteractions = new HashSet<>();
 	}
 
 	/**
@@ -100,13 +102,13 @@ implements InteractingEntity {
 	 */
 	public void setBehavior(LTS behavior) {
 		this.behavior = behavior;
+		updateCache();
 	}
 	
 	@Override
 	public Interaction getAllowedInteraction() {
 		boolean sat = false;
 		Interaction interaction;
-		Set<Interaction> forbiddenInteractions = new HashSet<>();
 		do {
 			interaction = super.getAllowedInteraction();
 			sat = !isInvolvedInInteraction(interaction) || behavior.isInteractionEnabled(interaction);
@@ -129,6 +131,7 @@ implements InteractingEntity {
 		super.updateCache();
 		if (behavior != null)
 			behavior.clearCache();
+		forbiddenInteractions = new HashSet<>();
 	}
 
 	@SuppressWarnings("unchecked")

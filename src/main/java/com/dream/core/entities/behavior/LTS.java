@@ -69,7 +69,8 @@ public class LTS implements Caching {
 
 	@Override
 	public void clearCache() {
-		cached_transitions.values().stream().forEach(Transition::clearCache);
+		cached_transitions = new HashMap<>();
+		transitions.values().stream().forEach(set -> set.stream().forEach(Transition::clearCache));
 	}
 
 	public OperationsSet getTransitionOperation(Interaction interaction) {

@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.dream.core.entities.InteractingEntity;
 import com.dream.core.expressions.values.Value;
 
 /**
@@ -19,23 +18,23 @@ import com.dream.core.expressions.values.Value;
 public class VarStore {
 
 	private Map<String,LocalVariable> localVariables;
-	private InteractingEntity owner;
+	private StoringInstance owner;
 
 	public VarStore() {
 		this.localVariables = new HashMap<>();
 	}
 
-	public VarStore(InteractingEntity owner, Map<String,LocalVariable> localVariables) {
+	public VarStore(StoringInstance owner, Map<String,LocalVariable> localVariables) {
 		this.owner = owner;
 		this.localVariables = localVariables;
 		bindOwner();
 	}
 
-	public VarStore(InteractingEntity owner) {
+	public VarStore(StoringInstance owner) {
 		this(owner, new HashMap<>());
 	}
 
-	public VarStore(InteractingEntity owner, LocalVariable... localVariables) {
+	public VarStore(StoringInstance owner, LocalVariable... localVariables) {
 		this(owner,
 				Arrays.stream(localVariables)
 				.collect(Collectors.toMap(LocalVariable::getName, Function.identity())));
@@ -65,7 +64,7 @@ public class VarStore {
 			localVariables.get(varName).setValue(varValue);
 		else 
 			// create new variable if not present
-			localVariables.put(varName,new LocalVariable(varName,varValue));
+			localVariables.put(varName,new LocalVariable(varName,varValue,owner));
 	}
 	
 	public boolean hasLocalVariable(String varName) {
@@ -84,14 +83,14 @@ public class VarStore {
 	/**
 	 * @return the owner
 	 */
-	public InteractingEntity getOwner() {
+	public StoringInstance getOwner() {
 		return owner;
 	}
 
 	/**
 	 * @param owner the owner to set
 	 */
-	public void setOwner(InteractingEntity owner) {
+	public void setOwner(StoringInstance owner) {
 		this.owner = owner;
 		bindOwner();
 	}

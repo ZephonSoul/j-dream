@@ -13,6 +13,7 @@ import com.dream.core.coordination.Interaction;
 import com.dream.core.entities.CoordinatingEntity;
 import com.dream.core.entities.NoAdmissibleInteractionsException;
 import com.dream.core.exec.ExecutionStrategy;
+import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.operations.Operation;
 import com.dream.core.operations.OperationsSet;
 import com.dream.core.output.JSONOutput;
@@ -26,6 +27,8 @@ import com.dream.core.output.Output;
 public class ExecutionEngine implements Runnable {
 	
 	public final static String version = "0.1.3";
+	
+	private final static String defaultFileOutput = "ee_log.json";
 
 	private CoordinatingEntity rootEntity;
 	private ExecutionStrategy executionStrategy;
@@ -39,47 +42,36 @@ public class ExecutionEngine implements Runnable {
 	public ExecutionEngine(
 			CoordinatingEntity rootEntity,
 			ExecutionStrategy executionStrategy,
-			Output output) {
+			Output output,
+			boolean interactive,
+			int maxCycles,
+			String fileOutput) {
 
 		this.rootEntity = rootEntity;
 		this.executionStrategy = executionStrategy;
 		this.output = output;
-		this.maxCycles = 0;
-		this.snapshotSemantics = true;
-		this.jsonOut = new JSONOutput("ee_log.json");
-	}
-
-	public ExecutionEngine(
-			CoordinatingEntity rootComponent,
-			ExecutionStrategy executionStrategy,
-			Output output,
-			boolean interactive) {
-
-		this(rootComponent,executionStrategy,output);
 		this.interactive = interactive;
-	}
-
-	public ExecutionEngine(
-			CoordinatingEntity rootComponent,
-			ExecutionStrategy executionStrategy,
-			Output output,
-			int maxCycles) {
-
-		this(rootComponent,executionStrategy,output,false);
 		this.maxCycles = maxCycles;
+		this.snapshotSemantics = true;
+		this.jsonOut = new JSONOutput(fileOutput);
 	}
-
+	
 	public ExecutionEngine(
-			CoordinatingEntity rootComponent,
+			CoordinatingEntity rootEntity,
 			ExecutionStrategy executionStrategy,
 			Output output,
 			boolean interactive,
 			int maxCycles) {
-
-		this(rootComponent,executionStrategy,output);
-		this.maxCycles = maxCycles;
-		this.interactive = interactive;
+		
+		this(
+				rootEntity,
+				GreedyStrategy.getInstance(),
+				output,
+				interactive,
+				maxCycles,
+				defaultFileOutput);
 	}
+	
 
 	public void setSnapshotSemantics(boolean snapshotSemantics) {
 		this.snapshotSemantics = snapshotSemantics;
@@ -137,6 +129,10 @@ public class ExecutionEngine implements Runnable {
 		
 		return descriptor;
 	}
+	
+	private double getElapsed(long startTime) {
+		return (System.nanoTime() - startTime)/1000000000.0;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -147,7 +143,7 @@ public class ExecutionEngine implements Runnable {
 		System.out.println("============================");
 		System.out.println("DReAM execution engine "+version);
 		System.out.println("============================");
-		System.out.println(String.format("interactive: %s\nMax cycles: %s\nSnapshot semantics: %s\nExec strategy: %s",
+		System.out.println(String.format("interactive: %s\nMax cycles: %s\nSnapshot semantics: %s\nExec strategy: %s\n",
 				interactive,
 				maxCycles,
 				snapshotSemantics,
@@ -167,6 +163,7 @@ public class ExecutionEngine implements Runnable {
 		
 		while (cycles < maxCycles || unboundedExecution) {
 			try {
+				System.out.println("cycle " + (cycles+1) + " (elapsed " + getElapsed(startTime) + ")");
 				state = new JSONObject();
 				
 				Interaction interaction = executionStrategy.selectInteraction(rootEntity);
@@ -189,11 +186,11 @@ public class ExecutionEngine implements Runnable {
 				output.write(MessageWritable.write(rootEntity.getJSONDescriptor()));
 				cycles++;
 				if (interactive) {
-					initPause = System.currentTimeMillis();
+					initPause = System.nanoTime();
 					System.out.println("Press ENTER to continue");
 					try {
 						System.in.read();
-						startTime += (System.currentTimeMillis() - initPause);
+						startTime += (System.nanoTime() - initPause);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

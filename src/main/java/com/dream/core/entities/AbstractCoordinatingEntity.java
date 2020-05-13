@@ -28,13 +28,14 @@ public abstract class AbstractCoordinatingEntity
 extends AbstractEntity 
 implements CoordinatingEntity {
 
-	final static boolean greedy_cache_update = true;
+	final static boolean greedy_cache_update = false;
 
 	protected Set<Entity> pool;
 	protected Rule rule;
 	protected Rule cached_rule;
 	protected PoolInteractionsIterator poolInteractionsIterator;
 	protected boolean dirtyCache;
+	protected Set<Interaction> forbiddenInteractions;
 
 	/**
 	 * @param parent
@@ -208,6 +209,7 @@ implements CoordinatingEntity {
 		rule.clearCache();
 		cached_rule = rule.expandDeclarations();
 		poolInteractionsIterator = new PoolInteractionsIterator(pool);
+		forbiddenInteractions = new HashSet<>();
 		dirtyCache = false;
 	}
 
@@ -237,12 +239,21 @@ implements CoordinatingEntity {
 	@Override
 	public Interaction getAllowedInteraction() {
 		Interaction interaction;
-		Set<Interaction> forbiddenInteractions = new HashSet<>();
 		if (dirtyCache)
 			updateCache();
 		boolean sat = false;
+		long startTime = System.nanoTime();
+		long timeCap = 30000000000L;
+		boolean fallback = false;
 		do {
-			interaction = poolInteractionsIterator.next();
+			if (!fallback && (System.nanoTime() - startTime >= timeCap)) {
+				// fallback, try empty interaction if searching is taking too long
+				fallback = true;
+				interaction = new Interaction();
+				System.out.println(String.format("WARNING: timecap of %d s reached in %s! Attempting fallback interaction {}", 
+						timeCap/1000000000,toString()));
+			} else
+				interaction = poolInteractionsIterator.next();
 			sat = cached_rule.sat(interaction);
 			if (!sat)
 				if (forbiddenInteractions.contains(interaction))

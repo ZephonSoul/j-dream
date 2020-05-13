@@ -25,4 +25,8 @@ public class IDFactory {
 		return instanceIdCounter;
 	}
 	
+	public void resetFactory() {
+		this.instanceIdCounter = 0;
+	}
+	
 }

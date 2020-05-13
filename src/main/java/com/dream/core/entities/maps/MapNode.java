@@ -30,6 +30,7 @@ public class MapNode implements StoringInstance {
 		this.name = name;
 		this.entities = entities;
 		this.store = store;
+		this.store.setOwner(this);
 	}
 
 	public MapNode(MotifMap map, String name, Set<Entity> entities) {
@@ -74,11 +75,15 @@ public class MapNode implements StoringInstance {
 
 	public void setStore(VarStore store) {
 		this.store = store;
+		this.store.setOwner(this);
 	}
 
 	@Override
 	public String toString() {
-		return name;
+		if (map != null && map.getOwner() != null)
+			return String.format("%s.%s", map.getOwner().toString(),name);
+		else
+			return name;
 	}
 
 	@SuppressWarnings("unchecked")

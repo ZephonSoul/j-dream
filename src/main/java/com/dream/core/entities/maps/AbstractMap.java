@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 
 import com.dream.core.Entity;
 import com.dream.core.entities.AbstractMotif;
+import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.expressions.values.Value;
 
 /**
@@ -110,6 +111,11 @@ public abstract class AbstractMap implements MotifMap {
 	@Override
 	public MapProperty<?> getProperty(String property) {
 		return properties.get(property);
+	}
+	
+	@Override
+	public boolean hasProperty(String property) {
+		return properties.containsKey(property);
 	}
 
 	public Set<MapNode> getNodes() {
@@ -226,6 +232,7 @@ public abstract class AbstractMap implements MotifMap {
 	@Override
 	public MapNode createNode() {
 		MapNode newNode = new MapNode(this,String.format("n_%d", nodeCounter));
+		newNode.getStore().setVarValue("index", new NumberValue(nodeCounter));
 		nodeCounter++;
 		nodes.add(newNode);
 		return newNode;

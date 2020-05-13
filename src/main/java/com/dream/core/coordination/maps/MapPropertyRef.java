@@ -31,7 +31,7 @@ public class MapPropertyRef<T> implements Instance<T>, Bindable<Instance<T>> {
 	@Override
 	public T getActual() {
 		try {
-			return (T) ((AbstractMotif) scope.getActual()).getMapProperty(propertyName).get();
+			return (T) ((AbstractMotif) scope.getActual()).getMapProperty(propertyName);
 		} catch (UnboundReferenceException ex) {
 			return null;
 		}

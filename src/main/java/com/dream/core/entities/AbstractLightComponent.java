@@ -195,7 +195,6 @@ implements CoordinatingEntity, InteractingEntity {
 		if (dirtyCache)
 			updateCache();
 		Interaction interaction;
-		Set<Interaction> forbiddenInteractions = new HashSet<>();
 		boolean sat = false;
 		do {
 			interaction = interactionsIterator.next();

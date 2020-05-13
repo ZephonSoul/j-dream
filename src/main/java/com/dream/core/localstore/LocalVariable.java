@@ -1,6 +1,5 @@
 package com.dream.core.localstore;
 
-import com.dream.core.entities.InteractingEntity;
 import com.dream.core.expressions.values.Value;
 
 /**
@@ -13,14 +12,14 @@ public class LocalVariable {
 
 	protected String name;
 	protected Value value;
-	protected InteractingEntity owner;
+	protected StoringInstance owner;
 
 	public LocalVariable(String name, Value value) {
 		this.name = name;
 		this.value = value;
 	}
 
-	public LocalVariable(String name, Value value, InteractingEntity owner) {
+	public LocalVariable(String name, Value value, StoringInstance owner) {
 		this(name,value);
 		this.owner = owner;
 	}
@@ -43,11 +42,11 @@ public class LocalVariable {
 		this.value = value;
 	}
 	
-	public InteractingEntity getOwner() {
+	public StoringInstance getOwner() {
 		return owner;
 	}
 	
-	public void setOwner(InteractingEntity newOwner) {
+	public void setOwner(StoringInstance newOwner) {
 		this.owner = newOwner;
 	}
 
@@ -89,7 +88,7 @@ public class LocalVariable {
 	public String getInstanceName() {
 		String name = this.name;
 		if (owner != null)
-			name += "[" + owner.getId() + "]";
+			name += "[" + owner.toString() + "]";
 		return name;
 	}
 
