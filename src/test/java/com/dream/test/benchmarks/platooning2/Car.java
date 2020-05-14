@@ -29,23 +29,21 @@ import com.dream.core.localstore.VarStore;
  */
 public class Car extends AbstractComponent {
 
-	public static NumberValue splitProb = new NumberValue(0.4);
-
 	/**
 	 * @param parent
 	 */
-	public Car(Entity parent, double position, double speed) {
+	public Car(Entity parent, double position, double speed, double splitProb) {
 		super(parent);
 
 		setInterface(newInterface());
 
-		setStore(newStore(getId(),position,speed));
+		setStore(newStore(getId(),position,speed,splitProb));
 
 		setBehavior(newBehavior(getInterface(),getStore()));
 	}
 
-	public Car(double position, double speed) {
-		this(null,position,speed);
+	public Car(double position, double speed, double splitProb) {
+		this(null,position,speed,splitProb);
 	}
 
 	private static Port[] newInterface() {
@@ -53,19 +51,17 @@ public class Car extends AbstractComponent {
 				new Port("initSplit"), 
 				new Port("ackSplit"), 
 				new Port("closeSplit"), 
-				new Port("initJoin"),
-				new Port("ackJoin"),
-				new Port("finishJoin")};
+				new Port("join")};
 		return ports;
 	}
 
-	private static VarStore newStore(int id, double position, double speed) {
+	private static VarStore newStore(int id, double position, double speed, double splitProb) {
 		return new VarStore(
 				new LocalVariable("id", new NumberValue(id)),
 				new LocalVariable("pos", new NumberValue(position)),
 				new LocalVariable("speed", new NumberValue(speed)),
-				new LocalVariable("joinedPlatoon", new NumberValue(0)),
-				new LocalVariable("followCar", new NumberValue(0)));
+				new LocalVariable("followCar", new NumberValue(0)),
+				new LocalVariable("splitProb", new NumberValue(splitProb)));
 	}
 
 	private static LTS newBehavior(Map<String, Port> cInterface, VarStore store) {
@@ -82,18 +78,14 @@ public class Car extends AbstractComponent {
 						new And(
 								new LessThan(
 										new RandomNumber(),
-										splitProb
+										store.getLocalVariable("splitProb").getValue()
 										),
 								new PortAtom(cInterface.get("initSplit"))
 								)), c2));
 		transitions.get(c1).add(new Transition(c1, new Term(new PortAtom(cInterface.get("ackSplit"))), c2));
 		transitions.put(c2, new HashSet<>());
 		transitions.get(c2).add(new Transition(c2, new Term(new PortAtom(cInterface.get("closeSplit"))), c1));
-		c2 = new ControlLocation("joining");
-		transitions.put(c2, new HashSet<>());
-		transitions.get(c1).add(new Transition(c1, new Term(new PortAtom(cInterface.get("initJoin"))), c2));
-		transitions.get(c1).add(new Transition(c1, new Term(new PortAtom(cInterface.get("ackJoin"))), c2));
-		transitions.get(c2).add(new Transition(c2, new Term(new PortAtom(cInterface.get("finishJoin"))), c1));
+		transitions.get(c1).add(new Transition(c1, new Term(new PortAtom(cInterface.get("join"))), c1));
 
 		return new LTS(transitions,currentControlLocation);
 	}

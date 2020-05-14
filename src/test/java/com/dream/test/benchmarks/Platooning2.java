@@ -18,6 +18,7 @@ import com.dream.core.coordination.EntityInstanceRef;
 import com.dream.core.coordination.FOILRule;
 import com.dream.core.coordination.Quantifier;
 import com.dream.core.coordination.Rule;
+import com.dream.core.coordination.Term;
 import com.dream.core.coordination.TypeRestriction;
 import com.dream.core.coordination.constraints.And;
 import com.dream.core.coordination.constraints.Not;
@@ -25,6 +26,7 @@ import com.dream.core.coordination.constraints.Or;
 import com.dream.core.coordination.constraints.PortReference;
 import com.dream.core.coordination.constraints.predicates.CurrentControlLocation;
 import com.dream.core.coordination.constraints.predicates.Equals;
+import com.dream.core.coordination.constraints.predicates.GreaterThan;
 import com.dream.core.coordination.constraints.predicates.LessThan;
 import com.dream.core.coordination.constraints.predicates.SameInstance;
 import com.dream.core.coordination.maps.MapNodeActual;
@@ -35,6 +37,7 @@ import com.dream.core.entities.maps.predefined.DummyMap;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.Difference;
 import com.dream.core.expressions.InstanceIdentifier;
+import com.dream.core.expressions.PoolSize;
 import com.dream.core.expressions.Product;
 import com.dream.core.expressions.Sum;
 import com.dream.core.expressions.VariableRef;
@@ -81,6 +84,7 @@ public class Platooning2 extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		EntityInstanceRef p1 = platoons1.getVariable();
+		platoons1.setInstanceFilter(new GreaterThan(new PoolSize(p1),new NumberValue(0)));
 		Declaration cars = new Declaration(
 				Quantifier.FORALL,
 				p1,
@@ -91,45 +95,70 @@ public class Platooning2 extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		EntityInstanceRef p2 = platoons2.getVariable();
-		Instance<Entity> tail_p2 = new MapPropertyRef<>(p2,"tail");
+		platoons2.setInstanceFilter(new GreaterThan(new PoolSize(p2),new NumberValue(0)));
 		Instance<Entity> lead_p1 = new MapPropertyRef<>(p1,"leader");
-		// \forall p : Platoon {
+		Instance<Entity> lead_p2 = new MapPropertyRef<>(p2,"leader");
+		Instance<Entity> tail_p1 = new MapPropertyRef<>(p1,"tail");
+		Instance<Entity> tail_p2 = new MapPropertyRef<>(p2,"tail");
+		// \forall p : Platoon [poolSize(p1)>0] {
 		//		\forall c : p.Car {
-		//			\exists p' : Platoon{ 
-		//				c.initJoin |> p != p' 
-		//				/\ (0 < (tail(p2).pos + tail(p2).speed) - (leader(p1).pos + leader(p1).speed ) < joinDist) 
-		//				/\ leader(p2).ackJoin
-		//					-> c.speed := tail(p2).speed; c.joinedPlatoon := p2 }}}}
+		//			\exists p2 : Platoon [poolSize(p2)>0] { 
+		//				c.join |> p != p' 
+		//				/\ ( (0 < (tail(p2).pos + tail(p2).speed) - (leader(p1).pos + leader(p1).speed ) < joinDist) 
+		//					\/ (0 < (tail(p1).pos + tail(p1).speed) - (leader(p2).pos + leader(p2).speed ) < joinDist) ) 
+		//				/\ leader(p2).join
+		//					-> IF (lead(p1).pos < lead(p2).pos) [ c.speed := tail(p2).speed; migrate(c,p2,root(p2)) ] }}}}
 		Rule join1 = 
 				new FOILRule(platoons1, 
 						new FOILRule(cars,
 								new FOILRule(platoons2,
 										new ConjunctiveTerm(
-												new PortReference(c, "initJoin"), 
+												new PortReference(c, "join"), 
 												new And(
 														new Not(new SameInstance(p1,p2)),
-														new LessThan(
-																new NumberValue(0),
-																new Difference(
-																		new Sum(
-																				new VariableRef(tail_p2,"pos"),
-																				new VariableRef(tail_p2,"speed")
+														new Or(
+																new LessThan(
+																		new NumberValue(0),
+																		new Difference(
+																				new Sum(
+																						new VariableRef(tail_p2,"pos"),
+																						new VariableRef(tail_p2,"speed")
+																						),
+																				new Sum(
+																						new VariableRef(lead_p1,"pos"),
+																						new VariableRef(lead_p1,"speed")
+																						)
 																				),
-																		new Sum(
-																				new VariableRef(lead_p1,"pos"),
-																				new VariableRef(lead_p1,"speed")
-																				)
+																		joinDist
 																		),
-																joinDist
+																new LessThan(
+																		new NumberValue(0),
+																		new Difference(
+																				new Sum(
+																						new VariableRef(tail_p1,"pos"),
+																						new VariableRef(tail_p1,"speed")
+																						),
+																				new Sum(
+																						new VariableRef(lead_p2,"pos"),
+																						new VariableRef(lead_p2,"speed")
+																						)
+																				),
+																		joinDist
+																		)
 																),
-														new PortReference(new MapPropertyRef<>(p2,"leader"),"ackJoin")
+														new PortReference(lead_p2,"join")
 														),
-												new OperationsSequence(
-														new Assign(new VariableRef(c,"speed"),
-																new VariableRef(tail_p2,"speed")),
-														new Assign(new VariableRef(c,"joinedPlatoon"),
-																new InstanceIdentifier(p2))
-														)
+												new IfThenElse(
+														new LessThan(
+																new VariableRef(lead_p1,"pos"),
+																new VariableRef(lead_p2,"pos")
+																), 
+														new OperationsSequence(
+																new Assign(new VariableRef(c,"speed"),
+																		new VariableRef(tail_p2,"speed")),
+																new MigrateMotif(c,p2,new MapPropertyRef<>(p2,"root"))
+																)
+														)	
 												)
 										)
 								)
@@ -140,56 +169,21 @@ public class Platooning2 extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		p1 = platoons1.getVariable();
-		platoons2 = new Declaration(
-				Quantifier.EXISTS,
-				scope,
-				new TypeRestriction(Platoon.class));
-		p2 = platoons2.getVariable();
-		Instance<Entity> tail_p1 = new MapPropertyRef<>(p2,"tail");
-		Instance<Entity> lead_p2 = new MapPropertyRef<>(p1,"leader");
-		// \forall p1 : Platoon { \exists p2 : Platoon { 
-		//		leader(p1).ackJoin |> leader(p2).initJoin /\ (0 < (tail(p1).pos + speed) - (head(p2).pos + speed) < Delta) } }
-		Rule join1b = new FOILRule(platoons1,
-				new FOILRule(platoons2,
-						new ConjunctiveTerm(
-								new PortReference(new MapPropertyRef<>(p1,"leader"),"ackJoin"),
-								new And(
-										new PortReference(new MapPropertyRef<>(p2,"leader"),"initJoin"),
-										new LessThan(
-												new NumberValue(0),
-												new Difference(
-														new Sum(
-																new VariableRef(tail_p1,"pos"),
-																new VariableRef(tail_p1,"speed")
-																),
-														new Sum(
-																new VariableRef(lead_p2,"pos"),
-																new VariableRef(lead_p2,"speed")
-																)
-														),
-												joinDist
-												)
-										)
-								)
-						));
-
-		platoons1 = new Declaration(
-				Quantifier.FORALL,
-				scope,
-				new TypeRestriction(Platoon.class));
-		p1 = platoons1.getVariable();
+		platoons1.setInstanceFilter(new GreaterThan(new PoolSize(p1),new NumberValue(0)));
 		platoons2 = new Declaration(
 				Quantifier.FORALL,
 				scope,
 				new TypeRestriction(Platoon.class));
 		p2 = platoons2.getVariable();
-		// \forall p1 : Platoon { \forall p2 : Platoon { 
+		platoons2.setInstanceFilter(new GreaterThan(new PoolSize(p2),new NumberValue(0)));
+		// \forall p1 : Platoon[PoolSize(p1)>0] { \forall p2 : Platoon[PoolSize(p2)>0] { 
 		//		(0 < tail(p1).pos+speed - head(p2).pos+speed < Delta) /\ lead(p1).cruising /\ lead(p2).cruising |> 
-		//		p1 = p2 \/ ( leader(p2).initJoin /\ leader(p1).ackJoin)  } }
-		tail_p1 = new MapPropertyRef<>(p1,"tail");
+		//		p1 = p2 \/ ( leader(p2).join /\ leader(p1).join)  } }
 		lead_p1 = new MapPropertyRef<>(p1,"leader");
 		lead_p2 = new MapPropertyRef<>(p2,"leader");
-		Rule join1c = new FOILRule(platoons1,
+		tail_p1 = new MapPropertyRef<>(p1,"tail");
+		tail_p2 = new MapPropertyRef<>(p2,"tail");
+		Rule join2 = new FOILRule(platoons1,
 				new FOILRule(platoons2,
 						new ConjunctiveTerm(
 								new And(
@@ -213,8 +207,8 @@ public class Platooning2 extends AbstractMotif {
 								new Or(
 										new SameInstance(p1,p2),
 										new And(
-												new PortReference(lead_p2,"initJoin"),
-												new PortReference(lead_p1,"ackJoin")
+												new PortReference(lead_p1,"join"),
+												new PortReference(lead_p2,"join")
 												)
 										)
 								)
@@ -225,64 +219,7 @@ public class Platooning2 extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		p1 = platoons1.getVariable();
-		cars = new Declaration(
-				Quantifier.FORALL,
-				p1,
-				new TypeRestriction(Car.class));
-		c = cars.getVariable();
-		platoons2 = new Declaration(
-				Quantifier.EXISTS,
-				scope,
-				new TypeRestriction(Platoon.class));
-		p2 = platoons2.getVariable();
-		// \forall p1 : Platoon {
-		//		\forall c : Car {
-		//			\exists p2 : Platoon {
-		//				c.finishJoin |> leader(p2).finishJoin /\ ( c.joinedPlatoon=p2 \/ p1 = p2)
-		//				-> IF (p1 != p2) THEN [migrate(c,p2,root(p2)); delete(p1)];
-		//					c.joinedPlatoon := 0
-		Rule join2 = 
-				new FOILRule(platoons1,
-						new FOILRule(cars,
-								new FOILRule(platoons2,
-										new ConjunctiveTerm(
-												new PortReference(c, "finishJoin"),
-												new And(
-														new PortReference(new MapPropertyRef<>(p2,"leader"),"finishJoin"),
-														new Or(
-																new Equals(
-																		new VariableRef(c,"joinedPlatoon"),
-																		new InstanceIdentifier(p2)
-																		),
-																new SameInstance(p1,p2)
-																)
-														),
-												new OperationsSequence(
-														new IfThenElse(
-																new Not(new SameInstance(p1,p2)),
-																new OperationsSequence(
-																		new MigrateMotif(
-																				c, 
-																				p2,
-																				new MapPropertyRef<>(p2,"root")),
-																		new DeleteInstance(p1)
-																		)
-																),
-														new Assign(
-																new VariableRef(c,"joinedPlatoon"),
-																new NumberValue(0))
-														)
-												)
-										)
-								)
-						);
-
-
-		platoons1 = new Declaration(
-				Quantifier.FORALL,
-				scope,
-				new TypeRestriction(Platoon.class));
-		p1 = platoons1.getVariable();
+		platoons1.setInstanceFilter(new GreaterThan(new PoolSize(p1),new NumberValue(0)));
 		cars = new Declaration(
 				Quantifier.FORALL,
 				p1,
@@ -328,6 +265,7 @@ public class Platooning2 extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		p1 = platoons1.getVariable();
+		platoons1.setInstanceFilter(new GreaterThan(new PoolSize(p1),new NumberValue(0)));
 		Declaration allCars1 = new Declaration(
 				Quantifier.FORALL,
 				p1,
@@ -391,6 +329,7 @@ public class Platooning2 extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		p1 = platoons1.getVariable();
+		platoons1.setInstanceFilter(new GreaterThan(new PoolSize(p1),new NumberValue(0)));
 		cars = new Declaration(
 				Quantifier.FORALL,
 				p1,
@@ -401,6 +340,7 @@ public class Platooning2 extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		p2 = platoons2.getVariable();
+		platoons2.setInstanceFilter(new GreaterThan(new PoolSize(p2),new NumberValue(0)));
 		// \forall p1 : Platoon {
 		//		\forall c : p.Car {
 		//			\exists p2 : Platoon{ 
@@ -449,7 +389,19 @@ public class Platooning2 extends AbstractMotif {
 						)
 				);
 
-		setRule(new AndRule(join1,join1b,join2,split1,split2,split3));
+		platoons1 = new Declaration(
+				Quantifier.FORALL,
+				scope,
+				new TypeRestriction(Platoon.class));
+		p1 = platoons1.getVariable();
+		platoons1.setInstanceFilter(new Equals(new PoolSize(p1),new NumberValue(0)));
+		// clean-up
+		// \forall p:Platoon[PoolSize(p)=0] { TRUE -> delete(p) }
+		Rule cleanup = new FOILRule(platoons1,
+				new Term(
+						new DeleteInstance(p1)));
+
+		setRule(new AndRule(join1,join2,split1,split2,split3,cleanup));
 
 	}
 
@@ -463,7 +415,8 @@ public class Platooning2 extends AbstractMotif {
 			double avgInterPlatoonSpace,
 			double avgInterPlatoonSpaceDelta,
 			double joinDistance,
-			double speedDelta) {
+			double speedDelta,
+			double splitProb) {
 
 		double globalPos = 0;
 		double baseCarSpeed = avgSpeed - avgSpeedDelta/2;
@@ -475,7 +428,7 @@ public class Platooning2 extends AbstractMotif {
 			for (int j=0; j<carsPerPlatoon; j++) {
 				if (j!=0)
 					globalPos = globalPos + baseCarSpace + avgInterCarSpaceDelta * Math.random();
-				cars[carsPerPlatoon-j-1] = new Car(globalPos,(baseCarSpeed + avgSpeedDelta * Math.random()));
+				cars[carsPerPlatoon-j-1] = new Car(globalPos,(baseCarSpeed + avgSpeedDelta * Math.random()),splitProb);
 			}
 			pool.add(new Platoon(null,cars));
 			globalPos = globalPos + basePlatoonSpace + avgInterPlatoonSpaceDelta * Math.random();
@@ -487,37 +440,65 @@ public class Platooning2 extends AbstractMotif {
 
 	public static void main(String[] args) {
 
+		int runs = 4;
 		// number of platoons
-		int[] pN = {3};//6,4,3,2,6,4,3,2};
+		int[] pN = {6,4,3,2};
 		// number of cars per platoon
-		int[] cN = {3};//2,3,4,6,2,3,4,6};
+		int[] cN = {2,3,4,6};
 		// average car speed
-		double[] avgS = {40,40,40,40,40,40,40,40};
+		double[] avgS = {40};
 		// average speed variance
-		double[] avgSVar = {0,0,0,0,10,10,10,10};//{10,10,10,10,10,10};
+		double[] avgSVar = {10};//{10,10,10,10,10,10};
 		// average inter-car spacing
-		double[] avgCS = {15,15,15,15,15,15,15,15};
+		double[] avgCS = {15};
 		// average inter-car spacing variance
-		double[] avgCSVar = {0,0,0,0,5,5,5,5};////{5,5,5,5,5,5};
+		double[] avgCSVar = {5};////{5,5,5,5,5,5};
 		// average inter-platoon spacing
-		double[] avgPS = {30,30,30,30,30,30,30,30};
+		double[] avgPS = {30};
 		// average inter-platoon spacing variance
-		double[] avgPSVar = {0,0,0,0,10,10,10,10};//{10,10,10,10,10,10};
+		double[] avgPSVar = {10};//{10,10,10,10,10,10};
 		// minimum join distance
-		double[] jD = {25,25,25,25,25,25,25,25};
+		double[] jD = {25};
 		// relative speed variation after splitting
-		double[] sD = {0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2};
+		double[] sD = {0.2};
+		// splitting probability
+		double[] sP = {0.2};
 		// number of cycles
-		int[] cycles = {100,100,100,100,100,100,100,100};
+		int[] cycles = {100};
 
-		for (int i=0; i<pN.length; i++) {
+		for (int i=0; i<runs; i++) {
 			IDFactory.getInstance().resetFactory();
-			Platooning2 road = generateConfiguration(pN[i],cN[i],avgS[i],avgSVar[i],avgCS[i],avgCSVar[i],avgPS[i],avgPSVar[i],jD[i],sD[i]);
-			String output = String.format("platooning_%d_%d_%.2f_%.2f_%.2f_%.2f_%.2f_%.2f_%.2f_%.2f_%dc.json",
-					pN[i],cN[i],avgS[i],avgSVar[i],avgCS[i],avgCSVar[i],avgPS[i],avgPSVar[i],jD[i],sD[i],cycles[i]);
-			//			System.out.println(Arrays.stream(road.getAllowedInteractions()).map(Interaction::toString).collect(Collectors.joining("\n")));
+			Platooning2 road = generateConfiguration(
+					pN[i%pN.length],
+					cN[i%cN.length],
+					avgS[i%avgS.length],
+					avgSVar[i%avgSVar.length],
+					avgCS[i%avgCS.length],
+					avgCSVar[i%avgCSVar.length],
+					avgPS[i%avgPS.length],
+					avgPSVar[i%avgPSVar.length],
+					jD[i%jD.length],
+					sD[i%sD.length],
+					sP[i%sP.length]);
+			String output = String.format(
+					"platooning_%d_%d_%.2f_%.2f_%.2f_%.2f_%.2f_%.2f_%.2f_%.2f_%.2f_%dc.json",
+					pN[i%pN.length],
+					cN[i%cN.length],
+					avgS[i%avgS.length],
+					avgSVar[i%avgSVar.length],
+					avgCS[i%avgCS.length],
+					avgCSVar[i%avgCSVar.length],
+					avgPS[i%avgPS.length],
+					avgPSVar[i%avgPSVar.length],
+					jD[i%jD.length],
+					sD[i%sD.length],
+					sP[i%sP.length],
+					cycles[i%cycles.length]);
+
 			System.out.println("\nWorking on: " + output + "\n");
-			ExecutionEngine ex = new ExecutionEngine(road,GreedyStrategy.getInstance(),new ConsoleOutput(),false,cycles[i],output);
+			ExecutionEngine ex = new ExecutionEngine(
+					road,GreedyStrategy.getInstance(),new DummyOutput(),false,
+					cycles[i%cycles.length],output);
 			ex.setSnapshotSemantics(true);
 			ex.run();
 		}

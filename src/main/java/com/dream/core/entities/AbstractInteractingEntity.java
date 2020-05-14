@@ -149,7 +149,11 @@ implements InteractingEntity, Caching {
 	
 	@Override
 	public Port getPortByName(String name) {
-		return cInterface.get(name);
+		Port p = cInterface.get(name);
+		if (p == null)
+			throw new InvalidPortException(name,this);
+			else
+				return p;
 	}
 	
 	private void setInterfaceOwner() {

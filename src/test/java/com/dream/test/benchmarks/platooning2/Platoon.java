@@ -158,7 +158,7 @@ public class Platoon extends AbstractMotif {
 				);
 
 		// \forall c1:Car {
-		//		\forall c2:Car { c1.ackJoin |> c2.ackJoin -> 0 }
+		//		\forall c2:Car { c1.join |> c2.join -> 0 }
 		Declaration allCars1 = new Declaration(
 				Quantifier.FORALL,
 				scope,
@@ -169,53 +169,11 @@ public class Platoon extends AbstractMotif {
 				scope,
 				new TypeRestriction(Car.class));
 		var c2 = allCars2.getVariable();
-		Rule r4 = new FOILRule(allCars1,
-				new FOILRule(allCars2,
-						new ConjunctiveTerm(
-								new PortReference(c1, "ackJoin"),
-								new PortReference(c2, "ackJoin")
-								)
-						)
-				);
-
-		// \forall c1:Car {
-		//		\forall c2:Car { c1.initJoin |> c2.initJoin -> 0 }
-		allCars1 = new Declaration(
-				Quantifier.FORALL,
-				scope,
-				new TypeRestriction(Car.class));
-		c1 = allCars1.getVariable();
-		allCars2 = new Declaration(
-				Quantifier.FORALL,
-				scope,
-				new TypeRestriction(Car.class));
-		c2 = allCars2.getVariable();
 		Rule r5 = new FOILRule(allCars1,
 				new FOILRule(allCars2,
 						new ConjunctiveTerm(
-								new PortReference(c1, "initJoin"),
-								new PortReference(c2, "initJoin")
-								)
-						)
-				);
-
-		// \forall c1:Car {
-		//		\forall c2:Car { c1.finishJoin |> c2.finishJoin -> 0 }
-		allCars1 = new Declaration(
-				Quantifier.FORALL,
-				scope,
-				new TypeRestriction(Car.class));
-		c1 = allCars1.getVariable();
-		allCars2 = new Declaration(
-				Quantifier.FORALL,
-				scope,
-				new TypeRestriction(Car.class));
-		c2 = allCars2.getVariable();
-		Rule r6 = new FOILRule(allCars1,
-				new FOILRule(allCars2,
-						new ConjunctiveTerm(
-								new PortReference(c1, "finishJoin"),
-								new PortReference(c2, "finishJoin")
+								new PortReference(c1, "join"),
+								new PortReference(c2, "join")
 								)
 						)
 				);
@@ -286,14 +244,14 @@ public class Platoon extends AbstractMotif {
 						)
 				);
 
-		return new AndRule(r1,r2,r3,r4,r5,r6,r7,r8,r9);
+		return new AndRule(r1,r2,r3,r5,r7,r8,r9);
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Car[] cars = {new Car(0.0, 1.5), new Car(2.0,2.0)};//, new Car(5,1)};
+		Car[] cars = {new Car(0.0, 1.5,0.2), new Car(2.0,2.0,0.2)};//, new Car(5,1)};
 		AbstractMotif platoon = new Platoon(null,cars);
 		System.out.println(platoon.getJSONDescriptor());
 		System.out.println(platoon.getExpandedRule().toString());

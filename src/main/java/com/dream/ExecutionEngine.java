@@ -166,10 +166,10 @@ public class ExecutionEngine implements Runnable {
 				System.out.println("cycle " + (cycles+1) + " (elapsed " + getElapsed(startTime) + ")");
 				state = new JSONObject();
 				
+				output.write(MessageWritable.write("Expanded rule:\n",rootEntity.getExpandedRule()));
+				
 				Interaction interaction = executionStrategy.selectInteraction(rootEntity);
 				OperationsSet opsSet = rootEntity.getOperationsForInteraction(interaction);
-
-				output.write(MessageWritable.write("Expanded rule:\n",rootEntity.getExpandedRule()));
 
 				output.write(MessageWritable.write("Performed interaction = ",interaction));
 

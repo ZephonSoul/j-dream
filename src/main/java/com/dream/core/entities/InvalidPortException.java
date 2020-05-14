@@ -14,7 +14,7 @@ public class InvalidPortException extends RuntimeException {
 	
 	private static String getMessage(String portName,InteractingEntity owner) {
 		return String.format(
-				"Invalid port name %s: no such port for entity %s", 
+				"Invalid port name \"%s\": no such port for entity %s", 
 				portName, 
 				owner.toString());
 	}
