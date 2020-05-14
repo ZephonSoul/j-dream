@@ -29,7 +29,7 @@ import com.dream.core.localstore.VarStore;
  */
 public class Car extends AbstractComponent {
 
-	public static NumberValue splitProb = new NumberValue(1);
+	public static NumberValue splitProb = new NumberValue(0.4);
 
 	/**
 	 * @param parent

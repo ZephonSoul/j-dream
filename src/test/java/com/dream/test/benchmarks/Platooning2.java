@@ -9,6 +9,7 @@ import java.util.Set;
 import com.dream.ExecutionEngine;
 import com.dream.core.Entity;
 import com.dream.core.IDFactory;
+import com.dream.core.Instance;
 import com.dream.core.coordination.AndRule;
 import com.dream.core.coordination.ConjunctiveTerm;
 import com.dream.core.coordination.Declaration;
@@ -22,6 +23,7 @@ import com.dream.core.coordination.constraints.And;
 import com.dream.core.coordination.constraints.Not;
 import com.dream.core.coordination.constraints.Or;
 import com.dream.core.coordination.constraints.PortReference;
+import com.dream.core.coordination.constraints.predicates.CurrentControlLocation;
 import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.LessThan;
 import com.dream.core.coordination.constraints.predicates.SameInstance;
@@ -34,6 +36,7 @@ import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.expressions.Difference;
 import com.dream.core.expressions.InstanceIdentifier;
 import com.dream.core.expressions.Product;
+import com.dream.core.expressions.Sum;
 import com.dream.core.expressions.VariableRef;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.expressions.values.Value;
@@ -88,11 +91,15 @@ public class Platooning2 extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		EntityInstanceRef p2 = platoons2.getVariable();
+		Instance<Entity> tail_p2 = new MapPropertyRef<>(p2,"tail");
+		Instance<Entity> lead_p1 = new MapPropertyRef<>(p1,"leader");
 		// \forall p : Platoon {
 		//		\forall c : p.Car {
 		//			\exists p' : Platoon{ 
-		//				c.initJoin |> p != p' /\ (0 < tail(p2).pos - leader(p1).pos < joinDist) /\ leader(p').ackJoin
-		//					-> c.speed := leader(p').speed; c.joinedPlatoon := p' }}}}
+		//				c.initJoin |> p != p' 
+		//				/\ (0 < (tail(p2).pos + tail(p2).speed) - (leader(p1).pos + leader(p1).speed ) < joinDist) 
+		//				/\ leader(p2).ackJoin
+		//					-> c.speed := tail(p2).speed; c.joinedPlatoon := p2 }}}}
 		Rule join1 = 
 				new FOILRule(platoons1, 
 						new FOILRule(cars,
@@ -104,8 +111,14 @@ public class Platooning2 extends AbstractMotif {
 														new LessThan(
 																new NumberValue(0),
 																new Difference(
-																		new VariableRef(new MapPropertyRef<>(p2,"tail"),"pos"),
-																		new VariableRef(new MapPropertyRef<>(p1,"leader"),"pos")
+																		new Sum(
+																				new VariableRef(tail_p2,"pos"),
+																				new VariableRef(tail_p2,"speed")
+																				),
+																		new Sum(
+																				new VariableRef(lead_p1,"pos"),
+																				new VariableRef(lead_p1,"speed")
+																				)
 																		),
 																joinDist
 																),
@@ -113,7 +126,7 @@ public class Platooning2 extends AbstractMotif {
 														),
 												new OperationsSequence(
 														new Assign(new VariableRef(c,"speed"),
-																new VariableRef(new MapPropertyRef<>(p2,"leader"),"speed")),
+																new VariableRef(tail_p2,"speed")),
 														new Assign(new VariableRef(c,"joinedPlatoon"),
 																new InstanceIdentifier(p2))
 														)
@@ -132,8 +145,10 @@ public class Platooning2 extends AbstractMotif {
 				scope,
 				new TypeRestriction(Platoon.class));
 		p2 = platoons2.getVariable();
+		Instance<Entity> tail_p1 = new MapPropertyRef<>(p2,"tail");
+		Instance<Entity> lead_p2 = new MapPropertyRef<>(p1,"leader");
 		// \forall p1 : Platoon { \exists p2 : Platoon { 
-		//		leader(p1).ackJoin |> leader(p2).initJoin /\ (0 < tail(p1).pos - head(p2).pos < Delta) } }
+		//		leader(p1).ackJoin |> leader(p2).initJoin /\ (0 < (tail(p1).pos + speed) - (head(p2).pos + speed) < Delta) } }
 		Rule join1b = new FOILRule(platoons1,
 				new FOILRule(platoons2,
 						new ConjunctiveTerm(
@@ -143,10 +158,63 @@ public class Platooning2 extends AbstractMotif {
 										new LessThan(
 												new NumberValue(0),
 												new Difference(
-														new VariableRef(new MapPropertyRef<>(p1,"tail"),"pos"),
-														new VariableRef(new MapPropertyRef<>(p2,"leader"),"pos")
+														new Sum(
+																new VariableRef(tail_p1,"pos"),
+																new VariableRef(tail_p1,"speed")
+																),
+														new Sum(
+																new VariableRef(lead_p2,"pos"),
+																new VariableRef(lead_p2,"speed")
+																)
 														),
 												joinDist
+												)
+										)
+								)
+						));
+
+		platoons1 = new Declaration(
+				Quantifier.FORALL,
+				scope,
+				new TypeRestriction(Platoon.class));
+		p1 = platoons1.getVariable();
+		platoons2 = new Declaration(
+				Quantifier.FORALL,
+				scope,
+				new TypeRestriction(Platoon.class));
+		p2 = platoons2.getVariable();
+		// \forall p1 : Platoon { \forall p2 : Platoon { 
+		//		(0 < tail(p1).pos+speed - head(p2).pos+speed < Delta) /\ lead(p1).cruising /\ lead(p2).cruising |> 
+		//		p1 = p2 \/ ( leader(p2).initJoin /\ leader(p1).ackJoin)  } }
+		tail_p1 = new MapPropertyRef<>(p1,"tail");
+		lead_p1 = new MapPropertyRef<>(p1,"leader");
+		lead_p2 = new MapPropertyRef<>(p2,"leader");
+		Rule join1c = new FOILRule(platoons1,
+				new FOILRule(platoons2,
+						new ConjunctiveTerm(
+								new And(
+										new CurrentControlLocation(lead_p1, "cruising"),
+										new CurrentControlLocation(lead_p2, "cruising"),
+										new LessThan(
+												new NumberValue(0),
+												new Difference(
+														new Sum(
+																new VariableRef(tail_p1,"pos"),
+																new VariableRef(tail_p1,"speed")
+																),
+														new Sum(
+																new VariableRef(lead_p2,"pos"),
+																new VariableRef(lead_p2,"speed")
+																)
+														),
+												joinDist
+												)
+										),
+								new Or(
+										new SameInstance(p1,p2),
+										new And(
+												new PortReference(lead_p2,"initJoin"),
+												new PortReference(lead_p1,"ackJoin")
 												)
 										)
 								)
@@ -170,8 +238,9 @@ public class Platooning2 extends AbstractMotif {
 		// \forall p1 : Platoon {
 		//		\forall c : Car {
 		//			\exists p2 : Platoon {
-		//				c.finishJoin |> leader(p2).finishJoin /\ ( c.joinedPlatoon \/ p1 = p2)
-		//				-> IF (p1 != p2) THEN [migrate(c,p2,@(c).newLoc); delete(p1)]
+		//				c.finishJoin |> leader(p2).finishJoin /\ ( c.joinedPlatoon=p2 \/ p1 = p2)
+		//				-> IF (p1 != p2) THEN [migrate(c,p2,root(p2)); delete(p1)];
+		//					c.joinedPlatoon := 0
 		Rule join2 = 
 				new FOILRule(platoons1,
 						new FOILRule(cars,
@@ -188,15 +257,20 @@ public class Platooning2 extends AbstractMotif {
 																new SameInstance(p1,p2)
 																)
 														),
-												new IfThenElse(
-														new Not(new SameInstance(p1,p2)),
-														new OperationsSequence(
-																new MigrateMotif(
-																		c, 
-																		p2,
-																		new MapPropertyRef<>(p2,"root")),
-																new DeleteInstance(p1)
-																)
+												new OperationsSequence(
+														new IfThenElse(
+																new Not(new SameInstance(p1,p2)),
+																new OperationsSequence(
+																		new MigrateMotif(
+																				c, 
+																				p2,
+																				new MapPropertyRef<>(p2,"root")),
+																		new DeleteInstance(p1)
+																		)
+																),
+														new Assign(
+																new VariableRef(c,"joinedPlatoon"),
+																new NumberValue(0))
 														)
 												)
 										)
@@ -330,29 +404,47 @@ public class Platooning2 extends AbstractMotif {
 		// \forall p1 : Platoon {
 		//		\forall c : p.Car {
 		//			\exists p2 : Platoon{ 
-		//				c.closeSplit |> leader(p2).closeSplit /\ c.followCar = leader(p2)
-		//				->	IF (p1 != p2) THEN [migrate(c,p2,root(p2)] }}}
+		//				c.closeSplit |> (leader(p2).closeSplit /\ c.followCar = leader(p2)) \/ c.followCar = c
+		//				->	IF (c.followCar != c) THEN [migrate(c,p2,root(p2)];
+		//					c.followCar := 0 }}}
 		Rule split3 = new FOILRule(platoons1,
 				new FOILRule(cars,
 						new FOILRule(platoons2,
 								new ConjunctiveTerm(
 										new PortReference(c,"closeSplit"),
-										new And(
+										new Or(
 												new Equals(
 														new VariableRef(c,"followCar"),
-														new InstanceIdentifier(new MapPropertyRef<>(p2,"leader"))
+														new InstanceIdentifier(c)
 														),
-												new PortReference(new MapPropertyRef<>(p2,"leader"),"closeSplit")
-												),
-										new IfThenElse(
-												new Not(new SameInstance(p1,p2)),
-												new MigrateMotif(
-														c,
-														p2,
-														new MapPropertyRef<>(p2,"root")
+												new And(
+														new Equals(
+																new VariableRef(c,"followCar"),
+																new InstanceIdentifier(new MapPropertyRef<>(p2,"leader"))
+																),
+														new PortReference(new MapPropertyRef<>(p2,"leader"),"closeSplit")
 														)
+												),
+										new OperationsSequence(
+												new IfThenElse(
+														new Not(
+																new Equals(
+																		new VariableRef(c,"followCar"),
+																		new InstanceIdentifier(c)
+																		)
+																),
+														new MigrateMotif(
+																c,
+																p2,
+																new MapPropertyRef<>(p2,"root")
+																)
+														),
+												new Assign(
+														new VariableRef(c,"followCar"),
+														new NumberValue(0))
 												)
 										)
+
 								)
 						)
 				);
@@ -396,27 +488,27 @@ public class Platooning2 extends AbstractMotif {
 	public static void main(String[] args) {
 
 		// number of platoons
-		int[] pN = {6,8,4,2};//,4,3,2};
+		int[] pN = {3};//6,4,3,2,6,4,3,2};
 		// number of cars per platoon
-		int[] cN = {2,2,4,8};//,3,4,6};
+		int[] cN = {3};//2,3,4,6,2,3,4,6};
 		// average car speed
-		double[] avgS = {40,40,40,40,40,40};
+		double[] avgS = {40,40,40,40,40,40,40,40};
 		// average speed variance
-		double[] avgSVar = {0,0,0,0,0,0};//{10,10,10,10,10,10};
+		double[] avgSVar = {0,0,0,0,10,10,10,10};//{10,10,10,10,10,10};
 		// average inter-car spacing
-		double[] avgCS = {15,15,15,15,15,15};
+		double[] avgCS = {15,15,15,15,15,15,15,15};
 		// average inter-car spacing variance
-		double[] avgCSVar = {0,0,0,0,0,0};////{5,5,5,5,5,5};
+		double[] avgCSVar = {0,0,0,0,5,5,5,5};////{5,5,5,5,5,5};
 		// average inter-platoon spacing
-		double[] avgPS = {30,30,30,30,30,30};
+		double[] avgPS = {30,30,30,30,30,30,30,30};
 		// average inter-platoon spacing variance
-		double[] avgPSVar = {0,0,0,0,0,0};//{10,10,10,10,10,10};
+		double[] avgPSVar = {0,0,0,0,10,10,10,10};//{10,10,10,10,10,10};
 		// minimum join distance
-		double[] jD = {25,25,25,25,25,25};
+		double[] jD = {25,25,25,25,25,25,25,25};
 		// relative speed variation after splitting
-		double[] sD = {0.2,0.2,0.2,0.2,0.2,0.2};
+		double[] sD = {0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2};
 		// number of cycles
-		int[] cycles = {100,100,100,100,100,100};
+		int[] cycles = {100,100,100,100,100,100,100,100};
 
 		for (int i=0; i<pN.length; i++) {
 			IDFactory.getInstance().resetFactory();
@@ -425,7 +517,7 @@ public class Platooning2 extends AbstractMotif {
 					pN[i],cN[i],avgS[i],avgSVar[i],avgCS[i],avgCSVar[i],avgPS[i],avgPSVar[i],jD[i],sD[i],cycles[i]);
 			//			System.out.println(Arrays.stream(road.getAllowedInteractions()).map(Interaction::toString).collect(Collectors.joining("\n")));
 			System.out.println("\nWorking on: " + output + "\n");
-			ExecutionEngine ex = new ExecutionEngine(road,GreedyStrategy.getInstance(),new DummyOutput(),false,cycles[i],output);
+			ExecutionEngine ex = new ExecutionEngine(road,GreedyStrategy.getInstance(),new ConsoleOutput(),false,cycles[i],output);
 			ex.setSnapshotSemantics(true);
 			ex.run();
 		}

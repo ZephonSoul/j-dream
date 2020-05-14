@@ -243,7 +243,7 @@ implements CoordinatingEntity {
 			updateCache();
 		boolean sat = false;
 		long startTime = System.nanoTime();
-		long timeCap = 30000000000L;
+		long timeCap = 60000000000L;
 		boolean fallbackUsed = false;
 		do {
 			if (!fallbackUsed && (System.nanoTime() - startTime >= timeCap)) {
