@@ -51,4 +51,7 @@ public class MapNodeRef implements MapNodeInstance, Bindable<MapNodeInstance> {
 		return name;
 	}
 
+	@Override
+	public void evaluate() {}
+
 }

@@ -48,6 +48,7 @@ public abstract class AbstractMap implements MotifMap {
 		this.nodeCounter = nodes.size();
 
 		this.edgeConstructor = edgeConstructor;
+		
 	}
 
 	public AbstractMap(
@@ -79,12 +80,36 @@ public abstract class AbstractMap implements MotifMap {
 				new HashMap<>()
 				);
 	}
+	
+	public AbstractMap(AbstractMotif owner) {
+
+		this(
+				owner,
+				null,
+				new HashSet<>(),
+				new HashMap<>(),
+				new HashSet<>(),
+				new HashMap<>()
+				);
+	}
 
 	public AbstractMap(Supplier<? extends MapEdge> edgeConstructor) {
 
 		this(
 				null,
 				edgeConstructor,
+				new HashSet<>(),
+				new HashMap<>(),
+				new HashSet<>(),
+				new HashMap<>()
+				);
+	}
+	
+	public AbstractMap() {
+
+		this(
+				null,
+				null,
 				new HashSet<>(),
 				new HashMap<>(),
 				new HashSet<>(),

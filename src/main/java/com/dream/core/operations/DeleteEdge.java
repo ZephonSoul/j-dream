@@ -42,7 +42,10 @@ public class DeleteEdge extends AbstractOperation {
 	public void clearCache() {}
 
 	@Override
-	public void evaluateOperands() {	}
+	public void evaluate() {
+		node1.evaluate();
+		node2.evaluate();
+	}
 
 	@Override
 	public void execute() {

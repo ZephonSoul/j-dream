@@ -37,10 +37,6 @@ public class CreateInstance extends AbstractOperation {
 			Instance<Entity> parentInstance) {
 		this(entityType,parentInstance,null,Skip.getInstance());
 	}
-	
-	public CreateInstance() {
-		
-	}
 
 	/**
 	 * @return the newInstance
@@ -64,8 +60,9 @@ public class CreateInstance extends AbstractOperation {
 	}
 
 	@Override
-	public void evaluateOperands() {
-		chainedOperation.evaluateOperands();
+	public void evaluate() {
+		parentInstance.evaluate();
+		chainedOperation.evaluate();
 	}
 
 	@Override
@@ -79,7 +76,7 @@ public class CreateInstance extends AbstractOperation {
 				if (newInstance instanceof EntityInstanceRef) {
 					boundOps = chainedOperation.bindInstance(
 							newInstance, new EntityInstanceActual(newActualInstance));
-					boundOps.evaluateOperands();
+					boundOps.evaluate();
 				}
 				boundOps.execute();
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException

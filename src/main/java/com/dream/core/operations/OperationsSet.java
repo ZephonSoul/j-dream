@@ -41,7 +41,12 @@ public class OperationsSet implements Operation {
 	}
 
 	public boolean addAllOperationsSet(OperationsSet opSet) {
-		return operations.addAll(opSet.getOperations());
+		boolean changed = false;
+		for (Operation o : opSet.getOperations())
+			if (!(o instanceof Skip)) {
+				changed = operations.add(o) || changed;
+			}
+		return changed;
 	}
 	
 	public boolean isEmpty() {
@@ -51,10 +56,10 @@ public class OperationsSet implements Operation {
 	public void executeOperations(boolean snapshotSemantics) {
 		if (snapshotSemantics) {
 			//operations.stream().map(o -> {o.evaluateParams(); return o;}).forEach(Operation::execute);
-			operations.stream().forEach(Operation::evaluateOperands);
+			operations.stream().forEach(Operation::evaluate);
 			operations.stream().forEach(Operation::execute);
 		} else {
-			operations.stream().forEach(o -> {o.evaluateOperands(); o.execute();});
+			operations.stream().forEach(o -> {o.evaluate(); o.execute();});
 		}
 	}
 
@@ -99,8 +104,8 @@ public class OperationsSet implements Operation {
 	}
 
 	@Override
-	public void evaluateOperands() {
-		operations.stream().forEach(Operation::evaluateOperands);
+	public void evaluate() {
+		operations.stream().forEach(Operation::evaluate);
 	}
 
 	@Override

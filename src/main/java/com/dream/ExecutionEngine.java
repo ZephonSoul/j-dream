@@ -16,6 +16,7 @@ import com.dream.core.exec.ExecutionStrategy;
 import com.dream.core.exec.GreedyStrategy;
 import com.dream.core.operations.Operation;
 import com.dream.core.operations.OperationsSet;
+import com.dream.core.operations.Skip;
 import com.dream.core.output.JSONOutput;
 import com.dream.core.output.MessageWritable;
 import com.dream.core.output.Output;
@@ -79,7 +80,7 @@ public class ExecutionEngine implements Runnable {
 
 	private OperationsSet executeOperations(OperationsSet ops, boolean snapshotSemantics) {
 		if (snapshotSemantics)
-			ops.evaluateOperands();
+			ops.evaluate();
 		
 		Stack<Operation> scanOps = new Stack<Operation>();
 		OperationsSet tempSet = new OperationsSet();
@@ -90,7 +91,7 @@ public class ExecutionEngine implements Runnable {
 			for (Operation o : tempSet.getOperations()) {
 				if (o instanceof OperationsSet)
 					newOpsSet.addAllOperationsSet((OperationsSet) o);
-				else
+				else if (!(o.equals(Skip.getInstance())))
 					scanOps.push(o);
 			}
 		}
@@ -101,7 +102,7 @@ public class ExecutionEngine implements Runnable {
 			Operation o;
 			while (!scanOps.empty()) {
 				o = scanOps.pop();
-				o.evaluateOperands();
+				o.evaluate();
 				o.execute();
 			}
 		} else
@@ -157,7 +158,10 @@ public class ExecutionEngine implements Runnable {
 		if (maxCycles <= 0)
 			unboundedExecution = true;
 		
-		JSONObject state = rootEntity.getJSONDescriptor();
+		JSONObject state = new JSONObject();
+		state.put("state",rootEntity.getJSONDescriptor());
+		state.put("interaction",(new Interaction()).toString());
+		state.put("operations",(new OperationsSet()).toString());
 		output.write(MessageWritable.write(state));
 		jsonOut.write("state", state);
 		
@@ -180,7 +184,7 @@ public class ExecutionEngine implements Runnable {
 //				output.write(MessageWritable.write("Performed interaction = ",interaction));
 				state.put("interaction",interaction.toString());
 				state.put("operations",opsSet.toString());
-				state.put("new_state", rootEntity.getJSONDescriptor());
+				state.put("state", rootEntity.getJSONDescriptor());
 				jsonOut.write("state", state);
 
 				output.write(MessageWritable.write(rootEntity.getJSONDescriptor()));

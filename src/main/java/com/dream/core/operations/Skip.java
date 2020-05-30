@@ -16,7 +16,7 @@ public class Skip extends AbstractOperation {
 	}
 
 	@Override
-	public void evaluateOperands() {}
+	public void evaluate() {}
 
 	@Override
 	public void execute() {}

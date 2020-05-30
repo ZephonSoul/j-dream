@@ -113,14 +113,16 @@ public class VarStore {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public JSONArray getJSONDescriptor() {		
-		JSONArray descriptor = new JSONArray();
+	public JSONObject getJSONDescriptor() {		
+		//JSONArray descriptor = new JSONArray();
+		JSONObject descriptor = new JSONObject();
 		
 		localVariables.values().stream().forEach(
 				v -> {
-					JSONObject varDescriptor = new JSONObject();
-					varDescriptor.put(v.getInstanceName(),v.getValue().toString());
-					descriptor.add(varDescriptor);
+					//JSONObject varDescriptor = new JSONObject();
+					//varDescriptor.put(v.getInstanceName(),v.getValue().toString());
+					//descriptor.add(varDescriptor);
+					descriptor.put(v.getName(),v.getValue().toString());
 				}
 				);
 

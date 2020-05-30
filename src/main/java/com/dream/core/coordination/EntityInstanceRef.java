@@ -57,5 +57,8 @@ implements EntityInstance, Bindable<EntityInstance> {
 	public Entity getActual() {
 		throw new UnboundReferenceException(this);
 	}
+
+	@Override
+	public void evaluate() {}
 	
 }

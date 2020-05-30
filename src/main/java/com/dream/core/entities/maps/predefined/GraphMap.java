@@ -13,6 +13,7 @@ import com.dream.core.entities.maps.AbstractMap;
 import com.dream.core.entities.maps.MapEdge;
 import com.dream.core.entities.maps.MapNode;
 import com.dream.core.entities.maps.MotifMap;
+import com.dream.core.expressions.values.Value;
 
 /**
  * @author Alessandro Maggi
@@ -51,6 +52,24 @@ public class GraphMap extends AbstractMap implements MotifMap {
 	 */
 	public GraphMap(Supplier<? extends MapEdge> edgeConstructor) {
 		super(null,edgeConstructor);
+	}
+
+	@Override
+	public MapNode getNodeForAddress(Value address) {
+		// No addressing defined
+		return null;
+	}
+
+	@Override
+	public Value getAddressForNode(MapNode node) {
+		// No addressing defined
+		return null;
+	}
+
+	@Override
+	public Value distance(MapNode node1, MapNode node2) {
+		// TODO Compute number of edges separating nodes
+		return null;
 	}
 
 }

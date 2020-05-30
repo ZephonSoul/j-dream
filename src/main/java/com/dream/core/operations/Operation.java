@@ -9,7 +9,7 @@ import com.dream.core.Caching;
  */
 public interface Operation extends Bindable<Operation>,Caching {
 
-	public void evaluateOperands();
+	public void evaluate();
 	
 	public void execute();
 	

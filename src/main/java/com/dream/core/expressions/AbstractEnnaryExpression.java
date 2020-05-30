@@ -76,6 +76,7 @@ public abstract class AbstractEnnaryExpression extends AbstractExpression implem
 
 	@Override
 	public void clearCache() {
+		Arrays.stream(operands).forEach(Expression::clearCache);
 		operandsValue = new Value[operands.length];
 	}
 

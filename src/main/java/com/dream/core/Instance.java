@@ -11,5 +11,6 @@ public interface Instance<T> {
 	
 	public T getActual();
 	
+	public void evaluate();
 	
 }

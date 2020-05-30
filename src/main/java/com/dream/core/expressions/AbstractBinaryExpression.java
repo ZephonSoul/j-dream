@@ -11,20 +11,11 @@ public abstract class AbstractBinaryExpression extends AbstractExpression implem
 	protected Expression operand1,operand2;
 	protected Value operandValue1,operandValue2;
 
-	public AbstractBinaryExpression(
-			Expression operand1,
-			Expression operand2,
-			Value operandValue1,
-			Value operandValue2) {
 
-		this.operand1 = operand1;
-		this.operand2 = operand2;
-		this.operandValue1 = operandValue1;
-		this.operandValue2 = operandValue2;
-	}
 
 	public AbstractBinaryExpression(Expression operand1, Expression operand2) {
-		this(operand1,operand2,null,null);
+		this.operand1 = operand1;
+		this.operand2 = operand2;
 	}
 
 	/**
@@ -68,6 +59,8 @@ public abstract class AbstractBinaryExpression extends AbstractExpression implem
 
 	@Override
 	public void clearCache() {
+		operand1.clearCache();
+		operand2.clearCache();
 		operandValue1 = null;
 		operandValue2 = null;
 	}

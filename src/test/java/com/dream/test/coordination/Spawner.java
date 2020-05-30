@@ -5,7 +5,6 @@ import com.dream.core.coordination.EntityInstanceActual;
 import com.dream.core.coordination.ConjunctiveTerm;
 import com.dream.core.coordination.Declaration;
 import com.dream.core.coordination.Quantifier;
-import com.dream.core.coordination.constraints.*;
 import com.dream.core.coordination.constraints.predicates.LessThan;
 import com.dream.core.entities.*;
 import com.dream.core.exec.GreedyStrategy;
@@ -44,7 +43,7 @@ public class Spawner extends AbstractLightComponent {
 		//				)
 		//				);
 		setRule(new ConjunctiveTerm(
-				new LessThan(new VariableActual(y),new Constant(new NumberValue(5))),
+				new LessThan(new VariableActual(y),new NumberValue(5)),
 				new OperationsSequence(
 						new CreateInstance(DummyComponent.class,new EntityInstanceActual(this)),
 						new Assign(new VariableActual(x),new Difference(new VariableActual(x),new NumberValue(1))),

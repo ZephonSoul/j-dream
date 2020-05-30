@@ -1,7 +1,9 @@
 package com.dream.core.operations;
 
 import com.dream.core.Instance;
+import com.dream.core.coordination.UnboundReferenceException;
 import com.dream.core.coordination.constraints.Formula;
+import com.dream.core.expressions.EvaluationRuntimeException;
 
 /**
  * @author Alessandro Maggi
@@ -65,10 +67,10 @@ public class IfThenElse extends AbstractOperation {
 	}
 
 	@Override
-	public void evaluateOperands() {
+	public void evaluate() {
 		condition.evaluateExpressions();
-		thenOperation.evaluateOperands();
-		elseOperation.evaluateOperands();
+		thenOperation.evaluate();
+		elseOperation.evaluate();
 	}
 
 	@Override
@@ -81,10 +83,17 @@ public class IfThenElse extends AbstractOperation {
 
 	@Override
 	public boolean equals(Operation op) {
-		return (op instanceof IfThenElse)
-				&& condition.equals(((IfThenElse) op).getCondition())
-				&& thenOperation.equals(((IfThenElse) op).getThenOperation())
-				&& elseOperation.equals(((IfThenElse) op).getElseOperation());
+		try {
+			if (condition.sat())
+				return op.equals(thenOperation);
+			else
+				return op.equals(elseOperation);
+		} catch (UnboundReferenceException | EvaluationRuntimeException ex) {
+			return (op instanceof IfThenElse)
+					&& condition.equals(((IfThenElse) op).getCondition())
+					&& thenOperation.equals(((IfThenElse) op).getThenOperation())
+					&& elseOperation.equals(((IfThenElse) op).getElseOperation());
+		}
 	}
 
 	@Override
@@ -95,13 +104,20 @@ public class IfThenElse extends AbstractOperation {
 	}
 
 	public String toString() {
-		String elseBranch = "";
-		if (!(elseOperation instanceof Skip))
-			elseBranch = String.format(" ELSE [%s]", elseOperation.toString());
-		return String.format("IF (%s) THEN [%s]%s",
-				condition.toString(),
-				thenOperation.toString(),
-				elseBranch);
+		try {
+			if (condition.sat())
+				return thenOperation.toString();
+			else
+				return elseOperation.toString();
+		} catch (UnboundReferenceException | EvaluationRuntimeException ex) {
+			String elseBranch = "";
+			if (!(elseOperation instanceof Skip))
+				elseBranch = String.format(" ELSE [%s]", elseOperation.toString());
+			return String.format("IF (%s) THEN [%s]%s",
+					condition.toString(),
+					thenOperation.toString(),
+					elseBranch);
+		}
 	}
 
 }

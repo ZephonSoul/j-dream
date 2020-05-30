@@ -66,4 +66,10 @@ public class MapNodeVarEquals implements MapNodeInstance, Bindable<MapNodeInstan
 				testVarExpression.toString());
 	}
 
+	@Override
+	public void evaluate() {
+		scope.evaluate();
+		testVarExpression.evaluateOperands();
+	}
+
 }

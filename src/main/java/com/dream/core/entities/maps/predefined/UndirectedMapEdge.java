@@ -21,6 +21,10 @@ public class UndirectedMapEdge extends AbstractMapEdge implements MapEdge {
 	public UndirectedMapEdge(MapNode node1, MapNode node2) {
 		super(node1, node2);
 	}
+	
+	public UndirectedMapEdge() {
+		super();
+	}
 
 	@Override
 	public boolean equals(MapNode node1, MapNode node2) {

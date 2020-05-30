@@ -41,7 +41,11 @@ public class Migrate extends AbstractOperation {
 	}
 
 	@Override
-	public void evaluateOperands() {}
+	public void evaluate() {
+		entity.evaluate();
+		if (targetParent != null)
+			targetParent.evaluate();
+	}
 
 	@Override
 	public void execute() {

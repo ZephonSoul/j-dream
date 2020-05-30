@@ -48,7 +48,10 @@ public class SetAddress extends AbstractOperation {
 	public void clearCache() {}
 
 	@Override
-	public void evaluateOperands() {}
+	public void evaluate() {
+		entity.evaluate();
+		mapNode.evaluate();
+	}
 
 	@Override
 	public void execute() {

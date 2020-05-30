@@ -83,5 +83,10 @@ public class PortReference extends AbstractFormula implements Instance<Port> {
 	public Port getActual() {
 		throw new UnboundReferenceException(entityInstance);
 	}
+	
+	@Override
+	public void evaluate() {
+		entityInstance.evaluate();
+	}
 
 }

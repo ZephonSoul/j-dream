@@ -143,7 +143,7 @@ public class ArrayMap extends AbstractMap {
 			}
 		}
 		newNode.getStore().setVarValue("index", maxIndex.add(new NumberValue(1)));
-		
+
 		return newNode;
 	}
 
@@ -198,6 +198,26 @@ public class ArrayMap extends AbstractMap {
 			for (int i=0; i<entities.size(); i++)
 				mapping.get(entities.get(i)).getStore().setVarValue("index", new NumberValue(i));
 		}
+	}
+
+	@Override
+	public MapNode getNodeForAddress(Value address) {
+		if (address instanceof NumberValue)
+			return getNodeAtIndex(address);
+		else
+			throw new IncompatibleValueException(address, NumberValue.class);
+	}
+
+	@Override
+	public Value getAddressForNode(MapNode node) {
+		return new NumberValue(getIndexForNode(node));
+
+	}
+
+	@Override
+	public Value distance(MapNode node1, MapNode node2) {
+		NumberValue addr1 = (NumberValue) getAddressForNode(node1);	
+		return ((NumberValue) addr1.subtract((NumberValue) getAddressForNode(node2))).getAbsoluteValue();
 	}
 
 }

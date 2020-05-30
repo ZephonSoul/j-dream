@@ -45,6 +45,10 @@ public class MapNode implements StoringInstance {
 		this(null, name);
 	}
 
+	public MapNode(MotifMap map) {
+		this(map,"");
+	}
+
 	public boolean hasEntity(Entity entity) {
 		return entities.contains(entity);
 	}

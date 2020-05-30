@@ -16,6 +16,10 @@ import com.dream.core.entities.maps.AbstractMap;
 import com.dream.core.entities.maps.MapEdge;
 import com.dream.core.entities.maps.MapNode;
 import com.dream.core.entities.maps.MotifMap;
+import com.dream.core.entities.maps.NodeNotFoundException;
+import com.dream.core.expressions.values.IncompatibleValueException;
+import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.expressions.values.Value;
 
 /**
  * @author Alessandro Maggi
@@ -90,6 +94,33 @@ public class RingMap extends AbstractMap implements MotifMap {
 			nodes.remove(node);
 		}
 		return deleted;
+	}
+
+	@Override
+	public MapNode getNodeForAddress(Value address) {
+		if (address instanceof NumberValue) {
+			int intAddress = ((NumberValue)address).getRawValue().intValue();
+			if (intAddress < nodes.size())
+				return nodes.get(intAddress);
+			else
+				throw new NodeNotFoundException(this, String.format("@(%s)",address.toString()));
+		} else
+			throw new IncompatibleValueException(address, NumberValue.class);
+	}
+
+	@Override
+	public Value getAddressForNode(MapNode node) {
+		int index = nodes.indexOf(node);
+		if (index == -1)
+			throw new NodeNotFoundException(this, node);
+		else
+			return new NumberValue(index);
+	}
+
+	@Override
+	public Value distance(MapNode node1, MapNode node2) {
+		NumberValue addr1 = (NumberValue) getAddressForNode(node1);	
+		return ((NumberValue) addr1.subtract((NumberValue) getAddressForNode(node2))).getAbsoluteValue();
 	}
 
 }

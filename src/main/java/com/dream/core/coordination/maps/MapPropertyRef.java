@@ -53,4 +53,9 @@ public class MapPropertyRef<T> implements Instance<T>, Bindable<Instance<T>> {
 		return String.format("%s(%s)", propertyName, scope.toString());
 	}
 
+	@Override
+	public void evaluate() {
+		scope.evaluate();
+	}
+
 }

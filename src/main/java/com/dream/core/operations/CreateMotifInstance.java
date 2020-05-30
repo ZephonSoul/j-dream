@@ -72,7 +72,7 @@ public class CreateMotifInstance extends CreateInstance {
 				if (newInstance instanceof EntityInstanceRef) {
 					boundOps = chainedOperation.bindInstance(
 							newInstance, new EntityInstanceActual(newActualInstance));
-					boundOps.evaluateOperands();
+					boundOps.evaluate();
 				}
 				boundOps.execute();
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -112,6 +112,12 @@ public class CreateMotifInstance extends CreateInstance {
 				targetMapNode.toString(),
 				chainedOpsString);
 
+	}
+	
+	@Override
+	public void evaluate() {
+		super.evaluate();
+		targetMapNode.evaluate();
 	}
 
 }

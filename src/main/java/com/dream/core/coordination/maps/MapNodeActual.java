@@ -27,4 +27,7 @@ public class MapNodeActual implements MapNodeInstance {
 		return mapNode.toString();
 	}
 
+	@Override
+	public void evaluate() {}
+
 }

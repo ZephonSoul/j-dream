@@ -37,7 +37,8 @@ public class Assign extends AbstractOperation {
 	}
 
 	@Override
-	public void evaluateOperands() {
+	public void evaluate() {
+		localVariable.evaluate();
 		valueExpression.evaluateOperands();
 	}
 

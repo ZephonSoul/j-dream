@@ -33,15 +33,15 @@ public class SimpleComponent extends AbstractLightComponent {
 				new Term(new PortAtom(p1),
 						new Assign(new VariableActual(x),
 								new Sum(
-										new Constant(new NumberValue(10)),
-										new Constant(new NumberValue(5)),
+										new NumberValue(10),
+										new NumberValue(5),
 										new VariableActual(x)))
 						),
 				new Term(new PortAtom(p2),
 						new Assign(new VariableActual(x),
 								new Product(
-										new Constant(new NumberValue(2)),
-										new Constant(new NumberValue(3)),
+										new NumberValue(2),
+										new NumberValue(3),
 										new VariableActual(x)))
 						)
 				)

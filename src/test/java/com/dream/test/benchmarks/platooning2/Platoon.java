@@ -43,7 +43,7 @@ public class Platoon extends AbstractMotif {
 
 	/**
 	 * @param parent
-	 * @param pool
+	 * @param initialPool
 	 */
 	public Platoon(Entity parent, Entity[] initialPool) {
 		super(	parent, 

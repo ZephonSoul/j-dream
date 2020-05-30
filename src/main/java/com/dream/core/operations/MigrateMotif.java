@@ -56,6 +56,11 @@ public class MigrateMotif extends Migrate {
 				&& targetNode.equals(((MigrateMotif) op).getTargetNode());
 	}
 	
+	@Override
+	public void evaluate() {
+		super.evaluate();
+		targetNode.evaluate();
+	}
 
 	@Override
 	public <I> Operation bindInstance(

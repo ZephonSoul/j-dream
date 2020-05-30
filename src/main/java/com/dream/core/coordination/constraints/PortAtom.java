@@ -55,4 +55,7 @@ public class PortAtom extends AbstractFormula implements Formula, Instance<Port>
 		return port;
 	}
 
+	@Override
+	public void evaluate() {}
+
 }

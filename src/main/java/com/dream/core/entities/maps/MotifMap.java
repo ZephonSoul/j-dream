@@ -32,6 +32,8 @@ public interface MotifMap {
 	
 	public boolean isEdge(MapNode node1,MapNode node2);
 	
+	public Value distance(MapNode node1,MapNode node2);
+	
 	public Set<Entity> getEntitiesForNode(MapNode node);
 	
 	public MapNode createNode();
@@ -59,5 +61,9 @@ public interface MotifMap {
 	public boolean hasProperty(String property);
 
 	public void addProperty(String propertyName, MapProperty<?> property);
+
+	public MapNode getNodeForAddress(Value address);
+	
+	public Value getAddressForNode(MapNode node);
 	
 }

@@ -64,6 +64,11 @@ extends AbstractExpression implements Instance<LocalVariable> {
 	public void clearCache() {
 		variableValue = null;
 	}
+	
+	@Override
+	public <I> Expression bindInstance(Instance<I> reference, Instance<I> actual) {
+		return this;
+	}
 
 	public String getVarName() {
 		return localVariable.getInstanceName();
@@ -73,5 +78,8 @@ extends AbstractExpression implements Instance<LocalVariable> {
 	public LocalVariable getActual() {
 		return localVariable;
 	}
+
+	@Override
+	public void evaluate() {}
 
 }

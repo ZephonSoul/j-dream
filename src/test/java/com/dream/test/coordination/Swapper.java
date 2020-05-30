@@ -11,7 +11,6 @@ import com.dream.core.coordination.Rule;
 import com.dream.core.coordination.constraints.predicates.GreaterThan;
 import com.dream.core.entities.AbstractLightComponent;
 import com.dream.core.exec.GreedyStrategy;
-import com.dream.core.expressions.Constant;
 import com.dream.core.expressions.PoolSize;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.operations.Migrate;

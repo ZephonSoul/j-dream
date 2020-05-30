@@ -103,5 +103,10 @@ extends AbstractExpression implements Instance<LocalVariable> {
 		throw new UnboundReferenceException(scope);
 	}
 
+	@Override
+	public void evaluate() {
+		scope.evaluate();
+	}
+
 
 }

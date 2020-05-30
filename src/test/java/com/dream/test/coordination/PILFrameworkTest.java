@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.dream.core.Entity;
 import com.dream.core.coordination.AndRule;
 import com.dream.core.coordination.Interaction;
 import com.dream.core.coordination.OrRule;
@@ -19,11 +18,11 @@ import com.dream.core.coordination.constraints.PortAtom;
 import com.dream.core.coordination.constraints.predicates.Equals;
 import com.dream.core.coordination.constraints.predicates.Predicate;
 import com.dream.core.coordination.constraints.predicates.Tautology;
-import com.dream.core.entities.AbstractLightComponent;
 import com.dream.core.entities.InteractingEntity;
 import com.dream.core.entities.Port;
 import com.dream.core.expressions.*;
 import com.dream.core.expressions.values.NumberValue;
+import com.dream.core.expressions.values.Value;
 import com.dream.core.localstore.LocalVariable;
 import com.dream.core.operations.Assign;
 import com.dream.core.operations.Operation;
@@ -39,10 +38,10 @@ public class PILFrameworkTest {
 	Predicate sp1,sp2,sp3;
 	LocalVariable lvar1,lvar2;
 	Rule ru1,ru2;
-	Constant 	n0 = new Constant(new NumberValue(0)),
-				n1 = new Constant(new NumberValue(1)),
-				n2 = new Constant(new NumberValue(2)),
-				n3 = new Constant(new NumberValue(3));
+	Value 	n0 = new NumberValue(0),
+				n1 = new NumberValue(1),
+				n2 = new NumberValue(2),
+				n3 = new NumberValue(3);
 
 	@BeforeEach
 	void init() {
@@ -61,7 +60,7 @@ public class PILFrameworkTest {
 		sp2 = new Equals(n1,n2);
 		sp3 = new Equals(
 				new Sum(n2,n1),n3,
-				new Product(n2,new Constant(new NumberValue(1.5)),n1)
+				new Product(n2,new NumberValue(1.5),n1)
 				);
 		lvar1 = new LocalVariable("x1",new NumberValue(0));
 		lvar2 = new LocalVariable("x2",new NumberValue(5));
@@ -136,7 +135,7 @@ public class PILFrameworkTest {
 	@DisplayName("lvar1 := lvar2 + 3")
 	void assignmentTest() {
 		Operation op = new Assign(new VariableActual(lvar1), new Sum(new VariableActual(lvar2),n3));
-		op.evaluateOperands();
+		op.evaluate();
 		assertEquals(lvar1.getValue(),new NumberValue(0));
 		assertEquals(lvar2.getValue(),new NumberValue(5));
 		op.execute();
@@ -149,8 +148,8 @@ public class PILFrameworkTest {
 	void assignmentSequenceTest() {
 		Operation op1 = new Assign(new VariableActual(lvar1), new Sum(new VariableActual(lvar2),n3));
 		Operation op2 = new Assign(new VariableActual(lvar2), new Product(new VariableActual(lvar1),n3));
-		op1.evaluateOperands();
-		op2.evaluateOperands();
+		op1.evaluate();
+		op2.evaluate();
 		assertEquals(lvar1.getValue(),new NumberValue(0));
 		assertEquals(lvar2.getValue(),new NumberValue(5));
 		op1.execute();

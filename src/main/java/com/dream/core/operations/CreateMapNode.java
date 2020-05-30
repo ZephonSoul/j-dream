@@ -51,8 +51,9 @@ public class CreateMapNode extends AbstractOperation {
 	}
 
 	@Override
-	public void evaluateOperands() {
-		chainedOperation.evaluateOperands();
+	public void evaluate() {
+		mapScope.evaluate();
+		chainedOperation.evaluate();
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class CreateMapNode extends AbstractOperation {
 		AbstractMotif motif = (AbstractMotif) mapScope.getActual();
 		if (motif instanceof AbstractMotif) {
 			Operation boundOps = chainedOperation.bindInstance(newMapNode,new MapNodeActual(motif.createMapNode()));
-			boundOps.evaluateOperands();
+			boundOps.evaluate();
 			boundOps.execute();
 		} else
 			throw new IllegalScopeException(mapScope.getActual(),this.toString());

@@ -62,10 +62,10 @@ public class ForLoop extends AbstractOperation {
 	}
 
 	@Override
-	public void evaluateOperands() {
+	public void evaluate() {
 		initExpression.evaluateOperands();
 		stopExpression.evaluateOperands();
-		iteration.evaluateOperands();
+		iteration.evaluate();
 	}
 
 	@Override

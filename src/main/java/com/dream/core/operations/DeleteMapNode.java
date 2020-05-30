@@ -39,7 +39,9 @@ public class DeleteMapNode extends AbstractOperation {
 	public void clearCache() {}
 
 	@Override
-	public void evaluateOperands() {}
+	public void evaluate() {
+		mapNode.evaluate();
+	}
 
 	@Override
 	public void execute() {

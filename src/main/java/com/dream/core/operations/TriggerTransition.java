@@ -26,8 +26,6 @@ public class TriggerTransition extends AbstractOperation {
 	@Override
 	public void clearCache() {}
 
-	@Override
-	public void evaluateOperands() {	}
 
 	@Override
 	public void execute() {
@@ -44,5 +42,8 @@ public class TriggerTransition extends AbstractOperation {
 	public String toString() {
 		return String.format("trigger%s", transition.toString());
 	}
+
+	@Override
+	public void evaluate() {}
 
 }

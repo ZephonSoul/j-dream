@@ -17,15 +17,6 @@ public class Division extends AbstractBinaryExpression {
 	public static final int BASE_CODE = 707;
 
 	public Division(
-			Expression operand1,
-			Expression operand2,
-			Value operandValue1,
-			Value operandValue2) {
-
-		super(operand1,operand2,operandValue1,operandValue2);
-	}
-
-	public Division(
 			Expression operand1, 
 			Expression operand2) {
 
@@ -39,9 +30,7 @@ public class Division extends AbstractBinaryExpression {
 
 		return new Division(
 				operand1.bindInstance(reference, actual),
-				operand2.bindInstance(reference, actual),
-				operandValue1,
-				operandValue2);
+				operand2.bindInstance(reference, actual));
 	}
 
 	@Override

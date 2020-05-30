@@ -22,6 +22,10 @@ public class NumberValue extends PrimitiveValue<Number> implements AdditiveValue
 			throw new IncompatibleValueException(value, NumberValue.class);
 	}
 	
+	public NumberValue getAbsoluteValue() {
+		return new NumberValue(Math.abs(rawValue.doubleValue()));
+	}
+	
 	@Override
 	public boolean equals(Value value) {
 		return (value instanceof NumberValue)

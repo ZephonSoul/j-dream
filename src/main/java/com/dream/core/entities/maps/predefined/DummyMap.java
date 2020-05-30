@@ -16,6 +16,7 @@ import com.dream.core.entities.maps.MapProperty;
 import com.dream.core.entities.maps.MappingNotFoundException;
 import com.dream.core.entities.maps.MotifMap;
 import com.dream.core.entities.maps.NodeNotFoundException;
+import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.expressions.values.Value;
 
 /**
@@ -176,6 +177,27 @@ public class DummyMap implements MotifMap {
 
 	@Override
 	public void addProperty(String propertyName, MapProperty<?> property) {}
+
+	@Override
+	public MapNode getNodeForAddress(Value address) {
+		return node;
+	}
+
+	@Override
+	public Value getAddressForNode(MapNode node) {
+		return new NumberValue(0);
+	}
+
+	@Override
+	public Value distance(MapNode node1, MapNode node2) {
+		if (node1.equals(node))
+			if (node2.equals(node))
+				return new NumberValue(0);
+			else
+				throw new NodeNotFoundException(this, node2);
+		else
+			throw new NodeNotFoundException(this, node1);
+	}
 
 
 }

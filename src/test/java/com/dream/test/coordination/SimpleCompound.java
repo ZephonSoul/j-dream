@@ -1,6 +1,5 @@
 package com.dream.test.coordination;
 
-import java.util.Set;
 
 import com.dream.ExecutionEngine;
 import com.dream.core.coordination.EntityInstanceActual;
@@ -11,7 +10,6 @@ import com.dream.core.coordination.Quantifier;
 import com.dream.core.coordination.Rule;
 import com.dream.core.coordination.Term;
 import com.dream.core.coordination.TypeRestriction;
-import com.dream.core.coordination.constraints.And;
 import com.dream.core.coordination.constraints.PortReference;
 import com.dream.core.entities.AbstractLightComponent;
 import com.dream.core.exec.GreedyStrategy;
@@ -41,7 +39,7 @@ public class SimpleCompound extends AbstractLightComponent {
 		Rule target = new FOILRule(d,new AndRule(
 				new Term(
 						new PortReference(d.getVariable(),"p1"),
-						new Assign(new VariableRef(d.getVariable(),"x"), new Sum(new VariableRef(d.getVariable(),"x"),new Constant(new NumberValue(1))))
+						new Assign(new VariableRef(d.getVariable(),"x"), new Sum(new VariableRef(d.getVariable(),"x"),new NumberValue(1)))
 						)
 				)
 				);

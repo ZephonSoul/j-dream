@@ -26,7 +26,9 @@ public class DeleteInstance extends AbstractOperation {
 	}
 
 	@Override
-	public void evaluateOperands() {}
+	public void evaluate() {
+		targetInstance.evaluate();
+	}
 
 	@Override
 	public void execute() {

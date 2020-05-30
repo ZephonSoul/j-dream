@@ -27,8 +27,8 @@ public class OperationsSequence extends AbstractOperation {
 	}
 	
 	@Override
-	public void evaluateOperands() {
-		operations.stream().forEach(Operation::evaluateOperands);
+	public void evaluate() {
+		operations.stream().forEach(Operation::evaluate);
 	}
 
 	@Override

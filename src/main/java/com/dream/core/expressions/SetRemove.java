@@ -13,15 +13,6 @@ public class SetRemove extends AbstractBinaryExpression {
 	
 	public static final int BASE_CODE = 313;
 	
-	public SetRemove(
-			Expression operand1,
-			Expression operand2,
-			Value operandValue1,
-			Value operandValue2) {
-
-		super(operand1,operand2,operandValue1,operandValue2);
-	}
-	
 	public SetRemove(Expression operand1, Expression operand2) {
 		super(operand1,operand2);
 	}

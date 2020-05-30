@@ -24,4 +24,7 @@ public class ActualInstance<T> implements Instance<T> {
 		return actual.toString();
 	}
 
+	@Override
+	public void evaluate() {}
+
 }

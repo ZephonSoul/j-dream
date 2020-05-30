@@ -48,4 +48,7 @@ implements EntityInstance {
 		return entity;
 	}
 
+	@Override
+	public void evaluate() {}
+
 }

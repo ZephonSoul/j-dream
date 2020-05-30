@@ -73,4 +73,9 @@ implements MapNodeInstance, Bindable<MapNodeInstance> {
 				entity.equals(((MapNodeForEntity)o).getEntityInstance());
 	}
 
+	@Override
+	public void evaluate() {
+		entity.evaluate();
+	}
+
 }

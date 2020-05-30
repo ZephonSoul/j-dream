@@ -38,7 +38,9 @@ public class JavaOperation<T> extends AbstractOperation {
 	}
 
 	@Override
-	public void evaluateOperands() {	}
+	public void evaluate() {
+		context.evaluate();
+	}
 
 	@Override
 	public void execute() {

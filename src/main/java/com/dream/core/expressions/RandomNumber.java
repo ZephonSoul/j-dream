@@ -3,6 +3,7 @@
  */
 package com.dream.core.expressions;
 
+import com.dream.core.Instance;
 import com.dream.core.expressions.values.IncompatibleValueException;
 import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.expressions.values.RandomNumberFactory;
@@ -58,6 +59,11 @@ public class RandomNumber extends AbstractExpression {
 	@Override
 	public boolean allOperandsValued() {
 		return value != null && maxValue.allOperandsValued();
+	}
+	
+	@Override
+	public <I> Expression bindInstance(Instance<I> reference, Instance<I> actual) {
+		return this;
 	}
 	
 	public String toString() {
