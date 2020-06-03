@@ -9,6 +9,7 @@ import com.dream.core.Caching;
 import com.dream.core.Instance;
 import com.dream.core.coordination.maps.MapNodeActual;
 import com.dream.core.entities.maps.MapNode;
+import com.dream.core.expressions.values.NumberValue;
 import com.dream.core.expressions.values.Value;
 
 /**
@@ -80,7 +81,12 @@ public class MapNodeDistance extends AbstractExpression {
 
 	@Override
 	public String toString() {
-		return String.format("%s<->%s", mapNode1.toString(), mapNode2.toString());
+		String dist = "";
+		try {
+			double distance = ((NumberValue) computeResult()).getRawValue().doubleValue();
+			dist = String.format("[=%.2f]", distance);
+		} catch(Exception ex) {}
+		return String.format("%s<->%s%s", mapNode1.toString(), mapNode2.toString(), dist);
 	}
 	
 }

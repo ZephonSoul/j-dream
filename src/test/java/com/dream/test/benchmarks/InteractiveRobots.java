@@ -47,7 +47,7 @@ public class InteractiveRobots extends AbstractMotif {
 	public InteractiveRobots(int size, double range) {
 		super(new GridMap(size,size));
 
-		int[][] dirs = {{-1,-1},{0,-1},{1,-1},{-1,0},{0,0},{1,0},{-1,1},{0,1},{1,1}};
+		int[][] dirs = {{0,1},{1,1},{1,0},{1,-1},{0,0},{0,-1},{-1,-1},{-1,0},{-1,1}};
 		int[][] addrs = new int[9][2];
 		int step = size/3;
 		for (int i=0; i<3; i++) {
@@ -85,7 +85,7 @@ public class InteractiveRobots extends AbstractMotif {
 												)))));
 		// \forall c1:Robot {
 		//		\forall c2:Robot { c1.tick |> c2.tick 
-		//			-> IF (c1 != c2) /\ (c1.dir != c2.dir) /\ (@(c1)<->@(c2) < c1.range)
+		//			-> IF (c1 != c2) /\ (@(c1)<->@(c2) < c1.range) //mod /\ (c1.dir != c2.dir)
 		//				/\ (c1.ts < c2.ts \/ (c1.ts = c2.ts /\ c1.id < c2.id))) THEN [
 		//					c1.dir := c2.dir; c1.ts := c1.clock] } }
 		Declaration allRobots1 = new Declaration(
@@ -109,10 +109,10 @@ public class InteractiveRobots extends AbstractMotif {
 														new MapNodeDistance(new MapNodeForEntity(c1),new MapNodeForEntity(c2)),
 														new VariableRef(c1,"range")
 														),
-												new Not(new Equals(
-														new VariableRef(c1,"dir"),
-														new VariableRef(c2,"dir")
-														)),
+//												new Not(new Equals(
+//														new VariableRef(c1,"dir"),
+//														new VariableRef(c2,"dir")
+//														)),
 												new Or(
 														new LessThan(
 																new VariableRef(c1,"ts"),
@@ -155,7 +155,7 @@ public class InteractiveRobots extends AbstractMotif {
 				CoordinatingEntity rootEntity = new InteractiveRobots(size,range);
 				ExecutionEngine ex = new ExecutionEngine(
 						rootEntity,GreedyStrategy.getInstance(),new DummyOutput(),false,
-						30,String.format("interactive_robots_s%d_r%.0f.json",size,range));
+						40,String.format("interactive_robots_s%d_r%.0f.json",size,range));
 				ex.setSnapshotSemantics(true);
 				ex.run();
 			}

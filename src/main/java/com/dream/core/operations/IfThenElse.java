@@ -104,12 +104,12 @@ public class IfThenElse extends AbstractOperation {
 	}
 
 	public String toString() {
-		try {
-			if (condition.sat())
-				return thenOperation.toString();
-			else
-				return elseOperation.toString();
-		} catch (UnboundReferenceException | EvaluationRuntimeException ex) {
+//		try {
+//			if (condition.sat())
+//				return thenOperation.toString();
+//			else
+//				return elseOperation.toString();
+//		} catch (UnboundReferenceException | EvaluationRuntimeException ex) {
 			String elseBranch = "";
 			if (!(elseOperation instanceof Skip))
 				elseBranch = String.format(" ELSE [%s]", elseOperation.toString());
@@ -117,7 +117,7 @@ public class IfThenElse extends AbstractOperation {
 					condition.toString(),
 					thenOperation.toString(),
 					elseBranch);
-		}
+//		}
 	}
 
 }
